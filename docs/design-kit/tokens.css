@@ -1,0 +1,49 @@
+/* Sveska design tokens — dark-first. Import once at app root. */
+:root {
+  --ink-900: #0c0c0e;
+  --ink-800: #161619;
+  --ink-700: #222228;
+  --paper: #f4efe6;
+  --paper-dim: #b8b2a6;
+  --amber-500: #f2b544;
+  --amber-600: #eda92e;
+  --amber-700: #c9871f;
+  --signal-400: #4fd6c4;
+  --danger: #e5604d;
+  --ok: #6fcf7f;
+
+  --bg: var(--ink-900);
+  --surface: var(--ink-800);
+  --raised: var(--ink-700);
+  --text: var(--paper);
+  --text-dim: var(--paper-dim);
+  --accent: var(--amber-500);
+  --accent-hover: var(--amber-600);
+  --ai: var(--signal-400);
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-ui: 'Satoshi', 'Manrope', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'iA Writer Quattro', ui-monospace, monospace;
+  --font-serif: 'Newsreader', Georgia, serif;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.03), 0 12px 32px rgba(0, 0, 0, 0.45);
+  --tap: 44px;
+}
+:root[data-theme='light'] {
+  --bg: var(--paper);
+  --surface: #fbf8f1;
+  --raised: #efeadf;
+  --text: #15110a;
+  --text-dim: #6b6457;
+  --accent: var(--amber-600);
+  --accent-hover: var(--amber-700);
+  --ai: var(--amber-700);
+  --shadow: 0 1px 0 rgba(0, 0, 0, 0.02), 0 12px 28px rgba(20, 17, 10, 0.1);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']):not([data-theme='light']) {
+    color-scheme: light;
+  }
+}

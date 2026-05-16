@@ -1,9 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Sveska">
-  <rect x="0" y="0" width="512" height="512" fill="#0C0C0E"/>
+  <rect x="0" y="0" width="512" height="512" fill="#0C0C0E"></rect>
   <g transform="translate(256 256) scale(0.66) translate(-256 -256)">
-    <path d="M130 96 H328 L400 168 V398 A18 18 0 0 1 382 416 H130 A18 18 0 0 1 112 398 V114 A18 18 0 0 1 130 96 Z" fill="#F2B544"/>
-    <path d="M328 96 L400 168 H346 A18 18 0 0 1 328 150 Z" fill="#C9871F"/>
-    <path d="M338 196 C338 158 306 138 262 138 C214 138 182 162 182 200 C182 238 216 256 262 262 C308 268 342 286 342 326 C342 368 308 392 258 392 C214 392 180 372 178 332"
-          fill="none" stroke="#0C0C0E" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M130 96 H328 L400 168 V398 A18 18 0 0 1 382 416 H130 A18 18 0 0 1 112 398 V114 A18 18 0 0 1 130 96 Z" fill="#F2B544"></path>
+    <path d="M328 96 L400 168 H346 A18 18 0 0 1 328 150 Z" fill="#C9871F"></path>
+    <path d="M338 196 C338 158 306 138 262 138 C214 138 182 162 182 200 C182 238 216 256 262 262 C308 268 342 286 342 326 C342 368 308 392 258 392 C214 392 180 372 178 332" fill="none" stroke="#0C0C0E" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"></path>
   </g>
 </svg>

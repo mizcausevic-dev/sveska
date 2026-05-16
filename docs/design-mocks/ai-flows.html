@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sveska — Command Palette & AI Flows</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #f0eee9;
+      }
+      body {
+        font-family: 'Satoshi', system-ui, sans-serif;
+      }
+    </style>
+
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" src="design-canvas.jsx"></script>
+    <script type="text/babel" src="app-shell.jsx"></script>
+    <script type="text/babel" src="ai-flows.jsx"></script>
+    <script type="text/babel">
+      // helper for the editor-anchored slash menu — small dimmed shell under it
+      function SlashOverEditor() {
+        return (
+          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+            <FlowFrame
+              theme="dark"
+              anchor="custom"
+              anchorOffset={{ top: 380, left: 560 }}
+              veil="none"
+            >
+              {/* the caret indicator above the menu */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: -92,
+                  left: -200,
+                  width: 540,
+                  fontFamily: 'JetBrains Mono',
+                  fontSize: 15.5,
+                  lineHeight: 1.75,
+                  color: '#F4EFE6',
+                }}
+              >
+                <span
+                  style={{
+                    opacity: 0.55,
+                    width: 32,
+                    display: 'inline-block',
+                    textAlign: 'right',
+                    paddingRight: 14,
+                  }}
+                >
+                  17
+                </span>
+                <span style={{ paddingLeft: 14 }}>
+                  "Death and the Dervish" — the way memory is staged as procedure.
+                  <span style={{ color: '#F2B544' }}>{' /'}imp</span>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: 2,
+                      height: 18,
+                      background: '#F2B544',
+                      verticalAlign: '-3px',
+                      marginLeft: 1,
+                      animation: 'sveska-caret 1.1s steps(1) infinite',
+                    }}
+                  />
+                </span>
+              </div>
+              <SlashMenu />
+            </FlowFrame>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(
+        <DesignCanvas projectTitle="Sveska — AI Flows" initialZoom={0.4}>
+          <DCSection
+            id="palette"
+            title="⌘K · Command palette"
+            subtitle="Four states of the universal palette. Local search, AI commands, two-step context picker, and graceful degradation when the /api/ai proxy is unreachable."
+          >
+            <DCArtboard id="empty" label="① Open · empty" width={1100} height={820}>
+              <FlowFrame theme="dark" anchor="top">
+                <PaletteEmpty />
+              </FlowFrame>
+            </DCArtboard>
+
+            <DCArtboard id="filtered" label='② Query · "imp"' width={1100} height={820}>
+              <FlowFrame theme="dark" anchor="top">
+                <PaletteFiltered />
+              </FlowFrame>
+            </DCArtboard>
+
+            <DCArtboard id="context" label="③ /improve · context picker" width={1100} height={820}>
+              <FlowFrame theme="dark" anchor="top">
+                <PaletteContext />
+              </FlowFrame>
+            </DCArtboard>
+
+            <DCArtboard
+              id="nokey"
+              label="④ /api/ai unreachable · graceful"
+              width={1100}
+              height={820}
+            >
+              <FlowFrame theme="dark" anchor="top" veil="heavy">
+                <PaletteNoKey />
+              </FlowFrame>
+            </DCArtboard>
+          </DCSection>
+
+          <DCSection
+            id="editor"
+            title="AI in the editor"
+            subtitle="Slash menu, the streaming HUD, and the post-stream diff view — every state matched in dark and light. Full PWA resolution so the in-line context is honest."
+          >
+            <DCArtboard
+              id="slash"
+              label="⑤ Slash menu · typing / in editor"
+              width={1440}
+              height={900}
+            >
+              <SlashOverEditor />
+            </DCArtboard>
+
+            <DCArtboard
+              id="streaming"
+              label="⑥ Streaming · cyan ring on touched lines"
+              width={1440}
+              height={900}
+            >
+              <FlowFrame
+                theme="dark"
+                anchor="custom"
+                anchorOffset={{ top: 84, right: 36 }}
+                veil="none"
+              >
+                <StreamHUD />
+              </FlowFrame>
+            </DCArtboard>
+
+            <DCArtboard
+              id="diff"
+              label="⑦ Diff · accept · reject · retry"
+              width={1440}
+              height={900}
+            >
+              <FlowFrame theme="dark" anchor="center">
+                <DiffPanel />
+              </FlowFrame>
+            </DCArtboard>
+
+            <DCArtboard id="diff-light" label="⑧ Diff · light mirror" width={1440} height={900}>
+              <FlowFrame theme="light" anchor="center">
+                <DiffPanel />
+              </FlowFrame>
+            </DCArtboard>
+          </DCSection>
+        </DesignCanvas>,
+      );
+    </script>
+  </body>
+</html>
