@@ -41,3 +41,6 @@ public/sitemap.xml
 
 # scratch
 _tmp_final
+
+# Netlify CLI / MCP local cache
+.netlify

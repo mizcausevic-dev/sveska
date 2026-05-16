@@ -1,0 +1,51 @@
+name: Deploy to Netlify
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  # Serialize deploys — never let two builds race for the same Netlify site.
+  group: netlify-prod
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NETLIFY_SITE_ID: 0f0d7b94-c208-4af6-a321-df2623367629
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build (runs key-leak + bundle-budget gates)
+        run: pnpm build
+
+      - name: Deploy to Netlify (production)
+        run: npx -y netlify-cli@latest deploy --dir=dist --prod --site=$NETLIFY_SITE_ID --message "GHA · ${{ github.sha }}"
