@@ -1,4 +1,6 @@
 import { type ReactNode } from 'react';
+import { ThemeSwitch } from '@/ui/ThemeSwitch';
+import { openPrefs } from '@/ui/prefsModalStore';
 
 interface LayoutProps {
   children: ReactNode;
@@ -14,6 +16,18 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
             Sveska<span className="dot">.</span>
           </span>
         </a>
+        <nav aria-label="Primary">
+          <button
+            type="button"
+            onClick={openPrefs}
+            aria-label="Open preferences (Ctrl + ,)"
+            title="Preferences (Ctrl + ,)"
+            className="kbd"
+          >
+            Prefs · Ctrl+,
+          </button>
+          <ThemeSwitch />
+        </nav>
       </header>
       <main className="app-main" id="main">
         {children}

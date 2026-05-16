@@ -88,7 +88,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 ### M0 — Scaffold & platform skeleton
 
 - ✅ T0.1 Vite+TS+React+Zustand+Dexie+vite-plugin-pwa boot; tokens.css + brand assets wired; manifest + icons from brand kit.
-- ☐ T0.2 Theme: dark default, light, system; persists. (`Ctrl+,` opens prefs shell.)
+- ✅ T0.2 Theme: dark default, light, system; persists. (`Ctrl+,` opens prefs shell.)
 - ☐ T0.3 App shell + routing; analytics + consent stub; SEO meta + sitemap + `/glossary` route placeholder. **AC:** installable PWA, dark theme, Lighthouse PWA ✓.
 
 ### M1 — Core editor (notepad.js.org parity)
