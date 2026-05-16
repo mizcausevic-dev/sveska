@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react';
+import { NavLink } from 'react-router-dom';
 import { ThemeSwitch } from '@/ui/ThemeSwitch';
 import { openPrefs } from '@/ui/prefsModalStore';
 
@@ -10,13 +11,17 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <a href="/" className="brand" aria-label="Sveska home">
+        <NavLink to="/" className="brand" aria-label="Sveska home">
           <img src="/brand/favicon.svg" alt="" width={28} height={28} />
           <span className="wordmark">
             Sveska<span className="dot">.</span>
           </span>
-        </a>
+        </NavLink>
         <nav aria-label="Primary">
+          <NavLink to="/" end>
+            Home
+          </NavLink>
+          <NavLink to="/glossary">Glossary</NavLink>
           <button
             type="button"
             onClick={openPrefs}
@@ -33,7 +38,9 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         {children}
       </main>
       <footer className="app-footer">
-        <span>Sveska · local-first · v0.0.0</span>
+        <span>
+          Sveska · local-first · v0.0.0 · <a href="/glossary">glossary</a>
+        </span>
         <span aria-live="polite">Prazna sveska. Najbolji početak.</span>
       </footer>
     </div>

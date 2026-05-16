@@ -1,27 +1,27 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Layout } from './Layout';
-import { KeyBindings } from './KeyBindings';
+import { Home } from '@/routes/Home';
+import { Glossary } from '@/routes/Glossary';
+import { ShareTarget } from '@/routes/ShareTarget';
+import { NotFound } from '@/routes/NotFound';
 import { PrefsModalHost } from '@/ui/PrefsModal';
+import { KeyBindings } from './KeyBindings';
+import { ConsentBar } from '@/platform/ConsentBar';
 
 export function App(): React.JSX.Element {
   return (
-    <>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout>
-        <article>
-          <h1>
-            Prazna sveska. <span className="amb">Najbolji početak.</span>
-          </h1>
-          <p className="lead">
-            Sveska is a studio-grade, local-first, offline-first notepad. Your notes will live in
-            your browser&rsquo;s storage — no account, no telemetry, no sync until you ask for it.
-          </p>
-          <p className="lead">
-            M0/T0.2 wires the theme switch and the <span className="kbd">Ctrl + ,</span> preferences
-            shell. Routing and the platform surface land in T0.3.
-          </p>
-        </article>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/glossary" element={<Glossary />} />
+          <Route path="/share-target" element={<ShareTarget />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </Layout>
       <KeyBindings />
       <PrefsModalHost />
-    </>
+      <ConsentBar />
+    </BrowserRouter>
   );
 }
