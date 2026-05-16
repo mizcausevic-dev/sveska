@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Sveska">
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F6C155"/>
+      <stop offset="1" stop-color="#EDA92E"/>
+    </linearGradient>
+  </defs>
+  <!-- night tile -->
+  <rect x="0" y="0" width="512" height="512" rx="116" fill="#0C0C0E"/>
+  <!-- paper leaf with dog-ear fold (top-right) -->
+  <path d="M130 96
+           H328
+           L400 168
+           V398
+           A18 18 0 0 1 382 416
+           H130
+           A18 18 0 0 1 112 398
+           V114
+           A18 18 0 0 1 130 96 Z"
+        fill="url(#page)"/>
+  <!-- folded corner underside -->
+  <path d="M328 96 L400 168 H346 A18 18 0 0 1 328 150 Z" fill="#C9871F"/>
+  <!-- S monogram, knocked into the page -->
+  <path d="M338 196
+           C338 158 306 138 262 138
+           C214 138 182 162 182 200
+           C182 238 216 256 262 262
+           C308 268 342 286 342 326
+           C342 368 308 392 258 392
+           C214 392 180 372 178 332"
+        fill="none" stroke="#0C0C0E" stroke-width="46"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

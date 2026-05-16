@@ -1,0 +1,19 @@
+/* Self-hosted fonts only — CSP `default-src 'self'` rules out CDN fonts.
+ * Brand kit ships Bricolage Grotesque 700 + JetBrains Mono 600. Satoshi and Newsreader
+ * fall back to system-ui / Georgia until vendored (tracked for M1 prefs work). */
+
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('/brand/fonts/bricolage-700.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/brand/fonts/jbmono-600.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

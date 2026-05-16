@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 860" font-family="'Bricolage Grotesque','Segoe UI',system-ui,sans-serif">
+  <defs>
+    <style>
+      .bg{fill:#0C0C0E}.surf{fill:#161619;stroke:#222228;stroke-width:1.5}
+      .t{fill:#F4EFE6}.td{fill:#B8B2A6}.am{fill:#F2B544}.ai{fill:#4FD6C4}
+      .lbl{fill:#F4EFE6;font-size:19px;font-weight:700}
+      .sm{fill:#B8B2A6;font-size:14px}.tag{fill:#0C0C0E;font-size:12px;font-weight:700}.ms{fill:#F2B544;font-size:14px;font-weight:700}.msi{fill:#4FD6C4;font-size:14px;font-weight:700}
+      .box{fill:#161619;stroke:#2A2A30;stroke-width:1.5;rx:14}
+      .seam{fill:none;stroke:#F2B544;stroke-width:2;stroke-dasharray:7 6}
+      .flow{stroke:#3A3A42;stroke-width:2;fill:none;marker-end:url(#a)}
+      .flowA{stroke:#F2B544;stroke-width:2.5;fill:none;marker-end:url(#aa)}
+    </style>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#3A3A42"/></marker>
+    <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F2B544"/></marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1240" height="860"/>
+  <text x="48" y="56" class="t" font-size="30" font-weight="700">Sveska — Architecture</text>
+  <text x="48" y="84" class="td" font-size="15">Local-first PWA · swappable canvas · keys stay server-side</text>
+  <text x="1192" y="56" text-anchor="end" class="am" font-size="15" font-weight="700">sveska.studio</text>
+
+  <!-- CLIENT boundary (Service Worker) -->
+  <rect x="40" y="110" width="800" height="600" rx="22" fill="#0F0F12" stroke="#F2B544" stroke-width="1.5" stroke-dasharray="3 7"/>
+  <text x="64" y="138" class="am" font-size="14" font-weight="700">SERVICE WORKER · offline cache (Workbox)</text>
+
+  <!-- UI layer -->
+  <rect class="box" x="68" y="158" width="744" height="92"/>
+  <text x="88" y="186" class="lbl">UI shell</text>
+  <text x="88" y="214" class="sm">Command palette (Ctrl+K) · Tabs · Modals · Focus / Typewriter · Themes</text>
+  <text x="88" y="236" class="sm">React 18 + TS · tokens.css (dark-first)</text>
+
+  <!-- Store -->
+  <rect class="box" x="68" y="270" width="360" height="120"/>
+  <text x="88" y="298" class="lbl">State — Zustand</text>
+  <text x="88" y="324" class="sm">single source of truth</text>
+  <text x="88" y="346" class="sm">debounced 400ms → persist</text>
+  <text x="88" y="368" class="sm">immediate flush on blur</text>
+
+  <!-- Dexie -->
+  <rect class="box" x="452" y="270" width="360" height="120"/>
+  <text x="472" y="298" class="lbl">Dexie · IndexedDB</text>
+  <text x="472" y="324" class="sm">notes · versions · tabs · tags</text>
+  <text x="472" y="346" class="sm">snapshots · templates · inbox</text>
+  <text x="472" y="368" class="sm">legacy localStorage → import</text>
+
+  <!-- Markdown / Export -->
+  <rect class="box" x="68" y="410" width="360" height="98"/>
+  <text x="88" y="438" class="lbl">Markdown + Export</text>
+  <text x="88" y="464" class="sm">markdown-it + DOMPurify</text>
+  <text x="88" y="486" class="sm">one AST → txt / md / html / pdf</text>
+
+  <!-- Canvas seam -->
+  <rect x="452" y="410" width="360" height="98" rx="14" class="seam"/>
+  <text x="472" y="438" class="am" font-size="19" font-weight="700">CanvasProvider · seam</text>
+  <text x="472" y="464" class="sm">v1: Excalidraw (MIT)</text>
+  <text x="472" y="486" class="sm">alt: tldraw — flagged, licensed</text>
+
+  <!-- AI client -->
+  <rect class="box" x="68" y="528" width="744" height="86"/>
+  <text x="88" y="556" class="lbl">AI client <tspan class="ai">(no key)</tspan></text>
+  <text x="88" y="582" class="sm">slash: /improve /summarize /continue /rewrite · Notes → image · LinkedIn post</text>
+  <text x="88" y="602" class="sm">degrades gracefully if proxy unconfigured</text>
+
+  <!-- Platform band -->
+  <rect class="box" x="68" y="632" width="744" height="60"/>
+  <text x="88" y="668" class="lbl">Platform <tspan class="td" font-size="14" font-weight="400">— glossary · content/MDX · lead-gen · cookieless analytics</tspan></text>
+
+  <!-- SECURITY GATE -->
+  <rect x="880" y="158" width="312" height="170" rx="16" fill="#1A120A" stroke="#F2B544" stroke-width="2"/>
+  <text x="904" y="190" class="am" font-size="18" font-weight="700">Security gate</text>
+  <text x="904" y="220" class="sm">No API keys in client — ever</text>
+  <text x="904" y="244" class="sm">CSP: self + proxy only</text>
+  <text x="904" y="268" class="sm">DOMPurify on all rendered HTML</text>
+  <text x="904" y="292" class="sm">Hash-share = fragment only</text>
+  <text x="904" y="316" class="sm">CI grep blocks VITE_*_API_KEY</text>
+
+  <!-- Edge function -->
+  <rect x="880" y="360" width="312" height="150" rx="16" fill="#0F1614" stroke="#4FD6C4" stroke-width="1.8"/>
+  <text x="904" y="392" class="ai" font-size="18" font-weight="700">Edge function /api/ai</text>
+  <text x="904" y="420" class="sm">Cloudflare / Vercel Edge</text>
+  <text x="904" y="444" class="sm">key in env · rate-limited</text>
+  <text x="904" y="468" class="sm">streamed · stateless</text>
+  <text x="904" y="492" class="sm">only network dependency</text>
+
+  <!-- AI providers -->
+  <rect class="box" x="880" y="542" width="312" height="86"/>
+  <text x="904" y="570" class="lbl">AI providers</text>
+  <text x="904" y="596" class="sm">Claude API (key vaulted here)</text>
+  <text x="904" y="616" class="sm">never reachable from browser</text>
+
+  <!-- flows -->
+  <path class="flow" d="M440 330 H452"/>
+  <path class="flow" d="M248 390 V410"/>
+  <path class="flow" d="M632 390 V410"/>
+  <path class="flow" d="M440 577 H452" opacity="0"/>
+  <path class="flowA" d="M812 571 H880"/>
+  <path class="flowA" d="M1036 510 V542"/>
+  <text x="824" y="560" class="am" font-size="12" font-weight="700">HTTPS only</text>
+
+  <!-- milestone ribbon -->
+  <text x="48" y="752" class="t" font-size="17" font-weight="700">Build order</text>
+  <g font-size="13">
+    <rect x="48"  y="766" width="138" height="44" rx="9" class="surf"/><text x="60" y="784" class="ms">M0</text><text x="60" y="800" class="sm">Scaffold+PWA</text>
+    <rect x="196" y="766" width="138" height="44" rx="9" class="surf"/><text x="208" y="784" class="ms">M1</text><text x="208" y="800" class="sm">Core editor</text>
+    <rect x="344" y="766" width="138" height="44" rx="9" class="surf"/><text x="356" y="784" class="ms">M2</text><text x="356" y="800" class="sm">Multi-note</text>
+    <rect x="492" y="766" width="138" height="44" rx="9" class="surf"/><text x="504" y="784" class="ms">M3</text><text x="504" y="800" class="sm">Power UX</text>
+    <rect x="640" y="766" width="138" height="44" rx="9" class="surf"/><text x="652" y="784" class="msi">M4</text><text x="652" y="800" class="sm">AI (secure)</text>
+    <rect x="788" y="766" width="138" height="44" rx="9" class="surf"/><text x="800" y="784" class="ms">M5</text><text x="800" y="800" class="sm">Canvas</text>
+    <rect x="936" y="766" width="138" height="44" rx="9" class="surf"/><text x="948" y="784" class="ms">M6</text><text x="948" y="800" class="sm">Platform/$$</text>
+    <rect x="1084" y="766" width="108" height="44" rx="9" class="surf"/><text x="1096" y="784" class="ms">M7</text><text x="1096" y="800" class="sm">Harden</text>
+  </g>
+</svg>

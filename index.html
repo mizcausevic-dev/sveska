@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <!-- CSP gate: self only. Allow inline styles for tokens. AI proxy origin will be allowlisted at M4. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; manifest-src 'self'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0C0C0E" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F4EFE6" media="(prefers-color-scheme: light)" />
+
+    <title>Sveska — local-first notepad</title>
+    <meta
+      name="description"
+      content="A studio-grade, offline-first notepad. Notes, Markdown, canvas — all local. No account required."
+    />
+    <link rel="canonical" href="https://sveska.studio/" />
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sveska" />
+    <meta property="og:title" content="Sveska — local-first notepad" />
+    <meta
+      property="og:description"
+      content="A studio-grade, offline-first notepad. Notes, Markdown, canvas — all local."
+    />
+    <meta property="og:url" content="https://sveska.studio/" />
+    <meta property="og:image" content="/brand/icons/icon-512.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Sveska — local-first notepad" />
+    <meta
+      name="twitter:description"
+      content="A studio-grade, offline-first notepad. Notes, Markdown, canvas — all local."
+    />
+    <meta name="twitter:image" content="/brand/icons/icon-512.png" />
+
+    <!-- Icons + PWA -->
+    <link rel="icon" type="image/svg+xml" href="/brand/favicon.svg" />
+    <link rel="alternate icon" type="image/png" sizes="32x32" href="/brand/icons/favicon-32.png" />
+    <link rel="alternate icon" type="image/png" sizes="16x16" href="/brand/icons/favicon-16.png" />
+    <link rel="apple-touch-icon" href="/brand/icons/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/brand/favicon.svg" color="#F2B544" />
+  </head>
+  <body>
+    <noscript>Sveska requires JavaScript. The app is fully local once loaded.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
