@@ -2,6 +2,7 @@
   <defs>
     <style>
       .bg{fill:#0C0C0E}.surf{fill:#161619;stroke:#222228;stroke-width:1.5}
+      .surfDone{fill:#1a2418;stroke:#3a6044;stroke-width:1.5}
       .t{fill:#F4EFE6}.td{fill:#B8B2A6}.am{fill:#F2B544}.ai{fill:#4FD6C4}
       .lbl{fill:#F4EFE6;font-size:19px;font-weight:700}
       .sm{fill:#B8B2A6;font-size:14px}.tag{fill:#0C0C0E;font-size:12px;font-weight:700}.ms{fill:#F2B544;font-size:14px;font-weight:700}.msi{fill:#4FD6C4;font-size:14px;font-weight:700}
@@ -77,7 +78,7 @@
   <!-- Edge function -->
   <rect x="880" y="360" width="312" height="150" rx="16" fill="#0F1614" stroke="#4FD6C4" stroke-width="1.8"/>
   <text x="904" y="392" class="ai" font-size="18" font-weight="700">Edge function /api/ai</text>
-  <text x="904" y="420" class="sm">Cloudflare / Vercel Edge</text>
+  <text x="904" y="420" class="sm">Netlify Edge (Deno)</text>
   <text x="904" y="444" class="sm">key in env · rate-limited</text>
   <text x="904" y="468" class="sm">streamed · stateless</text>
   <text x="904" y="492" class="sm">only network dependency</text>
@@ -100,12 +101,12 @@
   <!-- milestone ribbon -->
   <text x="48" y="752" class="t" font-size="17" font-weight="700">Build order</text>
   <g font-size="13">
-    <rect x="48"  y="766" width="138" height="44" rx="9" class="surf"/><text x="60" y="784" class="ms">M0</text><text x="60" y="800" class="sm">Scaffold+PWA</text>
-    <rect x="196" y="766" width="138" height="44" rx="9" class="surf"/><text x="208" y="784" class="ms">M1</text><text x="208" y="800" class="sm">Core editor</text>
-    <rect x="344" y="766" width="138" height="44" rx="9" class="surf"/><text x="356" y="784" class="ms">M2</text><text x="356" y="800" class="sm">Multi-note</text>
-    <rect x="492" y="766" width="138" height="44" rx="9" class="surf"/><text x="504" y="784" class="ms">M3</text><text x="504" y="800" class="sm">Power UX</text>
-    <rect x="640" y="766" width="138" height="44" rx="9" class="surf"/><text x="652" y="784" class="msi">M4</text><text x="652" y="800" class="sm">AI (secure)</text>
-    <rect x="788" y="766" width="138" height="44" rx="9" class="surf"/><text x="800" y="784" class="ms">M5</text><text x="800" y="800" class="sm">Canvas</text>
+    <rect x="48"  y="766" width="138" height="44" rx="9" class="surfDone"/><text x="60" y="784" class="ms">✓ M0</text><text x="60" y="800" class="sm">Scaffold+PWA</text>
+    <rect x="196" y="766" width="138" height="44" rx="9" class="surfDone"/><text x="208" y="784" class="ms">✓ M1</text><text x="208" y="800" class="sm">Core editor</text>
+    <rect x="344" y="766" width="138" height="44" rx="9" class="surfDone"/><text x="356" y="784" class="ms">✓ M2</text><text x="356" y="800" class="sm">Multi-note</text>
+    <rect x="492" y="766" width="138" height="44" rx="9" class="surfDone"/><text x="504" y="784" class="ms">✓ M3</text><text x="504" y="800" class="sm">Power UX</text>
+    <rect x="640" y="766" width="138" height="44" rx="9" class="surfDone"/><text x="652" y="784" class="ms">✓ M4</text><text x="652" y="800" class="sm">AI (secure)</text>
+    <rect x="788" y="766" width="138" height="44" rx="9" class="surf"/><text x="800" y="784" class="msi">M5</text><text x="800" y="800" class="sm">Canvas · next</text>
     <rect x="936" y="766" width="138" height="44" rx="9" class="surf"/><text x="948" y="784" class="ms">M6</text><text x="948" y="800" class="sm">Platform/$$</text>
     <rect x="1084" y="766" width="108" height="44" rx="9" class="surf"/><text x="1096" y="784" class="ms">M7</text><text x="1096" y="800" class="sm">Harden</text>
   </g>

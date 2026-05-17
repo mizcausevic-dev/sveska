@@ -3,6 +3,12 @@
 > **Sveska** /ˈsvɛska/ — _Bosnian: notebook, exercise book._
 > A studio-grade, **local-first, offline-first** notepad PWA at [sveska.studio](https://sveska.studio).
 
+<p align="center">
+  <a href="https://sveska.studio">
+    <img src="docs/hero.svg" alt="Sveska — local-first notepad with Markdown split-pane preview, checklist tracking, and AI assistance" width="100%">
+  </a>
+</p>
+
 [![PWA](https://img.shields.io/badge/PWA-installable-F2B544?style=flat-square)](https://sveska.studio)
 [![M4](https://img.shields.io/badge/milestone-M4_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4)
 [![Tests](https://img.shields.io/badge/tests-217_passing-7AD29C?style=flat-square)](#milestone-status)
@@ -113,6 +119,12 @@ references, so `import()` chunks (jsPDF, html2canvas) don't count against the bu
 | M5     | Canvas (Excalidraw only — tldraw dropped)                                                               | ☐ next                                                                           |
 | M6     | Platform & monetisation (glossary engine, lead-gen, pricing)                                            | ☐                                                                                |
 | M7     | Hardening (Playwright offline, perf CI, a11y, security)                                                 | ☐                                                                                |
+
+## Architecture
+
+<p align="center">
+  <img src="docs/architecture.svg" alt="Sveska architecture: UI shell + Zustand state + Dexie storage + Markdown pipeline + Canvas seam + AI client through Netlify Edge Function with vaulted key, plus the milestone build order ribbon" width="100%">
+</p>
 
 ## Repo map
 
