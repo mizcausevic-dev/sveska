@@ -7,10 +7,8 @@
 
 ## In progress
 
-- [ ] **T3.7 — Import .txt/.md · Web Share target · share-via-URL hash · PDF export**
-  - **Why**: closes M3 by completing the I/O surface. Drag-and-drop or file-picker import of .txt/.md → fresh notes; PWA Web Share target accepts shared text into the inbox; share-via-URL packs a note into the `#` fragment so the receiver can preview it without a server; .pdf export via jsPDF.
-  - **AC**: Import button + drag-on-rail accepts .txt/.md files and creates notes; `share_target` in manifest.json POSTs to `/share-target` which writes the text to the inbox; "Copy share link" command builds a `#note=<base64>` URL the page parses on load; .pdf appears in ExportMenu alongside txt/md/html.
-  - **Don't**: ship jsPDF in the main chunk — `import('jspdf')` it on first .pdf click so plain-text users don't pay the ~50KB.
+- [ ] **M3 close — tag `v0.3.0-m3` + release notes**
+  - **AC**: tag pushed, release notes summarise T3.1–T3.7, both CLAUDE.md copies have all M3 ticks.
 
 ## Next up (sequential, top-down)
 
@@ -45,6 +43,7 @@
 - ✅ T3.4 — `templates` + `snippets` Dexie repos with 5 built-in templates (meeting / daily / retro / standup / brief) + 3 built-in snippets · TemplatesModal (Ctrl+T) with Templates / Snippets tabs · "New note from template" creates + opens · in-editor snippet typeahead (`findTriggerAt` matches longest trigger to caret) · palette commands wired · 8 unit tests + browser preview verified
 - ✅ T3.5 — Typewriter scroll hook (active line centered ~40% from top) + typing sounds hook (WebAudio synth click, 25ms throttle, pitch per key: 520Hz Enter / 360Hz Space / 440Hz default) · Prefs rows with conditional volume slider · 3 new persisted editor prefs (typewriter / sounds / soundVolume, both toggles default OFF) · 6 unit tests + browser preview verified
 - ✅ T3.6 — Paper textures (dotted/graph/linen/grain, CSS-only, no assets) + Pomodoro-style writing timer (auto-pauses on 60s idle) + word-count goal progress bar in SaveIndicator + Ctrl+F find/replace bar with match counter and case-sensitive toggle · 2 new persisted editor prefs (paper / wordGoal) · 12 unit tests + browser preview verified
+- ✅ T3.7 — Import .txt/.md (file picker + drag-drop on rail) · Web Share target → inbox · share-via-URL `#note=<base64url>` (pack + parse + auto-open on load + "Copy share link" palette command) · lazy `.pdf` export (jsPDF dynamic import; 223 KB into separate chunks, not initial bundle) · check-bundle.mjs updated to only count initial-load chunks · 8 unit tests + browser preview verified
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

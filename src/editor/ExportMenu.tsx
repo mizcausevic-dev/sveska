@@ -29,6 +29,15 @@ export function ExportMenu({ note, body }: Props): React.JSX.Element {
     download(result);
   }
 
+  async function exportPdf(): Promise<void> {
+    if (!note) return;
+    const live: Note = { ...note, body };
+    const ast = astFromNote(live);
+    // Lazy import — jsPDF is ~50KB gzip; only pay when the user clicks.
+    const { exportNoteAsPdf } = await import('@/lib/exportPdf');
+    await exportNoteAsPdf(ast);
+  }
+
   return (
     <div className="export-group" role="group" aria-label="Export note">
       <span className="export-label mono">export</span>
@@ -45,6 +54,16 @@ export function ExportMenu({ note, body }: Props): React.JSX.Element {
           .{label}
         </button>
       ))}
+      <button
+        type="button"
+        className="snap-btn export-btn"
+        onClick={() => void exportPdf()}
+        disabled={disabled}
+        data-testid="export-pdf"
+        title="Download as .pdf (lazy-loaded)"
+      >
+        .pdf
+      </button>
     </div>
   );
 }

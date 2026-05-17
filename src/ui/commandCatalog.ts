@@ -10,6 +10,7 @@ import { useUIStore } from '@/notes/uiStore';
 import { useNotesRail } from '@/notes/notesRailStore';
 import { useTabs } from '@/notes/tabsStore';
 import { setNotePinned } from '@/notes/noteRepo';
+import { packShareHash } from '@/lib/hashShare';
 
 /**
  * Static catalog of every user-facing action (M3.T3.1).
@@ -100,6 +101,21 @@ export function buildCommandCatalog(): PaletteCommand[] {
       keywords: 'expand trigger abbreviation',
       group: 'note',
       run: () => openTemplates('snippets'),
+    },
+    {
+      id: 'note.copy.share.link',
+      label: 'Copy share link (URL hash)',
+      keywords: 'share url copy link export hash',
+      group: 'note',
+      run: () => {
+        const n = useTabs.getState().activeNote;
+        if (!n || !navigator.clipboard) return;
+        const url =
+          window.location.origin +
+          window.location.pathname +
+          packShareHash({ title: n.title, body: n.body, mode: n.mode });
+        void navigator.clipboard.writeText(url);
+      },
     },
 
     // ─── editor ────────────────────────────────────────────────────────────

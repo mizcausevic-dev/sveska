@@ -3,9 +3,11 @@ import { type Note } from '@/notes/db';
 import { listNotes } from '@/notes/noteRepo';
 import { useTabs } from '@/notes/tabsStore';
 import { useNotesRail, type RailFilter } from '@/notes/notesRailStore';
+import { useRef } from 'react';
 import { countUnprocessed } from '@/notes/inboxRepo';
 import { openInbox, useInboxModal } from '@/ui/inboxModalStore';
 import { openSearch } from '@/ui/searchModalStore';
+import { importFiles } from '@/lib/importFiles';
 
 const RECENT_LIMIT = 8;
 
@@ -32,9 +34,19 @@ export function NotesRail(): React.JSX.Element {
   const tabs = useTabs((s) => s.tabs);
   const activeNote = useTabs((s) => s.activeNote);
   const inboxOpen = useInboxModal((s) => s.open);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [inboxCount, setInboxCount] = useState(0);
+
+  async function handleImport(files: FileList | File[] | null): Promise<void> {
+    if (!files || (files instanceof FileList ? files.length === 0 : files.length === 0)) return;
+    const { notes: created } = await importFiles(files);
+    if (created.length === 0) return;
+    setNotes(await listNotes());
+    const first = created[0];
+    if (first) await openNote(first.id);
+  }
 
   useEffect(() => {
     void (async () => {
@@ -80,7 +92,35 @@ export function NotesRail(): React.JSX.Element {
   }
 
   return (
-    <aside className="notes-rail" aria-label="Notes" data-testid="notes-rail">
+    <aside
+      className="notes-rail"
+      aria-label="Notes"
+      data-testid="notes-rail"
+      onDragOver={(e) => {
+        if (Array.from(e.dataTransfer.types).includes('Files')) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'copy';
+        }
+      }}
+      onDrop={(e) => {
+        if (e.dataTransfer.files.length > 0) {
+          e.preventDefault();
+          void handleImport(e.dataTransfer.files);
+        }
+      }}
+    >
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".txt,.md,.markdown,text/plain,text/markdown"
+        multiple
+        className="visually-hidden"
+        onChange={(e) => {
+          void handleImport(e.target.files);
+          e.target.value = '';
+        }}
+        data-testid="rail-import-input"
+      />
       <header className="rail-header">
         <span className="rail-title mono">Notes</span>
         <button
@@ -117,6 +157,15 @@ export function NotesRail(): React.JSX.Element {
               {inboxCount}
             </span>
           )}
+        </button>
+        <button
+          type="button"
+          className="snap-btn rail-action"
+          onClick={() => fileInputRef.current?.click()}
+          title="Import .txt or .md files (or drag-drop onto the rail)"
+          data-testid="rail-import"
+        >
+          Import…
         </button>
       </div>
       <div className="rail-filter">

@@ -43,6 +43,7 @@
 - **Every modal store must be reset in `test-setup.ts` afterEach**: Zustand singletons survive `cleanup()`. A modal left `open=true` by one test will be `open=true` when the next test mounts `<App />`, and its open-effect will fire against the _previous_ test's bootstrapped note id — silently loading the wrong data. The user-click that should open it is then a no-op (deps unchanged). Add a `useFooModal.setState({ open: false })` line for every new `*ModalStore` you ship.
 - **jsdom's Blob lacks both `.text()` and `.arrayBuffer()`**: tests that read export Blobs must use a FileReader-based helper (`fr.readAsText(blob)`). See `src/__tests__/export.test.tsx#blobText` for the pattern — markdown.test.tsx reused it after I burned 5 min discovering arrayBuffer also missing.
 - **Markdown bundle = +56KB gzip (T3.2)**: markdown-it (~45KB) + dompurify (~11KB) live in the main bundle. Total JS gzip jumped 104→160 KB; still under the 180 KB budget but tight. If M3 closes near budget, lazy-load `@/markdown/render` behind `import()` so plain-text users don't pay for the parser.
+- **check-bundle counts only initial-load chunks (T3.7)**: jsPDF is ~125KB gzip (plus html2canvas ~47KB + es helpers ~50KB = 223KB total). `scripts/check-bundle.mjs` parses dist/index.html and only sums assets it references, so `import('jspdf')` chunks don't count against the 180KB budget. Apply the same pattern for any future heavy vendor (Excalidraw at M5, anything M4 brings).
 
 ## File map (where things live)
 
@@ -73,6 +74,7 @@
 | T3.4 (2026-05-17)    | 169   | 163.21 KB | 6.09 KB  | +templates + snippet typeahead                 |
 | T3.5 (2026-05-17)    | 175   | 164.17 KB | 6.09 KB  | +typewriter scroll + WebAudio synth clicks     |
 | T3.6 (2026-05-17)    | 187   | 165.84 KB | 6.48 KB  | +paper / timer / word-goal / find&replace      |
+| T3.7 (2026-05-17)    | 195   | 167.31 KB | 6.48 KB  | +import / share / hash / lazy PDF (M3 close)   |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 
