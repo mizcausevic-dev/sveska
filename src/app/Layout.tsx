@@ -44,6 +44,8 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
           <NavLink to="/" end>
             Home
           </NavLink>
+          <NavLink to="/blog">Blog</NavLink>
+          <NavLink to="/changelog">Changelog</NavLink>
           <NavLink to="/glossary">Glossary</NavLink>
           <button
             type="button"

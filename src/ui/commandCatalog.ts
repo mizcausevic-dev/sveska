@@ -17,6 +17,7 @@ import { fallbackSpec, parseImageSpec, specPromptFor, type ImageVariant } from '
 import { downloadImage } from '@/ai/renderImage';
 import { runAI, type AIError } from '@/ai/aiClient';
 import { openCanvasView, useCanvasView } from '@/canvas/canvasViewStore';
+import { toBlogMdx, slugify as contentSlugify } from '@/platform/content';
 
 /**
  * Static catalog of every user-facing action (M3.T3.1).
@@ -168,6 +169,31 @@ export function buildCommandCatalog(): PaletteCommand[] {
           window.location.pathname +
           packShareHash({ title: n.title, body: n.body, mode: n.mode });
         void navigator.clipboard.writeText(url);
+      },
+    },
+    {
+      id: 'note.export.blog',
+      label: 'Export as blog post (MDX with frontmatter)',
+      keywords: 'blog mdx export frontmatter publish post',
+      group: 'note',
+      run: () => {
+        const n = useTabs.getState().activeNote;
+        if (!n) return;
+        const mdx = toBlogMdx({ title: n.title, body: n.body, tags: n.tags });
+        const slug = contentSlugify(n.title) || 'sveska-post';
+        const blob = new Blob([mdx], { type: 'text/markdown;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${slug}.mdx`;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 0);
+        useAIRun.getState().setToast({ kind: 'info', text: `Exported as ${slug}.mdx` });
       },
     },
 

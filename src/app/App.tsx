@@ -2,6 +2,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Layout } from './Layout';
 import { Home } from '@/routes/Home';
 import { Glossary } from '@/routes/Glossary';
+import { Changelog } from '@/routes/Changelog';
+import { BlogIndex } from '@/routes/BlogIndex';
+import { BlogPost } from '@/routes/BlogPost';
 import { ShareTarget } from '@/routes/ShareTarget';
 import { NotFound } from '@/routes/NotFound';
 import { PrefsModalHost } from '@/ui/PrefsModal';
@@ -53,6 +56,9 @@ export function App(): React.JSX.Element {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/glossary" element={<Glossary />} />
+          <Route path="/changelog" element={<Changelog />} />
+          <Route path="/blog" element={<BlogIndex />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/share-target" element={<ShareTarget />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

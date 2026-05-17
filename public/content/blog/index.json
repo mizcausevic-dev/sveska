@@ -1,0 +1,18 @@
+{
+  "posts": [
+    {
+      "slug": "why-local-first",
+      "title": "Why local-first, and what that means for a notepad",
+      "summary": "Sveska is built around the idea that your notes should outlive any company — including the one that built the tool.",
+      "publishedAt": "2026-05-17",
+      "tags": ["philosophy", "local-first"]
+    },
+    {
+      "slug": "shipping-six-milestones",
+      "title": "Six milestones in two days — what a clean spec gets you",
+      "summary": "Sveska went from empty repo to multi-note PWA with AI + canvas in 30 commits. The trick was the CLAUDE.md spec.",
+      "publishedAt": "2026-05-17",
+      "tags": ["process", "engineering"]
+    }
+  ]
+}

@@ -2478,3 +2478,130 @@ input[type='range'] {
   font-size: 16px;
   line-height: 1;
 }
+
+/* T6.2 — content pages (changelog, blog, blog post) */
+.content-page {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.content-error {
+  color: var(--danger);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.content-back {
+  margin: 0 0 18px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.content-back a {
+  color: var(--text-dim);
+}
+.content-back a:hover {
+  color: var(--accent);
+}
+.content-body h1,
+.content-body h2,
+.content-body h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin: 1.4em 0 0.5em;
+}
+.content-body h1 {
+  font-size: 32px;
+  margin-top: 0;
+}
+.content-body h2 {
+  font-size: 22px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.content-body h3 {
+  font-size: 17px;
+}
+.content-body p {
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0 0 1em;
+  color: var(--text);
+}
+.content-body a {
+  color: var(--accent);
+}
+.content-body a:hover {
+  text-decoration: underline;
+}
+.content-body code {
+  font-family: var(--font-mono);
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.95em;
+}
+.content-body ul,
+.content-body ol {
+  padding-left: 1.4em;
+  margin: 0 0 1em;
+}
+.content-body blockquote {
+  border-left: 3px solid var(--border-soft);
+  margin: 1em 0;
+  padding: 0.2em 1em;
+  color: var(--text-dim);
+}
+
+.blog-list {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.blog-entry {
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+}
+.blog-entry h2 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 20px;
+}
+.blog-entry h2 a {
+  color: var(--text);
+  text-decoration: none;
+}
+.blog-entry h2 a:hover {
+  color: var(--accent);
+}
+.blog-summary {
+  margin: 0 0 8px;
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.55;
+}
+.blog-meta {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+.blog-tags {
+  color: var(--text-dim);
+}
+.blog-post-head {
+  margin: 0 0 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.blog-post-head h1 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 1.15;
+}
