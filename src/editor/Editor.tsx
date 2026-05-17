@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { type Note } from '@/notes/db';
-import { getOrCreateActiveNote, migrateLegacyLocalStorage } from '@/notes/noteRepo';
+import { migrateLegacyLocalStorage, listNotes, getNoteById, saveNoteBody } from '@/notes/noteRepo';
+import { useTabs } from '@/notes/tabsStore';
 import { useAutosave, type SaveState } from './useAutosave';
 import { useSnapshots } from './useSnapshots';
 import { SnapshotToolbar } from './SnapshotToolbar';
@@ -13,7 +14,7 @@ import { astFromNote } from '@/markdown/ast';
 import { download, exportAs } from '@/markdown/export';
 import { ClearConfirmHost } from './ClearConfirm';
 import { confirmClear } from './clearConfirmStore';
-import { saveNoteBody } from '@/notes/noteRepo';
+import { TabBar } from './TabBar';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -26,42 +27,59 @@ const STATE_LABEL: Record<SaveState, string> = {
 };
 
 export function Editor(): React.JSX.Element {
-  const [note, setNote] = useState<Note | null>(null);
-  const [body, setBody] = useState('');
-  const [hydrated, setHydrated] = useState(false);
-  const noteId = note?.id ?? null;
+  const activeNote = useTabs((s) => s.activeNote);
+  const ready = useTabs((s) => s.ready);
+  const tabs = useTabs((s) => s.tabs);
+  const activeTabId = useTabs((s) => s.activeTabId);
+  const refreshActiveNote = useTabs((s) => s.refreshActiveNote);
 
+  const [body, setBody] = useState('');
+  const [notesById, setNotesById] = useState<Record<string, Note>>({});
+  const noteId = activeNote?.id ?? null;
+  const hydrated = ready && activeNote !== null;
+
+  // Run the legacy localStorage migration once at mount (no-op if already done).
   useEffect(() => {
-    let cancelled = false;
     void (async () => {
       try {
         await migrateLegacyLocalStorage();
       } catch (err) {
         console.warn('[sveska] legacy localStorage migration skipped:', err);
       }
-      const n = await getOrCreateActiveNote();
-      if (cancelled) return;
-      setNote(n);
-      setBody(n.body);
-      setHydrated(true);
     })();
-    return () => {
-      cancelled = true;
-    };
   }, []);
+
+  // When the active note ID changes (tab switch / new note / restore), reset
+  // the textarea body to that note's persisted body. Watching only the id
+  // is intentional — using `activeNote` would re-stomp the body on every
+  // refetch (e.g. after rename/save), discarding live edits.
+  useEffect(() => {
+    if (activeNote) setBody(activeNote.body);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeNote?.id]);
+
+  // Whenever the tab strip changes, refresh the title lookup so tab chips
+  // show the latest titles after a rename / hydration / new note.
+  useEffect(() => {
+    void (async () => {
+      const all = await listNotes();
+      const map: Record<string, Note> = {};
+      for (const n of all) map[n.id] = n;
+      setNotesById(map);
+    })();
+  }, [tabs.length, activeTabId, activeNote?.title]);
 
   const { state, lastSavedAt } = useAutosave({ noteId, body });
   const snapshots = useSnapshots({ noteId, body });
   const prefs = useEditorPrefs();
 
-  // Register T1.7 commands so KeyBindings can invoke them from the global handler.
+  // Register T1.7 commands with closures over the LATEST note + body.
   useEffect(() => {
     const reg = useEditorCommands.getState().register;
     const unreg = useEditorCommands.getState().unregister;
-
     reg('export.txt', () => {
-      if (!note) return;
-      const ast = astFromNote({ ...note, body });
+      if (!activeNote) return;
+      const ast = astFromNote({ ...activeNote, body });
       download(exportAs(ast, 'txt'));
     });
     reg('copy.body', () => {
@@ -69,13 +87,11 @@ export function Editor(): React.JSX.Element {
       void navigator.clipboard.writeText(body);
     });
     reg('clear.body.request', () => {
-      if (!note) return;
+      if (!activeNote) return;
       void confirmClear().then((ok) => {
         if (!ok) return;
         setBody('');
-        // Flush a save immediately so Dexie reflects the cleared body
-        // even if the user navigates away before the 400ms debounce.
-        void saveNoteBody(note.id, '');
+        void saveNoteBody(activeNote.id, '').then(() => refreshActiveNote());
       });
     });
     return () => {
@@ -83,7 +99,20 @@ export function Editor(): React.JSX.Element {
       unreg('copy.body');
       unreg('clear.body.request');
     };
-  }, [note, body]);
+  }, [activeNote, body, refreshActiveNote]);
+
+  // Refresh notesById after autosave so the tab dirty dot turns off.
+  // Same id-only dep reasoning as above.
+  useEffect(() => {
+    if (state !== 'saved' || !activeNote) return;
+    void (async () => {
+      const fresh = await getNoteById(activeNote.id);
+      if (fresh) {
+        setNotesById((prev) => ({ ...prev, [fresh.id]: fresh }));
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, activeNote?.id]);
 
   function onTextareaKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>): void {
     if (e.key === 'Tab' && !e.metaKey && !e.ctrlKey) {
@@ -92,7 +121,6 @@ export function Editor(): React.JSX.Element {
       const { selectionStart, selectionEnd, value } = el;
       const next = value.slice(0, selectionStart) + '\t' + value.slice(selectionEnd);
       setBody(next);
-      // Restore caret one char after the inserted tab.
       requestAnimationFrame(() => {
         el.selectionStart = el.selectionEnd = selectionStart + 1;
       });
@@ -101,6 +129,7 @@ export function Editor(): React.JSX.Element {
 
   return (
     <section className="editor" aria-busy={!hydrated}>
+      <TabBar tabs={tabs} activeTabId={activeTabId} notesById={notesById} activeBody={body} />
       <div className="editor-actions">
         <SnapshotToolbar snapshots={snapshots} onAfterRestore={setBody} />
         <div className="editor-actions-secondary">
@@ -113,7 +142,7 @@ export function Editor(): React.JSX.Element {
           >
             Stats
           </button>
-          <ExportMenu note={note} body={body} />
+          <ExportMenu note={activeNote} body={body} />
         </div>
       </div>
       <StatsModalHost body={body} />

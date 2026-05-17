@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
 import { Modal } from './Modal';
 import { ThemeSwitch } from './ThemeSwitch';
 import { closePrefs, usePrefsModal } from './prefsModalStore';
 import { useUIStore } from '@/notes/uiStore';
 import { FONT_FAMILY_LABEL, type FontFamily, useEditorPrefs } from '@/notes/editorPrefs';
+import { getRestoreSession, setRestoreSession } from '@/notes/tabsStore';
 
 const FAMILY_OPTIONS: FontFamily[] = ['mono', 'serif', 'ui', 'dyslexic'];
 const TAB_SIZE_OPTIONS = [2, 4, 8] as const;
@@ -12,6 +14,14 @@ export function PrefsModalHost(): React.JSX.Element {
   const prefs = useEditorPrefs();
   const focus = useUIStore((s) => s.focus);
   const toggleFocus = useUIStore((s) => s.toggleFocus);
+  const [restoreSession, setRestoreSessionLocal] = useState(true);
+
+  // Hydrate the restoreSession pref every time the modal opens so the toggle
+  // reflects the latest persisted value (changes elsewhere round-trip cleanly).
+  useEffect(() => {
+    if (!open) return;
+    void getRestoreSession().then(setRestoreSessionLocal);
+  }, [open]);
 
   return (
     <Modal open={open} onClose={closePrefs} title="Preferences" describedById="prefs-hint">
@@ -145,6 +155,31 @@ export function PrefsModalHost(): React.JSX.Element {
 
       <div className="row">
         <div>
+          <div className="label">Open previous session</div>
+          <span className="hint">
+            Restore the same tabs on next launch. Off = start fresh each time.
+          </span>
+        </div>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={restoreSession}
+            onChange={(e) => {
+              const v = e.target.checked;
+              setRestoreSessionLocal(v);
+              void setRestoreSession(v);
+            }}
+            data-testid="pref-restore-session"
+          />
+          <span className="switch-track" aria-hidden="true">
+            <span className="switch-thumb" />
+          </span>
+          <span className="switch-label">{restoreSession ? 'On' : 'Off'}</span>
+        </label>
+      </div>
+
+      <div className="row">
+        <div>
           <div className="label">Reset all editor preferences</div>
           <span className="hint">
             Back to BRAND.md defaults (17 px / 1.70× / mono / spellcheck on / tab 2).
@@ -164,12 +199,9 @@ export function PrefsModalHost(): React.JSX.Element {
         <div>
           <div className="label">Shortcuts</div>
           <span className="hint">
-            <span className="kbd">Ctrl + ,</span> prefs ·{' '}
-            <span className="kbd">Ctrl + Shift + I</span> stats ·{' '}
-            <span className="kbd">Alt + F</span> focus. More land at T1.7.
+            <span className="kbd">Ctrl + ?</span> opens the full cheatsheet.
           </span>
         </div>
-        <span className="kbd">M1.7</span>
       </div>
     </Modal>
   );

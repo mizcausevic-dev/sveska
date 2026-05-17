@@ -16,6 +16,7 @@ export const PREF_KEYS = {
 
 export const PREF_KEYS_UI = {
   focus: 'ui.focus',
+  restoreSession: 'ui.restoreSession',
 } as const;
 
 export const PREF_KEYS_EDITOR = {

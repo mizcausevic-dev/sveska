@@ -118,7 +118,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 
 ### M2 — Multi-note + persistence depth
 
-- ☐ T2.1 Multi-note tabs (named, switchable) + session restore + "open previous session" toggle.
+- ✅ T2.1 Multi-note tabs (named, switchable) + session restore + "open previous session" toggle.
 - ☐ T2.2 Local version history per note + diff compare view.
 - ☐ T2.3 Unsaved-draft recovery (crash/refresh safe).
 - ☐ T2.4 Tags, pinned notes, saved filters, recent-notes rail, favorites bar.

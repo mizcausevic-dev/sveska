@@ -7,12 +7,17 @@
 
 ## In progress
 
-- [ ] **M1 close** — Tag `v0.1.0-m1`, write release notes, ask user to run Lighthouse PWA on `sveska.studio`
-  - All seven M1 tickets shipped (T1.1–T1.7). Editor + autosave + snapshots + export + stats + focus + prefs + shortcuts.
-  - 61 tests, 96.22 KB JS gzip / 180 budget. Push to main on every ticket → CI auto-deploys to sveska.studio.
-  - Tag `v0.1.0-m1` on main, write release notes pinning the M1 scope + Lighthouse score once you've run it.
+- [ ] **T2.2 — Version history per note + diff compare view**
+  - **Files**: extend `src/notes/snapshotRepo.ts` with `getVersionsForNote(id)` (already there as `listSnapshots`) · new `src/lib/diff.ts` (line-level diff, pure) · new `src/editor/VersionsModal.tsx` (left = current body, right = snapshot body, with +/- gutters and restore button) · open via existing Snapshot toolbar "Restore last" → expand to list
+  - **AC**: opens a modal listing all snapshots newest-first with timestamp + first-line preview; clicking one shows side-by-side diff vs current body; Restore button writes the snapshot body back to the active note; diff handles unicode + diacritics
+  - **Don't**: pull a diff library (myers-diff etc) yet — write a simple LCS line diff. Library swap is M3 if Markdown render needs richer diff.
 
 ## Next up (sequential, top-down)
+
+- [ ] T2.3 — Unsaved-draft recovery (crash/refresh safe)
+- [ ] T2.4 — Tags, pinned notes, saved filters, recent-notes rail, favorites bar
+- [ ] T2.5 — Fuzzy search across notes (title + body) + quick-capture inbox · **AC**: 1k notes, search < 50ms
+- [ ] **M2 close** — tag `v0.2.0-m2`, release notes
 
 ## Recently done (this branch only)
 
@@ -24,6 +29,9 @@
 - ✅ T1.5 — Focus mode (`Alt+F`, persists in Dexie, exit chip in corner)
 - ✅ T1.6 — Editor prefs (size / line height / family / spellcheck / tab size / reset; round-trip persisted)
 - ✅ T1.7 — Shortcuts (`Ctrl+S`/`Alt+C`/`Ctrl+Del` w/ confirm/`Ctrl+?` cheatsheet) + editorCommands registry
+- ✅ **M1 close** — tagged [v0.1.0-m1](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.1.0-m1)
+- ✅ Polish (4b3b84f) — missing T1.3–T1.7 CSS rules · SW update banner · loosened alias redirects
+- ✅ T2.1 — Multi-note tabs + session restore + "open previous session" pref + inline rename + dirty dot
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

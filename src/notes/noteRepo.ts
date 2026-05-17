@@ -39,6 +39,42 @@ export async function saveNoteBody(id: string, body: string): Promise<void> {
   await db().notes.update(id, { body, updatedAt: Date.now() });
 }
 
+/** Rename a note (title) + touch updatedAt. M2 tab strip uses this for inline rename. */
+export async function renameNote(id: string, title: string): Promise<void> {
+  await db().notes.update(id, { title: title.trim(), updatedAt: Date.now() });
+}
+
+/** Get a single note by id (or null if missing / soft-deleted). */
+export async function getNoteById(id: string): Promise<Note | null> {
+  const n = await db().notes.get(id);
+  if (!n || n.deletedAt !== null) return null;
+  return n;
+}
+
+/** List all non-deleted notes, newest-first by updatedAt. */
+export async function listNotes(): Promise<Note[]> {
+  const all = await db().notes.orderBy('updatedAt').reverse().toArray();
+  return all.filter((n) => n.deletedAt === null);
+}
+
+/** Create a fresh note. M2 tab strip calls this for "+ new". */
+export async function createNote(
+  seed: Partial<Pick<Note, 'title' | 'body' | 'mode'>> = {},
+): Promise<Note> {
+  const note = NEW_NOTE_DEFAULTS();
+  if (seed.title !== undefined) note.title = seed.title;
+  if (seed.body !== undefined) note.body = seed.body;
+  if (seed.mode !== undefined) note.mode = seed.mode;
+  await db().notes.add(note);
+  return note;
+}
+
+/** Soft-delete a note (sets deletedAt). Snapshots + tab entries pointing at it
+ * stay; the tabsStore is responsible for closing any tab that references it. */
+export async function softDeleteNote(id: string): Promise<void> {
+  await db().notes.update(id, { deletedAt: Date.now() });
+}
+
 /** Migrate any legacy localStorage["note"] into a first note, then clear the key. */
 export async function migrateLegacyLocalStorage(): Promise<void> {
   if (typeof localStorage === 'undefined') return;
