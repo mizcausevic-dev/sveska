@@ -20,7 +20,7 @@ you opt in, no cloud dependency. The reference behaviour is `notepad.js.org` (Am
 Merchant, MIT). Sveska re-implements it as a typed, modular PWA with a platform surface
 from day one.
 
-## Features (live as of M4)
+## Features (live as of M5)
 
 | Layer       | What's shipped                                                                                                  |
 | ----------- | --------------------------------------------------------------------------------------------------------------- |
@@ -49,7 +49,7 @@ from day one.
 | Markdown    | `markdown-it` + DOMPurify                                                                       |
 | PWA         | `vite-plugin-pwa` (Workbox, `registerType: 'autoUpdate'`)                                       |
 | Router      | `react-router-dom` v6                                                                           |
-| Tests       | Vitest + Testing Library + `fake-indexeddb` (217 tests, 100% pass)                              |
+| Tests       | Vitest + Testing Library + `fake-indexeddb` (224 tests, 100% pass)                              |
 | Lint/format | ESLint 9 (flat config, typed) + Prettier 3                                                      |
 | Pre-commit  | Husky 9 + lint-staged                                                                           |
 | Edge        | **Netlify Edge Functions** (Deno) — same-origin AI proxy at `/api/ai`                           |
@@ -62,7 +62,7 @@ pnpm install
 pnpm dev            # http://localhost:5173
 pnpm build          # builds, generates sitemap, runs key-leak + bundle-budget gates
 pnpm preview        # serves the built bundle
-pnpm test           # Vitest + Testing Library (217 tests)
+pnpm test           # Vitest + Testing Library (224 tests)
 pnpm typecheck
 pnpm lint
 ```
