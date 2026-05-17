@@ -45,6 +45,7 @@
 - **Markdown bundle = +56KB gzip (T3.2)**: markdown-it (~45KB) + dompurify (~11KB) live in the main bundle. Total JS gzip jumped 104→160 KB; still under the 180 KB budget but tight. If M3 closes near budget, lazy-load `@/markdown/render` behind `import()` so plain-text users don't pay for the parser.
 - **check-bundle counts only initial-load chunks (T3.7)**: jsPDF is ~125KB gzip (plus html2canvas ~47KB + es helpers ~50KB = 223KB total). `scripts/check-bundle.mjs` parses dist/index.html and only sums assets it references, so `import('jspdf')` chunks don't count against the 180KB budget. Apply the same pattern for any future heavy vendor (Excalidraw at M5, anything M4 brings).
 - **Edge functions are NOT lint-checked by SPA tsconfig (T4.1)**: `netlify/edge-functions/` uses Deno (imports from `https://edge.netlify.com`) and is bundled by Netlify, not Vite. Added to ESLint ignores; type-checking happens via `netlify deploy --build` / `netlify dev`. Review function files in-PR carefully since the lint gate doesn't cover them.
+- **check-no-keys catches env-var NAMES too (T4.2)**: the gate's `/\bANTHROPIC_API_KEY\b/` regex flags any occurrence of the literal name, not just shaped values. Burned 5 min when the slash AI's "AI offline — set `ANTHROPIC_API_KEY` in env" toast made the build fail. Fix: keep client-facing copy generic ("see src/ai/README.md") and let the README hold the env-var instructions.
 
 ## File map (where things live)
 
@@ -77,6 +78,7 @@
 | T3.6 (2026-05-17)    | 187   | 165.84 KB | 6.48 KB  | +paper / timer / word-goal / find&replace      |
 | T3.7 (2026-05-17)    | 195   | 167.31 KB | 6.48 KB  | +import / share / hash / lazy PDF (M3 close)   |
 | T4.1 (2026-05-17)    | 201   | 167.31 KB | 6.48 KB  | +edge AI proxy + SSE client (no client growth) |
+| T4.2 (2026-05-17)    | 209   | 169.52 KB | 6.68 KB  | +slash AI commands + result pane + toast       |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 

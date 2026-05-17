@@ -7,10 +7,10 @@
 
 ## In progress
 
-- [ ] **T4.2 — Slash AI commands (`/improve`, `/summarize`, `/continue`, `/rewrite`, copy-as-linkedin)**
-  - **Why**: with the T4.1 proxy live, surface user-facing AI flows. Each command runs a curated system prompt against the active note's body and streams the result (token-by-token) into a side pane or replaces a selection in place.
-  - **AC**: typing `/` in the editor surfaces an `ai` group in the slash popover; selecting `/improve` (and friends) streams tokens visibly; unconfigured proxy degrades to "AI offline" toast instead of crashing; "Copy as LinkedIn post" sits in the command palette + writes the result to the clipboard.
-  - **Don't**: bundle a prompts-edit UI in this ticket — the catalog is hard-coded; user-editable prompts land in M6 if scope allows.
+- [ ] **T4.3 — Notes → image (Concise / Detailed visualization render)**
+  - **Why**: visual export. The user picks Concise (one summary card) or Detailed (multi-section poster); the AI proxy returns a structured description; we render it on a `<canvas>` and offer download. Pairs with the T3.7 .pdf export for share-friendly outputs.
+  - **AC**: a palette command "Render as image (concise/detailed)" runs an AI call with a prompt that asks for a structured spec (title / sub / bullets / accent), renders it server-free on a `<canvas>` at 1200×630 (OG-card friendly), and triggers a .png download. Zero key in client bundle (existing CI gate enforces).
+  - **Don't**: call an image-generation model. The visual is rendered locally from a structured spec — keeps the cost flat and the output predictable.
 
 ## Next up (sequential, top-down)
 
@@ -49,6 +49,7 @@
 - ✅ **M3 ship** — tagged [v0.3.0-m3](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.3.0-m3), GitHub release with per-ticket bullets
 - ✅ M4 edge-host decision — **Netlify Edge Functions** (over CF Workers / Vercel Edge). Same origin, single deploy pipeline.
 - ✅ T4.1 — `netlify/edge-functions/ai.ts` streaming Anthropic `/v1/messages` proxy (per-IP token bucket, same-origin guard, schema gate, key in `Deno.env`) · `netlify.toml` `[[edge_functions]]` route at `/api/ai` · `src/ai/aiClient.ts` SSE consumer (yields text deltas, maps to `AIError` kinds) · threat model + secret docs in `src/ai/README.md` · 6 unit tests
+- ✅ T4.2 — `src/ai/prompts.ts` 5-command catalog (improve / summarize / continue / rewrite / linkedin) · `aiRunStore` single-concurrent-run with abort + toast on error · `AIResultPane` split-view stream with Apply / Copy / Discard · `AIToast` 4s auto-dismiss · `ai`-group entries in command palette + slash popover · `copyOnComplete` writes the result to clipboard (used by LinkedIn) · 503 degrades to "AI offline — see README" toast (never leaks env-var name to the SPA, key-leak gate still passes) · 8 unit tests
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

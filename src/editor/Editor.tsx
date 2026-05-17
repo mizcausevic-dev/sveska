@@ -34,6 +34,7 @@ import {
   useWritingTimer,
 } from './writingTimerStore';
 import { FindReplaceBar } from './FindReplace';
+import { AIResultPane } from '@/ai/AIResultPane';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -299,6 +300,14 @@ export function Editor(): React.JSX.Element {
         />
         {activeNote?.mode === 'md' && previewOn && <PreviewPane body={body} />}
         {activeNote?.mode === 'checklist' && <ChecklistPane body={body} onBodyChange={setBody} />}
+        <AIResultPane
+          onApply={(next) => {
+            setBody(next);
+            if (activeNote) {
+              void saveNoteBody(activeNote.id, next).then(() => refreshActiveNote());
+            }
+          }}
+        />
       </div>
       <SaveIndicator
         state={state}

@@ -2261,3 +2261,97 @@ input[type='range'] {
   border-color: color-mix(in oklab, var(--ok) 50%, var(--border-soft));
   background: color-mix(in oklab, var(--ok) 8%, transparent);
 }
+
+/* T4.2 — AI result pane (right-side split) */
+.editor-input-wrap:has(.ai-pane) {
+  gap: 8px;
+}
+.editor-input-wrap:has(.ai-pane) > .editor-input {
+  flex: 1 1 50%;
+  width: 50%;
+}
+.ai-pane {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid color-mix(in oklab, var(--ai) 35%, var(--border-soft));
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.ai-pane-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  background: color-mix(in oklab, var(--ai) 8%, transparent);
+}
+.ai-pane-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.ai-pane-status {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.ai-pane-spacer {
+  flex: 1;
+}
+.ai-pane-body {
+  flex: 1;
+  margin: 0;
+  padding: 16px 18px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text);
+}
+
+/* T4.2 — AI toast (bottom-right, auto-dismiss) */
+.ai-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 60;
+  max-width: 360px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.ai-toast--warn {
+  border-color: color-mix(in oklab, var(--accent) 50%, var(--border-soft));
+  background: color-mix(in oklab, var(--accent) 10%, var(--surface));
+}
+.ai-toast--error {
+  border-color: color-mix(in oklab, var(--danger) 50%, var(--border-soft));
+  background: color-mix(in oklab, var(--danger) 10%, var(--surface));
+}
+.ai-toast-text {
+  flex: 1;
+  min-width: 0;
+}
+.ai-toast-close {
+  background: transparent;
+  border: 0;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}

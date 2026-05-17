@@ -11,6 +11,8 @@ import { useNotesRail } from '@/notes/notesRailStore';
 import { useTabs } from '@/notes/tabsStore';
 import { setNotePinned } from '@/notes/noteRepo';
 import { packShareHash } from '@/lib/hashShare';
+import { AI_COMMANDS } from '@/ai/prompts';
+import { useAIRun } from '@/ai/aiRunStore';
 
 /**
  * Static catalog of every user-facing action (M3.T3.1).
@@ -30,7 +32,7 @@ export interface PaletteCommand {
   label: string;
   keywords?: string;
   shortcut?: string;
-  group: 'editor' | 'view' | 'navigate' | 'note' | 'app';
+  group: 'editor' | 'view' | 'navigate' | 'note' | 'app' | 'ai';
   run: () => void;
 }
 
@@ -179,5 +181,20 @@ export function buildCommandCatalog(): PaletteCommand[] {
       group: 'app',
       run: openShortcuts,
     },
+
+    // ─── ai (M4.T4.2) — each entry dispatches a run against active note body ──
+    ...AI_COMMANDS.map(
+      (cmd): PaletteCommand => ({
+        id: cmd.id,
+        label: cmd.label,
+        keywords: `ai ${cmd.trigger} ${cmd.hint}`,
+        group: 'ai',
+        run: () => {
+          const n = useTabs.getState().activeNote;
+          if (!n) return;
+          void useAIRun.getState().start(cmd.id, n.body);
+        },
+      }),
+    ),
   ];
 }

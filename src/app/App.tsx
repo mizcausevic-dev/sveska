@@ -10,6 +10,7 @@ import { SearchModalHost } from '@/ui/SearchModal';
 import { InboxModalHost } from '@/ui/InboxModal';
 import { CommandPaletteHost } from '@/ui/CommandPalette';
 import { TemplatesModalHost } from '@/ui/TemplatesModal';
+import { AIToast } from '@/ai/AIToast';
 import { useEffect } from 'react';
 import { seedBuiltinTemplates } from '@/notes/templatesRepo';
 import { seedBuiltinSnippets } from '@/notes/snippetsRepo';
@@ -63,6 +64,7 @@ export function App(): React.JSX.Element {
       <InboxModalHost />
       <CommandPaletteHost />
       <TemplatesModalHost />
+      <AIToast />
       <UpdateBanner />
       <ConsentBar />
     </BrowserRouter>
