@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /share-target
 
-Sitemap: https://sveska.studio/sitemap.xml
+Sitemap: https://sveska.pages.dev/sitemap.xml

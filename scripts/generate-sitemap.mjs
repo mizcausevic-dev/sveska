@@ -4,10 +4,10 @@
 import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-// Canonical = sveska.studio (set in Netlify on 2026-05-16). Aliases like
-// sveska.netlify.app / sveska.kineticgain.com / notepad.kineticgain.com 301
-// to here via netlify.toml redirects.
-const BASE = 'https://sveska.studio';
+// Canonical = sveska.pages.dev (effective post-Netlify→CF Pages migration,
+// 2026-05-17). The branded sveska.studio is reserved for future custom-domain
+// attach; it currently 301s here via Hostinger registrar-level redirect.
+const BASE = 'https://sveska.pages.dev';
 const TODAY = new Date().toISOString().slice(0, 10);
 
 const routes = [
