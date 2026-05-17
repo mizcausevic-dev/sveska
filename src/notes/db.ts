@@ -94,7 +94,16 @@ export function db(): SveskaDB {
   return _db;
 }
 
-// Test-only: reset the singleton (fake-indexeddb resets between tests via the setup file).
-export function _resetDbForTests(): void {
-  _db = null;
+// Test-only: close the connection, drop the database, and null the singleton.
+// Awaits the delete so the next test boots against a guaranteed-empty IDB.
+export async function _resetDbForTests(): Promise<void> {
+  if (_db) {
+    _db.close();
+    _db = null;
+  }
+  try {
+    await Dexie.delete('sveska');
+  } catch {
+    // ignore — db may not exist yet
+  }
 }

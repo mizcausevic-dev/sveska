@@ -6,11 +6,11 @@ import { bootstrapTheme, useThemeStore } from '@/notes/themeStore';
 import { getPref, PREF_KEYS } from '@/notes/prefs';
 
 describe('M0 smoke', () => {
-  it('renders the brand wordmark and lede on /', async () => {
+  it('renders the brand wordmark and the editor on /', async () => {
     await bootstrapTheme();
     render(<App />);
     expect(screen.getByLabelText('Sveska home')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/Prazna sveska/i);
+    await waitFor(() => expect(screen.getByTestId('editor-textarea')).toBeInTheDocument());
   });
 
   it('opens the prefs modal via Ctrl+,', async () => {
