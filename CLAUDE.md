@@ -122,7 +122,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 - ✅ T2.2 Local version history per note + diff compare view.
 - ✅ T2.3 Unsaved-draft recovery (crash/refresh safe).
 - ✅ T2.4 Tags, pinned notes, saved filters, recent-notes rail, favorites bar.
-- ☐ T2.5 Fuzzy search across notes (title+body) + quick-capture inbox. **AC:** 1k notes, search < 50ms.
+- ✅ T2.5 Fuzzy search across notes (title+body) + quick-capture inbox. **AC:** 1k notes, search < 50ms.
 
 ### M3 — Power UX
 

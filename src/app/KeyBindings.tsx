@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { openPrefs } from '@/ui/prefsModalStore';
 import { openStats } from '@/editor/statsModalStore';
 import { openShortcuts } from '@/ui/shortcutsModalStore';
+import { openSearch } from '@/ui/searchModalStore';
+import { openInbox } from '@/ui/inboxModalStore';
 import { useEditorCommands } from '@/editor/editorCommands';
 import { useUIStore } from '@/notes/uiStore';
 
@@ -30,6 +32,16 @@ export function KeyBindings(): null {
       if (ctrlish && !e.shiftKey && !e.altKey && e.key === ',') {
         e.preventDefault();
         openPrefs();
+        return;
+      }
+      if (ctrlish && !e.shiftKey && !e.altKey && (e.key === 'P' || e.key === 'p')) {
+        e.preventDefault();
+        openSearch();
+        return;
+      }
+      if (ctrlish && e.shiftKey && !e.altKey && (e.key === 'K' || e.key === 'k')) {
+        e.preventDefault();
+        openInbox();
         return;
       }
       if (ctrlish && e.shiftKey && (e.key === 'I' || e.key === 'i')) {

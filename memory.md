@@ -64,6 +64,7 @@
 | T2.2 (2026-05-17)    | 85    | 99.83 KB  | 4.28 KB  | +diff + versions modal          |
 | T2.3 (2026-05-17)    | 95    | 100.23 KB | 4.37 KB  | +draft shadow + recovery banner |
 | T2.4 (2026-05-17)    | 107   | 101.66 KB | 4.94 KB  | +tags + pins + notes rail       |
+| T2.5 (2026-05-17)    | 126   | 103.46 KB | 5.21 KB  | +fuzzy search + inbox modal     |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 

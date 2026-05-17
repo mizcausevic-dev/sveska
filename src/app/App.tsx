@@ -6,6 +6,8 @@ import { ShareTarget } from '@/routes/ShareTarget';
 import { NotFound } from '@/routes/NotFound';
 import { PrefsModalHost } from '@/ui/PrefsModal';
 import { ShortcutsModalHost } from '@/ui/ShortcutsModal';
+import { SearchModalHost } from '@/ui/SearchModal';
+import { InboxModalHost } from '@/ui/InboxModal';
 import { KeyBindings } from './KeyBindings';
 import { UpdateBanner } from './UpdateBanner';
 import { ConsentBar } from '@/platform/ConsentBar';
@@ -24,6 +26,8 @@ export function App(): React.JSX.Element {
       <KeyBindings />
       <PrefsModalHost />
       <ShortcutsModalHost />
+      <SearchModalHost />
+      <InboxModalHost />
       <UpdateBanner />
       <ConsentBar />
     </BrowserRouter>

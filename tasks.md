@@ -7,14 +7,13 @@
 
 ## In progress
 
-- [ ] **T2.5 — Fuzzy search across notes (title + body) + quick-capture inbox**
-  - **Why**: scale beyond 5–10 notes — need fast multi-field search. Inbox is a one-line quick-capture (Ctrl+Shift+K-ish) that drops a row into the `inbox` Dexie table without leaving the editor.
-  - **AC**: `Ctrl+P` opens a fuzzy modal that searches title + body of all non-deleted notes; under 50ms for 1k notes; Enter opens the selected note in a tab. Inbox modal lives alongside; a small badge in the rail shows unprocessed count.
-  - **Don't**: pull `fuse.js` if a hand-rolled scorer can hit 50ms. The corpus is small (1k notes × ~5KB bodies = 5MB max). Bigram + substring scoring is enough.
+- [ ] **M2 close — tag `v0.2.0-m2` + release notes**
+  - **Why**: M2 ticket set (T2.1–T2.5) is shipped. Tagging marks the rollup so M3 work can start with a clean checkpoint.
+  - **AC**: tag pushed to GitHub, release notes (per-ticket bullets), CLAUDE.md M2 block reflected.
 
 ## Next up (sequential, top-down)
 
-- [ ] **M2 close** — tag `v0.2.0-m2`, release notes
+- [ ] **M3** — Command palette (`Ctrl+K`) · per-note Markdown mode · checklist mode · templates + snippets · typewriter + sounds · paper textures + writing timer + word-count goal + find&replace · import / share-target / PDF
 
 ## Recently done (this branch only)
 
@@ -32,6 +31,7 @@
 - ✅ T2.2 — Version history modal · pure LCS line diff · side-by-side panes · restore writes back to active note · empty-state · 16 unit tests
 - ✅ T2.3 — Crash-safe draft shadow per note (`prefs.draft.<noteId>`) · written on every keystroke · cleared on debounced save · recovery banner with Keep / Discard on stale shadow · 10 unit tests
 - ✅ T2.4 — Per-note tag chips · pin toggle · NotesRail sidebar with Pinned/Recent sections · saved-filter dropdown (All/Pinned/Untagged/#tag) · collapsible rail · 12 unit tests + browser preview verified
+- ✅ T2.5 — Hand-rolled fuzzy scorer (1k notes <50ms) · Ctrl+P SearchModal (title+body fuzzy, ↑↓ Enter) · Inbox repo + Ctrl+Shift+K InboxModal (capture, promote-to-note, mark processed) · rail badge for unprocessed count · 19 unit tests + browser preview verified
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

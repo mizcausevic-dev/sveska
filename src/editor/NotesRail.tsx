@@ -3,6 +3,9 @@ import { type Note } from '@/notes/db';
 import { listNotes } from '@/notes/noteRepo';
 import { useTabs } from '@/notes/tabsStore';
 import { useNotesRail, type RailFilter } from '@/notes/notesRailStore';
+import { countUnprocessed } from '@/notes/inboxRepo';
+import { openInbox, useInboxModal } from '@/ui/inboxModalStore';
+import { openSearch } from '@/ui/searchModalStore';
 
 const RECENT_LIMIT = 8;
 
@@ -28,14 +31,25 @@ export function NotesRail(): React.JSX.Element {
   const openNote = useTabs((s) => s.openNote);
   const tabs = useTabs((s) => s.tabs);
   const activeNote = useTabs((s) => s.activeNote);
+  const inboxOpen = useInboxModal((s) => s.open);
 
   const [notes, setNotes] = useState<Note[]>([]);
+  const [inboxCount, setInboxCount] = useState(0);
 
   useEffect(() => {
     void (async () => {
       setNotes(await listNotes());
     })();
   }, [tabs.length, activeNote?.id, activeNote?.title, activeNote?.pinned, activeNote?.tags]);
+
+  // Refresh the inbox badge whenever the inbox modal closes (most likely
+  // moment a row was processed/added) or on first mount.
+  useEffect(() => {
+    if (inboxOpen) return;
+    void (async () => {
+      setInboxCount(await countUnprocessed());
+    })();
+  }, [inboxOpen]);
 
   const visible = useMemo(() => applyFilter(notes, filter), [notes, filter]);
   const pinned = visible.filter((n) => n.pinned === 1);
@@ -80,6 +94,31 @@ export function NotesRail(): React.JSX.Element {
           «
         </button>
       </header>
+      <div className="rail-actions">
+        <button
+          type="button"
+          className="snap-btn rail-action"
+          onClick={openSearch}
+          title="Search notes (Ctrl + P)"
+          data-testid="rail-search"
+        >
+          Search · <span className="kbd">Ctrl+P</span>
+        </button>
+        <button
+          type="button"
+          className="snap-btn rail-action"
+          onClick={openInbox}
+          title="Open inbox (Ctrl + Shift + K)"
+          data-testid="rail-inbox"
+        >
+          Inbox
+          {inboxCount > 0 && (
+            <span className="rail-badge" data-testid="inbox-badge">
+              {inboxCount}
+            </span>
+          )}
+        </button>
+      </div>
       <div className="rail-filter">
         <label htmlFor="rail-filter-select" className="visually-hidden">
           Filter notes
