@@ -14,14 +14,14 @@
 
 Set in the Cloudflare dashboard:
 
-> **CF Pages → Project → Settings → Environment variables → Production →
-> Add variable** · Name: `ANTHROPIC_API_KEY` · Type: **Secret** (encrypted)
+> **CF Pages → sveska → Settings → Variables and Secrets → Add** ·
+> Name: `ANTHROPIC_API_KEY` · Type: **Secret** (encrypted) ·
+> Environment: **Production**
 
-Or via wrangler (after first deploy creates the project):
-
-```
-wrangler pages secret put ANTHROPIC_API_KEY --project-name=sveska
-```
+If you'd rather use the CLI, `pnpm dlx wrangler@4 pages secret put
+ANTHROPIC_API_KEY --project-name=sveska` works without installing
+wrangler globally. (We dropped it as a dev dep — its Node-≥22
+engine requirement blocked the CF Pages build runner.)
 
 Without the secret, the proxy returns 503 and the client throws
 `AIError('unconfigured')` — slash AI surfaces (T4.2) catch this and show

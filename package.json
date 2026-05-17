@@ -21,8 +21,6 @@
     "test:e2e": "node scripts/e2e.mjs",
     "check:keys": "node scripts/check-no-keys.mjs",
     "check:bundle": "node scripts/check-bundle.mjs",
-    "deploy": "wrangler pages deploy dist --project-name=sveska --branch=main",
-    "preview:cf": "wrangler pages dev dist --port 8788",
     "prepare": "husky"
   },
   "dependencies": {
@@ -68,8 +66,7 @@
     "vite-plugin-pwa": "^0.21.1",
     "vitest": "^2.1.8",
     "vitest-axe": "0.1.0",
-    "workbox-window": "^7.4.1",
-    "wrangler": "^4.92.0"
+    "workbox-window": "^7.4.1"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs,cjs}": [

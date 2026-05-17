@@ -1,26 +1,26 @@
-name: Deploy to Cloudflare Pages
+name: CI
+
+# Pre-merge gate for the SPA. Deploys are handled by Cloudflare Pages' own
+# git integration — every push to `main` triggers a Pages build that runs
+# `pnpm install --frozen-lockfile && pnpm build` and ships the result.
+# This workflow exists so PRs get a status check from the same gates
+# (typecheck / lint / test) that the SPA's `pnpm build` runs internally,
+# plus the unit-test suite which the deploy build does NOT run.
 
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
-
-concurrency:
-  # Serialize deploys — never let two builds race for the same Pages project.
-  group: cf-pages-prod
-  cancel-in-progress: false
 
 permissions:
   contents: read
-  deployments: write
 
 jobs:
-  deploy:
+  gate:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -46,13 +46,3 @@ jobs:
 
       - name: Build (runs key-leak + bundle-budget gates)
         run: pnpm build
-
-      # Deploy via wrangler — secrets-driven, no `npx -y` surprises.
-      # The CF project must already exist (one-time `wrangler pages project
-      # create sveska --production-branch main`).
-      - name: Deploy to Cloudflare Pages (production)
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=sveska --branch=main --commit-hash=${{ github.sha }} --commit-message="GHA · ${{ github.sha }}"
