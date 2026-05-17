@@ -11,6 +11,7 @@ import { useShortcutsModal } from '@/ui/shortcutsModalStore';
 import { useUIStore } from '@/notes/uiStore';
 import { DEFAULT_EDITOR_PREFS, useEditorPrefs } from '@/notes/editorPrefs';
 import { useTabs } from '@/notes/tabsStore';
+import { useVersionsModal } from '@/editor/versionsModalStore';
 
 // Pre-bootstrap the tabs store so every test starts with a hydrated note +
 // one open tab — matches first-boot behavior. Without this, tests would race
@@ -28,6 +29,7 @@ afterEach(async () => {
   usePrefsModal.setState({ open: false });
   useStatsModal.setState({ open: false });
   useShortcutsModal.setState({ open: false });
+  useVersionsModal.setState({ open: false });
   useUIStore.setState({ focus: false });
   useEditorPrefs.setState(DEFAULT_EDITOR_PREFS);
   useTabs.setState({ tabs: [], activeTabId: null, activeNote: null, ready: false });

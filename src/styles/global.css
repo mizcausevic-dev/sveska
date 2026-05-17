@@ -1033,3 +1033,208 @@ input[type='range'] {
   background: var(--raised);
   color: var(--accent);
 }
+
+/* ──────────────────────────────────────────────────────────
+ * M2.T2.2 — Version history modal + side-by-side diff
+ * Visual lineage: docs/design-mocks/ai-flows.jsx <DiffPanel>.
+ * ────────────────────────────────────────────────────────── */
+.versions-empty {
+  padding: 8px 0;
+  color: var(--text-dim);
+}
+
+.versions {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 14px;
+  max-height: 60vh;
+  min-height: 320px;
+}
+
+.versions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  border-right: 1px solid var(--border-soft);
+  padding-right: 10px;
+  scrollbar-width: thin;
+}
+
+.versions-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-radius: var(--r-sm);
+  padding: 8px 10px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-dim);
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.versions-item:hover {
+  background: var(--raised);
+  color: var(--text);
+}
+
+.versions-item--active {
+  background: color-mix(in oklab, var(--accent) 14%, transparent);
+  color: var(--text);
+}
+
+.versions-item--active .versions-stamp {
+  color: var(--accent);
+}
+
+.versions-stamp {
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.versions-preview {
+  font-size: 13px;
+  color: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.versions-diff {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.versions-diff-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0 10px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.versions-diff-head .dim {
+  color: var(--text-dim);
+}
+
+.versions-diff-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  overflow: auto;
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  margin-top: 10px;
+  padding: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  min-height: 220px;
+  max-height: 50vh;
+}
+
+.versions-diff-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.versions-diff-label {
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 0 0 6px;
+  padding: 0 6px;
+}
+
+.diff-line {
+  display: grid;
+  grid-template-columns: 32px 14px 1fr;
+  column-gap: 4px;
+  padding: 1px 6px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: 2px;
+}
+
+.diff-gutter {
+  color: var(--text-dim);
+  opacity: 0.55;
+  text-align: right;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  font-size: 10.5px;
+  padding-top: 2px;
+}
+
+.diff-marker {
+  color: var(--text-dim);
+  opacity: 0.7;
+  text-align: center;
+  user-select: none;
+}
+
+.diff-text {
+  color: var(--text);
+  min-width: 0;
+}
+
+.diff-line--eq {
+  background: transparent;
+}
+
+.diff-line--del {
+  background: color-mix(in oklab, var(--danger) 12%, transparent);
+}
+.diff-line--del .diff-marker {
+  color: var(--danger);
+  opacity: 1;
+}
+
+.diff-line--add {
+  background: color-mix(in oklab, var(--ok) 12%, transparent);
+}
+.diff-line--add .diff-marker {
+  color: var(--ok);
+  opacity: 1;
+}
+
+.diff-line--gap {
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0,
+    transparent 6px,
+    color-mix(in oklab, var(--border-soft) 50%, transparent) 6px,
+    color-mix(in oklab, var(--border-soft) 50%, transparent) 7px
+  );
+  opacity: 0.5;
+}
+
+@media (max-width: 720px) {
+  .versions {
+    grid-template-columns: 1fr;
+    max-height: none;
+  }
+  .versions-list {
+    border-right: 0;
+    padding-right: 0;
+    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 10px;
+    max-height: 180px;
+  }
+  .versions-diff-body {
+    grid-template-columns: 1fr;
+  }
+}

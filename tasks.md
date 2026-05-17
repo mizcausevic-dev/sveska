@@ -7,14 +7,13 @@
 
 ## In progress
 
-- [ ] **T2.2 — Version history per note + diff compare view**
-  - **Files**: extend `src/notes/snapshotRepo.ts` with `getVersionsForNote(id)` (already there as `listSnapshots`) · new `src/lib/diff.ts` (line-level diff, pure) · new `src/editor/VersionsModal.tsx` (left = current body, right = snapshot body, with +/- gutters and restore button) · open via existing Snapshot toolbar "Restore last" → expand to list
-  - **AC**: opens a modal listing all snapshots newest-first with timestamp + first-line preview; clicking one shows side-by-side diff vs current body; Restore button writes the snapshot body back to the active note; diff handles unicode + diacritics
-  - **Don't**: pull a diff library (myers-diff etc) yet — write a simple LCS line diff. Library swap is M3 if Markdown render needs richer diff.
+- [ ] **T2.3 — Unsaved-draft recovery (crash/refresh safe)**
+  - **Why**: autosave is debounced 400ms so a crash / hard refresh during the window loses keystrokes. Recovery = a tiny crash-safe shadow in IndexedDB written synchronously on every input, replayed on next boot if newer than the saved note body.
+  - **AC**: typing → close tab → reopen → unsaved tail is restored to the textarea with a non-blocking "recovered draft" toast offering Keep / Discard.
+  - **Don't**: build a separate Dexie table — store the shadow in `prefs` (key = `draft.<noteId>`) so it shares the existing connection + cleanup path.
 
 ## Next up (sequential, top-down)
 
-- [ ] T2.3 — Unsaved-draft recovery (crash/refresh safe)
 - [ ] T2.4 — Tags, pinned notes, saved filters, recent-notes rail, favorites bar
 - [ ] T2.5 — Fuzzy search across notes (title + body) + quick-capture inbox · **AC**: 1k notes, search < 50ms
 - [ ] **M2 close** — tag `v0.2.0-m2`, release notes
@@ -32,6 +31,7 @@
 - ✅ **M1 close** — tagged [v0.1.0-m1](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.1.0-m1)
 - ✅ Polish (4b3b84f) — missing T1.3–T1.7 CSS rules · SW update banner · loosened alias redirects
 - ✅ T2.1 — Multi-note tabs + session restore + "open previous session" pref + inline rename + dirty dot
+- ✅ T2.2 — Version history modal · pure LCS line diff · side-by-side panes · restore writes back to active note · empty-state · 16 unit tests
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

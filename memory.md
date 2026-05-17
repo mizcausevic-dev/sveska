@@ -40,6 +40,7 @@
 - **NS delegation drift (2026-05-17)**: `sveska.studio` started delegating to `dns1.p07.nsone.net` / `dns2.p07.nsone.net` (NS1 / Netlify-DNS nameservers) — but **no zone existed there**, so public resolvers got `SERVFAIL` and browsers showed `DNS_PROBE_FINISHED_NXDOMAIN`. The Hostinger zone records were intact. Fix: `PUT /api/domains/v1/portfolio/{domain}/nameservers` setting `ns1=athena.dns-parking.com, ns2=apollo.dns-parking.com`. Likely cause: Netlify dashboard's "Use Netlify DNS" or a similar one-click that flips the registered NS at the registrar level. **If you ever see SERVFAIL on a Hostinger-registered domain, check `gh api … /portfolio/{domain}` for the `name_servers` field first.**
 - **Workbox `autoUpdate` doesn't always pick up new SW within a session**: after shipping multiple builds, some users get stuck on a stale precache. M1.7 polish added an `<UpdateBanner />` that polls `registration.update()` every 60s and surfaces a "Reload" pill when `needRefresh` flips.
 - **Don't force-redirect the alias hostnames**: keeping `sveska.netlify.app` (and `*.kineticgain.com`) reachable means we have a live backup when the canonical breaks (e.g. NS drift above). Canonical is enforced via `<link rel="canonical">` in `index.html`, not via 301. Only `www.sveska.studio` is force-redirected (apex preference).
+- **Every modal store must be reset in `test-setup.ts` afterEach**: Zustand singletons survive `cleanup()`. A modal left `open=true` by one test will be `open=true` when the next test mounts `<App />`, and its open-effect will fire against the _previous_ test's bootstrapped note id — silently loading the wrong data. The user-click that should open it is then a no-op (deps unchanged). Add a `useFooModal.setState({ open: false })` line for every new `*ModalStore` you ship.
 
 ## File map (where things live)
 
@@ -52,14 +53,15 @@
 
 ## Performance snapshot (rolling)
 
-| Date                 | Tests | JS gzip  | CSS gzip | Notes         |
-| -------------------- | ----- | -------- | -------- | ------------- |
-| M0 ship (2026-05-16) | 3     | 89.81 KB | 2.53 KB  | scaffold only |
-| T1.1 (2026-05-16)    | 8     | 90.67 KB | 2.81 KB  | +editor       |
-| T1.2 (2026-05-16)    | 17    | 91.29 KB | 3.15 KB  | +snapshots    |
-| T1.3 (2026-05-17)    | 28    | 93.21 KB | 3.15 KB  | +export       |
-| T1.4 (2026-05-17)    | 40    | 93.84 KB | 3.15 KB  | +stats modal  |
-| T1.5 (2026-05-17)    | 45    | 94.10 KB | 3.15 KB  | +focus mode   |
+| Date                 | Tests | JS gzip  | CSS gzip | Notes                  |
+| -------------------- | ----- | -------- | -------- | ---------------------- |
+| M0 ship (2026-05-16) | 3     | 89.81 KB | 2.53 KB  | scaffold only          |
+| T1.1 (2026-05-16)    | 8     | 90.67 KB | 2.81 KB  | +editor                |
+| T1.2 (2026-05-16)    | 17    | 91.29 KB | 3.15 KB  | +snapshots             |
+| T1.3 (2026-05-17)    | 28    | 93.21 KB | 3.15 KB  | +export                |
+| T1.4 (2026-05-17)    | 40    | 93.84 KB | 3.15 KB  | +stats modal           |
+| T1.5 (2026-05-17)    | 45    | 94.10 KB | 3.15 KB  | +focus mode            |
+| T2.2 (2026-05-17)    | 85    | 99.83 KB | 4.28 KB  | +diff + versions modal |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 

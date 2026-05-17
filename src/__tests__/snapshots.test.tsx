@@ -78,7 +78,7 @@ describe('M1.T1.2 — snapshot UI integration', () => {
     const dot = screen.getByTestId('snap-dot');
     expect(dot).toHaveClass('snap-dot--idle');
     expect(screen.getByTestId('snap-save')).toBeDisabled();
-    expect(screen.getByTestId('snap-restore')).toBeDisabled();
+    expect(screen.getByTestId('snap-history')).toBeDisabled();
     expect(screen.getByTestId('snap-clear')).toBeDisabled();
   });
 
@@ -90,32 +90,15 @@ describe('M1.T1.2 — snapshot UI integration', () => {
     expect(screen.getByTestId('snap-save')).toBeEnabled();
   });
 
-  it('save flow: pending → saved + count increments + restore enabled', async () => {
+  it('save flow: pending → saved + count increments + history enabled', async () => {
     await renderApp();
     const textarea = screen.getByTestId('editor-textarea');
     await userEvent.type(textarea, 'v1');
     await userEvent.click(screen.getByTestId('snap-save'));
     await waitFor(() => expect(screen.getByTestId('snap-dot')).toHaveClass('snap-dot--saved'));
-    expect(screen.getByTestId('snap-restore')).toBeEnabled();
+    expect(screen.getByTestId('snap-history')).toBeEnabled();
     expect(screen.getByTestId('snap-clear')).toBeEnabled();
-    expect(screen.getByTestId('snap-clear')).toHaveTextContent(/\(1\)/);
-  });
-
-  it('restore last replaces the textarea content with the snapshot body', async () => {
-    await renderApp();
-    const textarea = screen.getByTestId('editor-textarea');
-    await userEvent.type(textarea, 'original');
-    await userEvent.click(screen.getByTestId('snap-save'));
-    await waitFor(() => expect(screen.getByTestId('snap-dot')).toHaveClass('snap-dot--saved'));
-
-    await userEvent.type(textarea, ' + edits');
-    expect((textarea as HTMLTextAreaElement).value).toBe('original + edits');
-
-    await userEvent.click(screen.getByTestId('snap-restore'));
-    await waitFor(() => {
-      const t = screen.getByTestId('editor-textarea');
-      expect((t as HTMLTextAreaElement).value).toBe('original');
-    });
+    expect(screen.getByTestId('snap-history')).toHaveTextContent(/\(1\)/);
   });
 
   it('clear all wipes snapshots; dot returns to pending (body remains)', async () => {

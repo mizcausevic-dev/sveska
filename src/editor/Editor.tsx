@@ -15,6 +15,7 @@ import { download, exportAs } from '@/markdown/export';
 import { ClearConfirmHost } from './ClearConfirm';
 import { confirmClear } from './clearConfirmStore';
 import { TabBar } from './TabBar';
+import { VersionsModalHost } from './VersionsModal';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -147,6 +148,7 @@ export function Editor(): React.JSX.Element {
       </div>
       <StatsModalHost body={body} />
       <ClearConfirmHost />
+      <VersionsModalHost liveBody={body} onRestore={setBody} />
       <textarea
         className="editor-input"
         value={body}

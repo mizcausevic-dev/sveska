@@ -1,12 +1,18 @@
 import { type SnapshotsAPI } from './useSnapshots';
+import { openVersions } from './versionsModalStore';
 
 interface Props {
   snapshots: SnapshotsAPI;
+  /** Receives the restored body when the user picks a snapshot in the history modal. */
   onAfterRestore: (body: string) => void;
 }
 
 export function SnapshotToolbar({ snapshots, onAfterRestore }: Props): React.JSX.Element {
-  const { latest, count, pending, save, restoreLast, clearAll } = snapshots;
+  // Mark intentionally-unused-here — VersionsModalHost in Editor.tsx owns
+  // the restore + body-update flow now. Retained on the API so the editor
+  // can still feed setBody into the modal host.
+  void onAfterRestore;
+  const { latest, count, pending, save, clearAll } = snapshots;
 
   const stamp =
     latest === null
@@ -40,15 +46,12 @@ export function SnapshotToolbar({ snapshots, onAfterRestore }: Props): React.JSX
       <button
         type="button"
         className="snap-btn"
-        onClick={() => {
-          void restoreLast().then((body) => {
-            if (body !== null) onAfterRestore(body);
-          });
-        }}
-        disabled={latest === null}
-        data-testid="snap-restore"
+        onClick={openVersions}
+        disabled={count === 0}
+        data-testid="snap-history"
+        title="Browse version history + diff"
       >
-        Restore last
+        History {count > 0 && `(${count})`}
       </button>
       <button
         type="button"
@@ -57,7 +60,7 @@ export function SnapshotToolbar({ snapshots, onAfterRestore }: Props): React.JSX
         disabled={count === 0}
         data-testid="snap-clear"
       >
-        Clear {count > 0 && `(${count})`}
+        Clear
       </button>
     </div>
   );
