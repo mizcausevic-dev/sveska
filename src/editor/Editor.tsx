@@ -5,6 +5,8 @@ import { useAutosave, type SaveState } from './useAutosave';
 import { useSnapshots } from './useSnapshots';
 import { SnapshotToolbar } from './SnapshotToolbar';
 import { ExportMenu } from './ExportMenu';
+import { StatsModalHost } from './StatsModal';
+import { openStats } from './statsModalStore';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -48,8 +50,20 @@ export function Editor(): React.JSX.Element {
     <section className="editor" aria-busy={!hydrated}>
       <div className="editor-actions">
         <SnapshotToolbar snapshots={snapshots} onAfterRestore={setBody} />
-        <ExportMenu note={note} body={body} />
+        <div className="editor-actions-secondary">
+          <button
+            type="button"
+            className="snap-btn stats-btn"
+            onClick={openStats}
+            data-testid="stats-open"
+            title="Statistics (Ctrl + Shift + I)"
+          >
+            Stats
+          </button>
+          <ExportMenu note={note} body={body} />
+        </div>
       </div>
+      <StatsModalHost body={body} />
       <textarea
         className="editor-input"
         value={body}

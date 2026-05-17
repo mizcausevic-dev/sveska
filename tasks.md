@@ -7,15 +7,13 @@
 
 ## In progress
 
-- [ ] **T1.3 — Export module** (`.txt` / `.md` / `.html` via shared AST)
-  - **Files**: `src/markdown/export.ts` (new) · `src/markdown/ast.ts` (new) · `src/editor/Editor.tsx` (add download trio) · `src/__tests__/export.test.tsx` (new)
-  - **AC**: one AST → three formats, consistent line endings, HTML wrapped in minimal template with Sveska CSP-safe styles
-  - **Don't**: pull markdown-it yet (M3.2). For now: text → `<pre>` HTML + `.md` is the raw text + minimal escape
+- [ ] **T1.5 — Focus mode** (`Alt+F`, hide chrome, widen margins to 880px column)
+  - **Files**: new `src/notes/uiStore.ts` (focus boolean, persists via Dexie prefs) · `src/app/Layout.tsx` (add `app-shell--focus` class) · `src/app/KeyBindings.tsx` (bind Alt+F) · `src/editor/Editor.tsx` (conditional toolbar visibility) · CSS `.app-shell--focus` · `src/__tests__/focus.test.tsx`
+  - **AC**: Alt+F toggles, persists across reload; focus hides nav + theme switch + snapshot/export/stats row + status bar + footer/consent; editor centered, max-width 880px, top padding 64px; Alt+F again to exit (also documented in cheatsheet at T1.7)
+  - **Don't**: animate the chrome (jumpy); just toggle classes. Don't persist focus per-note — it's a global mode.
 
 ## Next up (sequential, top-down)
 
-- [ ] T1.4 — Statistics modal (words/chars/lines/paragraphs/reading time/unique)
-- [ ] T1.5 — Focus mode (`Alt+F`, hide chrome, widen margins to 880px column)
 - [ ] T1.6 — Preferences (font size slider, line height, family, spellcheck, tab-indent, focus margin)
 - [ ] T1.7 — Shortcuts (`Ctrl+S` save txt, `Alt+C` copy, `Ctrl+Del` clear, `Ctrl+,` prefs already, `Alt+F` focus)
 - [ ] **M1 close** — Lighthouse PWA pass on `sveska.studio`, tag `v0.1.0-m1`, write release notes
@@ -25,6 +23,8 @@
 - ✅ **M0 ship** — 5 commits, tagged `v0.0.1-m0`, deployed to `sveska.studio`
 - ✅ T1.1 — Editor + Dexie autosave (debounced 400ms + blur/visibility flush + refresh-safe)
 - ✅ T1.2 — Snapshots save/restore/clear + pending dot indicator
+- ✅ T1.3 — Export `.txt` / `.md` / `.html` from shared AST + ExportMenu
+- ✅ T1.4 — Statistics modal (pure `computeStats` + live UI + `Ctrl+Shift+I`)
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 
