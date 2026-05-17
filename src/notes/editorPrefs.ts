@@ -8,6 +8,16 @@ import { getPref, PREF_KEYS_EDITOR, setPref } from './prefs';
  */
 
 export type FontFamily = 'mono' | 'serif' | 'ui' | 'dyslexic';
+export type Paper = 'plain' | 'dotted' | 'graph' | 'linen' | 'grain';
+
+export const PAPER_OPTIONS: Paper[] = ['plain', 'dotted', 'graph', 'linen', 'grain'];
+export const PAPER_LABEL: Record<Paper, string> = {
+  plain: 'Plain',
+  dotted: 'Dotted',
+  graph: 'Graph',
+  linen: 'Linen',
+  grain: 'Grain',
+};
 
 export interface EditorPrefs {
   fontSize: number;
@@ -21,6 +31,10 @@ export interface EditorPrefs {
   sounds: boolean;
   /** 0–1 volume for typing sounds. */
   soundVolume: number;
+  /** T3.6 — paper texture background applied to the editor surface. */
+  paper: Paper;
+  /** T3.6 — target word count for the session goal progress bar; 0 = off. */
+  wordGoal: number;
 }
 
 export const DEFAULT_EDITOR_PREFS: EditorPrefs = {
@@ -32,6 +46,8 @@ export const DEFAULT_EDITOR_PREFS: EditorPrefs = {
   typewriter: false,
   sounds: false,
   soundVolume: 0.4,
+  paper: 'plain',
+  wordGoal: 0,
 };
 
 export const FONT_FAMILY_CSS: Record<FontFamily, string> = {
@@ -59,6 +75,8 @@ interface EditorPrefsState extends EditorPrefs {
   setTypewriter: (b: boolean) => Promise<void>;
   setSounds: (b: boolean) => Promise<void>;
   setSoundVolume: (n: number) => Promise<void>;
+  setPaper: (p: Paper) => Promise<void>;
+  setWordGoal: (n: number) => Promise<void>;
   reset: () => Promise<void>;
 }
 
@@ -105,6 +123,15 @@ export const useEditorPrefs = create<EditorPrefsState>((set) => ({
     set({ soundVolume: clamped });
     await persist(PREF_KEYS_EDITOR.soundVolume, clamped);
   },
+  setPaper: async (p) => {
+    set({ paper: p });
+    await persist(PREF_KEYS_EDITOR.paper, p);
+  },
+  setWordGoal: async (n) => {
+    const clamped = Math.max(0, Math.floor(n));
+    set({ wordGoal: clamped });
+    await persist(PREF_KEYS_EDITOR.wordGoal, clamped);
+  },
   reset: async () => {
     set(DEFAULT_EDITOR_PREFS);
     await Promise.all([
@@ -116,6 +143,8 @@ export const useEditorPrefs = create<EditorPrefsState>((set) => ({
       persist(PREF_KEYS_EDITOR.typewriter, DEFAULT_EDITOR_PREFS.typewriter),
       persist(PREF_KEYS_EDITOR.sounds, DEFAULT_EDITOR_PREFS.sounds),
       persist(PREF_KEYS_EDITOR.soundVolume, DEFAULT_EDITOR_PREFS.soundVolume),
+      persist(PREF_KEYS_EDITOR.paper, DEFAULT_EDITOR_PREFS.paper),
+      persist(PREF_KEYS_EDITOR.wordGoal, DEFAULT_EDITOR_PREFS.wordGoal),
     ]);
   },
 }));
@@ -123,17 +152,29 @@ export const useEditorPrefs = create<EditorPrefsState>((set) => ({
 /** Hydrate from Dexie before React mounts. Falls back to defaults on miss. */
 export async function bootstrapEditorPrefs(): Promise<void> {
   try {
-    const [fontSize, lineHeight, fontFamily, spellcheck, tabSize, typewriter, sounds, soundVolume] =
-      await Promise.all([
-        getPref<number>(PREF_KEYS_EDITOR.fontSize),
-        getPref<number>(PREF_KEYS_EDITOR.lineHeight),
-        getPref<FontFamily>(PREF_KEYS_EDITOR.fontFamily),
-        getPref<boolean>(PREF_KEYS_EDITOR.spellcheck),
-        getPref<number>(PREF_KEYS_EDITOR.tabSize),
-        getPref<boolean>(PREF_KEYS_EDITOR.typewriter),
-        getPref<boolean>(PREF_KEYS_EDITOR.sounds),
-        getPref<number>(PREF_KEYS_EDITOR.soundVolume),
-      ]);
+    const [
+      fontSize,
+      lineHeight,
+      fontFamily,
+      spellcheck,
+      tabSize,
+      typewriter,
+      sounds,
+      soundVolume,
+      paper,
+      wordGoal,
+    ] = await Promise.all([
+      getPref<number>(PREF_KEYS_EDITOR.fontSize),
+      getPref<number>(PREF_KEYS_EDITOR.lineHeight),
+      getPref<FontFamily>(PREF_KEYS_EDITOR.fontFamily),
+      getPref<boolean>(PREF_KEYS_EDITOR.spellcheck),
+      getPref<number>(PREF_KEYS_EDITOR.tabSize),
+      getPref<boolean>(PREF_KEYS_EDITOR.typewriter),
+      getPref<boolean>(PREF_KEYS_EDITOR.sounds),
+      getPref<number>(PREF_KEYS_EDITOR.soundVolume),
+      getPref<Paper>(PREF_KEYS_EDITOR.paper),
+      getPref<number>(PREF_KEYS_EDITOR.wordGoal),
+    ]);
     useEditorPrefs.setState({
       fontSize: typeof fontSize === 'number' ? fontSize : DEFAULT_EDITOR_PREFS.fontSize,
       lineHeight: typeof lineHeight === 'number' ? lineHeight : DEFAULT_EDITOR_PREFS.lineHeight,
@@ -143,6 +184,8 @@ export async function bootstrapEditorPrefs(): Promise<void> {
       typewriter: typeof typewriter === 'boolean' ? typewriter : DEFAULT_EDITOR_PREFS.typewriter,
       sounds: typeof sounds === 'boolean' ? sounds : DEFAULT_EDITOR_PREFS.sounds,
       soundVolume: typeof soundVolume === 'number' ? soundVolume : DEFAULT_EDITOR_PREFS.soundVolume,
+      paper: isPaper(paper) ? paper : DEFAULT_EDITOR_PREFS.paper,
+      wordGoal: typeof wordGoal === 'number' ? wordGoal : DEFAULT_EDITOR_PREFS.wordGoal,
     });
   } catch {
     useEditorPrefs.setState(DEFAULT_EDITOR_PREFS);
@@ -151,4 +194,8 @@ export async function bootstrapEditorPrefs(): Promise<void> {
 
 function isFontFamily(v: unknown): v is FontFamily {
   return v === 'mono' || v === 'serif' || v === 'ui' || v === 'dyslexic';
+}
+
+function isPaper(v: unknown): v is Paper {
+  return PAPER_OPTIONS.includes(v as Paper);
 }

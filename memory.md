@@ -72,6 +72,7 @@
 | T3.3 (2026-05-17)    | 161   | 161.32 KB | 5.92 KB  | +checklist mode (parser + pane + drag-reorder) |
 | T3.4 (2026-05-17)    | 169   | 163.21 KB | 6.09 KB  | +templates + snippet typeahead                 |
 | T3.5 (2026-05-17)    | 175   | 164.17 KB | 6.09 KB  | +typewriter scroll + WebAudio synth clicks     |
+| T3.6 (2026-05-17)    | 187   | 165.84 KB | 6.48 KB  | +paper / timer / word-goal / find&replace      |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 

@@ -369,7 +369,8 @@ button:disabled {
 }
 
 .save-indicator {
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   align-items: center;
   gap: 8px;
   padding: 4px 12px;
@@ -2104,4 +2105,159 @@ input[type='range'] {
   font-family: var(--font-mono);
   font-size: 13px;
   resize: vertical;
+}
+
+.prefs-number {
+  width: 90px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border-soft);
+  border-radius: 5px;
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-align: right;
+}
+
+/* T3.6 — paper textures (all CSS, no image assets) */
+.editor-input--paper-plain {
+  /* default — no pattern */
+}
+.editor-input--paper-dotted {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--text) 18%, transparent) 1px,
+    transparent 1.4px
+  );
+  background-size: 14px 14px;
+  background-position: 0 0;
+}
+.editor-input--paper-graph {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--text) 12%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--text) 12%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 24px 24px;
+}
+.editor-input--paper-linen {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      color-mix(in oklab, var(--text) 5%, transparent) 2px,
+      color-mix(in oklab, var(--text) 5%, transparent) 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 2px,
+      color-mix(in oklab, var(--text) 5%, transparent) 2px,
+      color-mix(in oklab, var(--text) 5%, transparent) 3px
+    );
+}
+.editor-input--paper-grain {
+  background-image:
+    radial-gradient(color-mix(in oklab, var(--text) 8%, transparent) 1px, transparent 1.2px),
+    radial-gradient(color-mix(in oklab, var(--text) 5%, transparent) 1px, transparent 1.2px);
+  background-size:
+    7px 7px,
+    11px 11px;
+  background-position:
+    0 0,
+    3px 3px;
+}
+
+/* T3.6 — Find & replace bar (anchored above textarea) */
+.find-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+  padding: 6px 8px;
+  background: var(--surface);
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, var(--border-soft));
+  border-radius: 8px;
+}
+.find-input {
+  flex: 1 1 140px;
+  min-width: 100px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border-soft);
+  border-radius: 5px;
+  padding: 5px 8px;
+  font-size: 13px;
+  outline: 0;
+}
+.find-input:focus {
+  border-color: var(--accent);
+}
+.find-case {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+.find-count {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  min-width: 70px;
+}
+
+/* T3.6 — Save indicator extensions: spacer + word goal + writing timer */
+.save-indicator .save-spacer {
+  flex: 1;
+}
+.save-goal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.save-goal-bar {
+  display: inline-block;
+  width: 70px;
+  height: 5px;
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.save-goal-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 200ms ease;
+}
+.save-goal-bar--done > span {
+  background: var(--ok);
+}
+.save-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+}
+.save-timer--running {
+  color: var(--text);
+  border-color: color-mix(in oklab, var(--ok) 50%, var(--border-soft));
+  background: color-mix(in oklab, var(--ok) 8%, transparent);
 }

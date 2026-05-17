@@ -19,6 +19,9 @@ describe('M1.T1.6 — editor prefs (store + persistence)', () => {
       typewriter: false,
       sounds: false,
       soundVolume: 0.4,
+      // T3.6 additions — plain paper + no word goal.
+      paper: 'plain',
+      wordGoal: 0,
     });
   });
 

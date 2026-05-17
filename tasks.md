@@ -7,10 +7,10 @@
 
 ## In progress
 
-- [ ] **T3.6 — Paper textures · writing timer · word-count goal · find & replace**
-  - **Why**: writing-ritual polish. Pick a paper texture (dotted / graph / linen / grain) for the editor background; set a per-session word-count goal with progress; run a Pomodoro / idle-aware writing timer; find & replace inside the active note.
-  - **AC**: paper texture choice in Prefs persists + applies via CSS class on `.editor`; word-count goal modal sets a target N + shows a progress bar in the SaveIndicator footer; writing timer pill shows mm:ss running, pauses on idle > 60s; Ctrl+F opens find & replace within the textarea (case-sensitive opt-in, all/next/replace).
-  - **Don't**: persist the timer across reloads in v1 — keep it session-scoped.
+- [ ] **T3.7 — Import .txt/.md · Web Share target · share-via-URL hash · PDF export**
+  - **Why**: closes M3 by completing the I/O surface. Drag-and-drop or file-picker import of .txt/.md → fresh notes; PWA Web Share target accepts shared text into the inbox; share-via-URL packs a note into the `#` fragment so the receiver can preview it without a server; .pdf export via jsPDF.
+  - **AC**: Import button + drag-on-rail accepts .txt/.md files and creates notes; `share_target` in manifest.json POSTs to `/share-target` which writes the text to the inbox; "Copy share link" command builds a `#note=<base64>` URL the page parses on load; .pdf appears in ExportMenu alongside txt/md/html.
+  - **Don't**: ship jsPDF in the main chunk — `import('jspdf')` it on first .pdf click so plain-text users don't pay the ~50KB.
 
 ## Next up (sequential, top-down)
 
@@ -44,6 +44,7 @@
 - ✅ T3.3 — Pure parser for `- [ ]`/`- [x]` lines + passthrough preservation · ChecklistPane split-view with click-to-toggle, indent levels, drag-reorder, filter unchecked, summary · TagsBar mode cycle TXT → MD → CHK → TXT · 11 unit tests + browser preview verified
 - ✅ T3.4 — `templates` + `snippets` Dexie repos with 5 built-in templates (meeting / daily / retro / standup / brief) + 3 built-in snippets · TemplatesModal (Ctrl+T) with Templates / Snippets tabs · "New note from template" creates + opens · in-editor snippet typeahead (`findTriggerAt` matches longest trigger to caret) · palette commands wired · 8 unit tests + browser preview verified
 - ✅ T3.5 — Typewriter scroll hook (active line centered ~40% from top) + typing sounds hook (WebAudio synth click, 25ms throttle, pitch per key: 520Hz Enter / 360Hz Space / 440Hz default) · Prefs rows with conditional volume slider · 3 new persisted editor prefs (typewriter / sounds / soundVolume, both toggles default OFF) · 6 unit tests + browser preview verified
+- ✅ T3.6 — Paper textures (dotted/graph/linen/grain, CSS-only, no assets) + Pomodoro-style writing timer (auto-pauses on 60s idle) + word-count goal progress bar in SaveIndicator + Ctrl+F find/replace bar with match counter and case-sensitive toggle · 2 new persisted editor prefs (paper / wordGoal) · 12 unit tests + browser preview verified
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

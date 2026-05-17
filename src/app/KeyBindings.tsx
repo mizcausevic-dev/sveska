@@ -6,6 +6,7 @@ import { openSearch } from '@/ui/searchModalStore';
 import { openInbox } from '@/ui/inboxModalStore';
 import { openCommandPalette } from '@/ui/commandPaletteStore';
 import { openTemplates } from '@/ui/templatesModalStore';
+import { openFindReplace } from '@/editor/findReplaceStore';
 import { useEditorCommands } from '@/editor/editorCommands';
 import { useUIStore } from '@/notes/uiStore';
 
@@ -49,6 +50,11 @@ export function KeyBindings(): null {
       if (ctrlish && !e.shiftKey && !e.altKey && (e.key === 'T' || e.key === 't')) {
         e.preventDefault();
         openTemplates();
+        return;
+      }
+      if (ctrlish && !e.shiftKey && !e.altKey && (e.key === 'F' || e.key === 'f')) {
+        e.preventDefault();
+        openFindReplace();
         return;
       }
       if (ctrlish && e.shiftKey && !e.altKey && (e.key === 'K' || e.key === 'k')) {

@@ -3,7 +3,14 @@ import { Modal } from './Modal';
 import { ThemeSwitch } from './ThemeSwitch';
 import { closePrefs, usePrefsModal } from './prefsModalStore';
 import { useUIStore } from '@/notes/uiStore';
-import { FONT_FAMILY_LABEL, type FontFamily, useEditorPrefs } from '@/notes/editorPrefs';
+import {
+  FONT_FAMILY_LABEL,
+  PAPER_LABEL,
+  PAPER_OPTIONS,
+  type FontFamily,
+  type Paper,
+  useEditorPrefs,
+} from '@/notes/editorPrefs';
 import { getRestoreSession, setRestoreSession } from '@/notes/tabsStore';
 
 const FAMILY_OPTIONS: FontFamily[] = ['mono', 'serif', 'ui', 'dyslexic'];
@@ -130,6 +137,47 @@ export function PrefsModalHost(): React.JSX.Element {
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="row">
+        <div>
+          <div className="label">Paper texture</div>
+          <span className="hint">Subtle background pattern behind the textarea.</span>
+        </div>
+        <div className="seg" role="group" aria-label="Paper texture">
+          {PAPER_OPTIONS.map((p: Paper) => (
+            <button
+              key={p}
+              type="button"
+              aria-pressed={prefs.paper === p}
+              onClick={() => void prefs.setPaper(p)}
+              data-testid={`pref-paper-${p}`}
+            >
+              {PAPER_LABEL[p]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="row">
+        <div>
+          <div className="label">Word-count goal</div>
+          <span className="hint">
+            {prefs.wordGoal === 0
+              ? 'Off — set a number to show progress in the footer.'
+              : `${prefs.wordGoal} words`}
+          </span>
+        </div>
+        <input
+          type="number"
+          min={0}
+          step={50}
+          value={prefs.wordGoal}
+          onChange={(e) => void prefs.setWordGoal(Number(e.target.value))}
+          className="prefs-number"
+          aria-label="Word-count goal"
+          data-testid="pref-word-goal"
+        />
       </div>
 
       <div className="row">

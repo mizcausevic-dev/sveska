@@ -26,6 +26,14 @@ import { ChecklistPane } from './ChecklistPane';
 import { useSnippetExpand } from './useSnippetExpand';
 import { useTypewriterScroll } from './useTypewriterScroll';
 import { useTypingSounds } from './useTypingSounds';
+import {
+  countWords,
+  formatTimer,
+  startWritingTimerTick,
+  stopWritingTimerTick,
+  useWritingTimer,
+} from './writingTimerStore';
+import { FindReplaceBar } from './FindReplace';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -150,6 +158,12 @@ export function Editor(): React.JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, activeNote?.id]);
 
+  // T3.6 — writing timer tick lifecycle (start once at mount, stop on unmount).
+  useEffect(() => {
+    startWritingTimerTick();
+    return () => stopWritingTimerTick();
+  }, []);
+
   // T3.5 — typewriter mode: keep caret line centered in the textarea.
   useTypewriterScroll({
     textareaRef,
@@ -229,6 +243,14 @@ export function Editor(): React.JSX.Element {
       <ClearConfirmHost />
       <VersionsModalHost liveBody={body} onRestore={setBody} />
       <DraftRecoveryBanner onKeep={setBody} />
+      <FindReplaceBar
+        textareaRef={textareaRef}
+        body={body}
+        onBodyChange={(next, caret) => {
+          setBody(next);
+          setSelectionStart(caret);
+        }}
+      />
       <div
         className={`editor-input-wrap${
           (activeNote?.mode === 'md' && previewOn) || activeNote?.mode === 'checklist'
@@ -238,11 +260,12 @@ export function Editor(): React.JSX.Element {
       >
         <textarea
           ref={textareaRef}
-          className="editor-input"
+          className={`editor-input editor-input--paper-${prefs.paper}`}
           value={body}
           onChange={(e) => {
             setBody(e.target.value);
             setSelectionStart(e.target.selectionStart);
+            useWritingTimer.getState().registerInput();
           }}
           onKeyUp={(e) => setSelectionStart(e.currentTarget.selectionStart)}
           onClick={(e) => setSelectionStart(e.currentTarget.selectionStart)}
@@ -277,7 +300,13 @@ export function Editor(): React.JSX.Element {
         {activeNote?.mode === 'md' && previewOn && <PreviewPane body={body} />}
         {activeNote?.mode === 'checklist' && <ChecklistPane body={body} onBodyChange={setBody} />}
       </div>
-      <SaveIndicator state={state} lastSavedAt={lastSavedAt} hydrated={hydrated} />
+      <SaveIndicator
+        state={state}
+        lastSavedAt={lastSavedAt}
+        hydrated={hydrated}
+        body={body}
+        wordGoal={prefs.wordGoal}
+      />
     </section>
   );
 }
@@ -286,9 +315,19 @@ interface SaveIndicatorProps {
   state: SaveState;
   lastSavedAt: number | null;
   hydrated: boolean;
+  body: string;
+  wordGoal: number;
 }
 
-function SaveIndicator({ state, lastSavedAt, hydrated }: SaveIndicatorProps): React.JSX.Element {
+function SaveIndicator({
+  state,
+  lastSavedAt,
+  hydrated,
+  body,
+  wordGoal,
+}: SaveIndicatorProps): React.JSX.Element {
+  const elapsedMs = useWritingTimer((s) => s.elapsedMs);
+  const running = useWritingTimer((s) => s.running);
   const label = !hydrated ? 'loading' : STATE_LABEL[state];
   const stamp =
     lastSavedAt === null
@@ -298,11 +337,32 @@ function SaveIndicator({ state, lastSavedAt, hydrated }: SaveIndicatorProps): Re
           minute: '2-digit',
           second: '2-digit',
         });
+  const words = countWords(body);
+  const goalPct = wordGoal > 0 ? Math.min(100, Math.round((words / wordGoal) * 100)) : null;
   return (
     <div className="save-indicator" role="status" aria-live="polite" data-testid="save-state">
       <span className={`save-dot save-dot--${state}`} aria-hidden="true" />
       <span className="save-label">{label}</span>
       {stamp && <span className="save-stamp mono"> · {stamp}</span>}
+      <span className="save-spacer" />
+      {wordGoal > 0 && goalPct !== null && (
+        <span className="save-goal mono" data-testid="word-goal">
+          {words}/{wordGoal} ·
+          <span
+            className={`save-goal-bar${goalPct >= 100 ? ' save-goal-bar--done' : ''}`}
+            aria-hidden="true"
+          >
+            <span style={{ width: `${goalPct}%` }} />
+          </span>
+        </span>
+      )}
+      <span
+        className={`save-timer mono${running ? ' save-timer--running' : ''}`}
+        title={running ? 'Writing session running (pauses on idle > 60s)' : 'Idle'}
+        data-testid="writing-timer"
+      >
+        ⏱ {formatTimer(elapsedMs)}
+      </span>
     </div>
   );
 }

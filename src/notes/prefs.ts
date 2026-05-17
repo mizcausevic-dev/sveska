@@ -28,4 +28,6 @@ export const PREF_KEYS_EDITOR = {
   typewriter: 'editor.typewriter',
   sounds: 'editor.sounds',
   soundVolume: 'editor.soundVolume',
+  paper: 'editor.paper',
+  wordGoal: 'editor.wordGoal',
 } as const;
