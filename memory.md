@@ -41,6 +41,8 @@
 - **Workbox `autoUpdate` doesn't always pick up new SW within a session**: after shipping multiple builds, some users get stuck on a stale precache. M1.7 polish added an `<UpdateBanner />` that polls `registration.update()` every 60s and surfaces a "Reload" pill when `needRefresh` flips.
 - **Don't force-redirect the alias hostnames**: keeping `sveska.netlify.app` (and `*.kineticgain.com`) reachable means we have a live backup when the canonical breaks (e.g. NS drift above). Canonical is enforced via `<link rel="canonical">` in `index.html`, not via 301. Only `www.sveska.studio` is force-redirected (apex preference).
 - **Every modal store must be reset in `test-setup.ts` afterEach**: Zustand singletons survive `cleanup()`. A modal left `open=true` by one test will be `open=true` when the next test mounts `<App />`, and its open-effect will fire against the _previous_ test's bootstrapped note id — silently loading the wrong data. The user-click that should open it is then a no-op (deps unchanged). Add a `useFooModal.setState({ open: false })` line for every new `*ModalStore` you ship.
+- **jsdom's Blob lacks both `.text()` and `.arrayBuffer()`**: tests that read export Blobs must use a FileReader-based helper (`fr.readAsText(blob)`). See `src/__tests__/export.test.tsx#blobText` for the pattern — markdown.test.tsx reused it after I burned 5 min discovering arrayBuffer also missing.
+- **Markdown bundle = +56KB gzip (T3.2)**: markdown-it (~45KB) + dompurify (~11KB) live in the main bundle. Total JS gzip jumped 104→160 KB; still under the 180 KB budget but tight. If M3 closes near budget, lazy-load `@/markdown/render` behind `import()` so plain-text users don't pay for the parser.
 
 ## File map (where things live)
 
@@ -53,19 +55,20 @@
 
 ## Performance snapshot (rolling)
 
-| Date                 | Tests | JS gzip   | CSS gzip | Notes                             |
-| -------------------- | ----- | --------- | -------- | --------------------------------- |
-| M0 ship (2026-05-16) | 3     | 89.81 KB  | 2.53 KB  | scaffold only                     |
-| T1.1 (2026-05-16)    | 8     | 90.67 KB  | 2.81 KB  | +editor                           |
-| T1.2 (2026-05-16)    | 17    | 91.29 KB  | 3.15 KB  | +snapshots                        |
-| T1.3 (2026-05-17)    | 28    | 93.21 KB  | 3.15 KB  | +export                           |
-| T1.4 (2026-05-17)    | 40    | 93.84 KB  | 3.15 KB  | +stats modal                      |
-| T1.5 (2026-05-17)    | 45    | 94.10 KB  | 3.15 KB  | +focus mode                       |
-| T2.2 (2026-05-17)    | 85    | 99.83 KB  | 4.28 KB  | +diff + versions modal            |
-| T2.3 (2026-05-17)    | 95    | 100.23 KB | 4.37 KB  | +draft shadow + recovery banner   |
-| T2.4 (2026-05-17)    | 107   | 101.66 KB | 4.94 KB  | +tags + pins + notes rail         |
-| T2.5 (2026-05-17)    | 126   | 103.46 KB | 5.21 KB  | +fuzzy search + inbox modal       |
-| T3.1 (2026-05-17)    | 138   | 104.89 KB | 5.42 KB  | +command palette + slash commands |
+| Date                 | Tests | JS gzip   | CSS gzip | Notes                                      |
+| -------------------- | ----- | --------- | -------- | ------------------------------------------ |
+| M0 ship (2026-05-16) | 3     | 89.81 KB  | 2.53 KB  | scaffold only                              |
+| T1.1 (2026-05-16)    | 8     | 90.67 KB  | 2.81 KB  | +editor                                    |
+| T1.2 (2026-05-16)    | 17    | 91.29 KB  | 3.15 KB  | +snapshots                                 |
+| T1.3 (2026-05-17)    | 28    | 93.21 KB  | 3.15 KB  | +export                                    |
+| T1.4 (2026-05-17)    | 40    | 93.84 KB  | 3.15 KB  | +stats modal                               |
+| T1.5 (2026-05-17)    | 45    | 94.10 KB  | 3.15 KB  | +focus mode                                |
+| T2.2 (2026-05-17)    | 85    | 99.83 KB  | 4.28 KB  | +diff + versions modal                     |
+| T2.3 (2026-05-17)    | 95    | 100.23 KB | 4.37 KB  | +draft shadow + recovery banner            |
+| T2.4 (2026-05-17)    | 107   | 101.66 KB | 4.94 KB  | +tags + pins + notes rail                  |
+| T2.5 (2026-05-17)    | 126   | 103.46 KB | 5.21 KB  | +fuzzy search + inbox modal                |
+| T3.1 (2026-05-17)    | 138   | 104.89 KB | 5.42 KB  | +command palette + slash commands          |
+| T3.2 (2026-05-17)    | 150   | 160.39 KB | 5.70 KB  | +markdown-it + dompurify + md mode preview |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 

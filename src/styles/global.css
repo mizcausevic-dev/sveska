@@ -327,6 +327,14 @@ button:disabled {
   position: relative;
   display: flex;
 }
+.editor-input-wrap--split {
+  gap: 8px;
+}
+.editor-input-wrap--split > .editor-input,
+.editor-input-wrap--split > .md-preview {
+  flex: 1 1 50%;
+  width: 50%;
+}
 
 .editor-input {
   appearance: none;
@@ -1778,4 +1786,113 @@ input[type='range'] {
   font-size: 10px;
   color: var(--text-dim);
   flex-shrink: 0;
+}
+
+/* T3.2 — TXT / MD mode toggle in TagsBar */
+.mode-toggle {
+  background: transparent;
+  border: 1px solid var(--border-soft);
+  color: var(--text-dim);
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.mode-toggle:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+.mode-toggle--md {
+  color: var(--accent);
+  border-color: color-mix(in oklab, var(--accent) 50%, var(--border-soft));
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
+}
+
+/* T3.2 — Live Markdown preview pane (split layout) */
+.md-preview {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 22px 24px;
+  overflow-y: auto;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.md-preview-empty {
+  color: var(--text-dim);
+  font-style: italic;
+  margin: 0;
+}
+.md-preview h1,
+.md-preview h2,
+.md-preview h3 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  margin: 1.4em 0 0.4em;
+}
+.md-preview h1 {
+  font-size: 1.7em;
+}
+.md-preview h2 {
+  font-size: 1.35em;
+}
+.md-preview h3 {
+  font-size: 1.15em;
+}
+.md-preview p {
+  margin: 0 0 1em;
+}
+.md-preview code {
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+.md-preview pre {
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+}
+.md-preview pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.md-preview a {
+  color: var(--accent);
+}
+.md-preview blockquote {
+  border-left: 3px solid var(--border-soft);
+  margin: 1em 0;
+  padding: 0.2em 1em;
+  color: var(--text-dim);
+}
+.md-preview ul,
+.md-preview ol {
+  padding-left: 1.4em;
+  margin: 0 0 1em;
+}
+.md-preview hr {
+  border: 0;
+  border-top: 1px solid var(--border-soft);
+  margin: 1.5em 0;
+}
+.md-preview table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+.md-preview th,
+.md-preview td {
+  border: 1px solid var(--border-soft);
+  padding: 6px 10px;
+  text-align: left;
 }

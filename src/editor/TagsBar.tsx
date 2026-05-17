@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { type Note } from '@/notes/db';
-import { setNotePinned, updateNoteTags } from '@/notes/noteRepo';
+import { setNoteMode, setNotePinned, updateNoteTags } from '@/notes/noteRepo';
 import { useTabs } from '@/notes/tabsStore';
 
 interface Props {
@@ -35,6 +35,12 @@ export function TagsBar({ note }: Props): React.JSX.Element {
     await refreshActiveNote();
   }
 
+  async function toggleMode(): Promise<void> {
+    const next = note.mode === 'md' ? 'text' : 'md';
+    await setNoteMode(note.id, next);
+    await refreshActiveNote();
+  }
+
   return (
     <div className="tags-bar" role="group" aria-label="Note tags" data-testid="tags-bar">
       <button
@@ -47,6 +53,16 @@ export function TagsBar({ note }: Props): React.JSX.Element {
       >
         <span aria-hidden="true">{note.pinned ? '★' : '☆'}</span>
         <span className="visually-hidden">{note.pinned ? 'Unpin' : 'Pin'} note</span>
+      </button>
+      <button
+        type="button"
+        className={`mode-toggle${note.mode === 'md' ? ' mode-toggle--md' : ''}`}
+        onClick={() => void toggleMode()}
+        aria-pressed={note.mode === 'md'}
+        title={note.mode === 'md' ? 'Switch to plain text' : 'Switch to Markdown'}
+        data-testid="mode-toggle"
+      >
+        {note.mode === 'md' ? 'MD' : 'TXT'}
       </button>
       <ul className="tag-list" data-testid="tag-list">
         {note.tags.map((tag) => (

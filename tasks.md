@@ -7,14 +7,13 @@
 
 ## In progress
 
-- [ ] **T3.2 — Per-note Markdown mode + split / overlay live preview**
-  - **Why**: notes today are plain text. M3 unlocks Markdown rendering for notes whose `mode === 'md'`, with a live preview pane (split or overlay) using the already-vendored `markdown-it` + DOMPurify pipeline.
-  - **AC**: per-note mode toggle (text ↔ md) persists in the `notes.mode` field; opening an md-mode note shows a Preview button that splits the editor 50/50; live update on type; XSS-safe (DOMPurify) ; export pipeline already shares the AST so .md/.html exports stay consistent.
-  - **Don't**: swap in CodeMirror yet (M3.2 spec sticks to `<textarea>` for v1; CodeMirror was reserved for slash-power-mode in a later ticket).
+- [ ] **T3.3 — Checklist mode: nested checklists, drag-reorder, filter unchecked**
+  - **Why**: a third per-note `mode` ('checklist') after text + md. Parses a body where each line is `- [ ]` / `- [x]` plus indentation for nesting. UI renders interactive checkboxes that toggle the leading `[ ]`/`[x]` on click; supports drag-reorder via HTML5 drag-and-drop; a Filter Unchecked toggle hides completed items.
+  - **AC**: mode toggle cycles text → md → checklist → text; checklist render in place of textarea when active; click toggles done state in the source; nested via indentation (2-space units); reorder persists in the body text; filter hides `[x]` rows.
+  - **Don't**: bring in a TODO/Kanban library — this is a textarea on top of a simple checkbox parser; keep the source human-readable.
 
 ## Next up (sequential, top-down)
 
-- [ ] T3.3 — Checklist mode: nested checklists, drag-reorder, filter unchecked
 - [ ] T3.4 — Templates (incl. meeting-notes) + snippet manager + prompt library
 - [ ] T3.5 — Typewriter mode + typing sounds (key / space / enter, volume)
 - [ ] T3.6 — Paper textures · writing timer · word-count goal · find & replace
@@ -41,6 +40,7 @@
 - ✅ **M2 ship** — tagged [v0.2.0-m2](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.2.0-m2), GitHub release with per-ticket bullets
 - ✅ Layout fix — `.editor` switched from grid to flex (TagsBar broke the 4-track grid; textarea now always `flex: 1`)
 - ✅ T3.1 — Command catalog (12 entries across editor/view/navigate/note/app groups) · Ctrl+K CommandPalette modal (fuzzy filter, ↑↓ Enter) · inline slash-command popover in the editor (cursor on `/`-line triggers, Enter runs + strips `/query`) · 12 unit tests + browser preview verified
+- ✅ T3.2 — `markdown-it` + DOMPurify renderer · `setNoteMode()` · TagsBar TXT/MD toggle · split editor + PreviewPane when MD + preview-toggle · HTML export uses `.prose` div for md notes · XSS gates (no `<script>`, no `javascript:` hrefs) · 12 unit tests + browser preview verified
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

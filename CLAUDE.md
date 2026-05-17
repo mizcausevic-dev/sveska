@@ -127,7 +127,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 ### M3 — Power UX
 
 - ✅ T3.1 Command palette (`Ctrl+K`) + slash commands in editor.
-- ☐ T3.2 Per-note Markdown mode + split/overlay live preview.
+- ✅ T3.2 Per-note Markdown mode + split/overlay live preview.
 - ☐ T3.3 Checklist mode: nested checklists, drag-reorder, filter unchecked.
 - ☐ T3.4 Templates (incl. meeting-notes) + snippet manager + prompt library.
 - ☐ T3.5 Typewriter mode + typing sounds (from reference repo: key/space/enter, volume).

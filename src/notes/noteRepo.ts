@@ -102,6 +102,11 @@ export async function setNotePinned(id: string, pinned: boolean): Promise<void> 
   await db().notes.update(id, { pinned: pinned ? 1 : 0, updatedAt: Date.now() });
 }
 
+/** Switch a note between plain-text and Markdown mode (M3.T3.2). */
+export async function setNoteMode(id: string, mode: Note['mode']): Promise<void> {
+  await db().notes.update(id, { mode, updatedAt: Date.now() });
+}
+
 /** All pinned non-deleted notes, newest-first. M2.T2.4 favorites bar. */
 export async function listPinnedNotes(): Promise<Note[]> {
   const all = await db().notes.where('pinned').equals(1).toArray();

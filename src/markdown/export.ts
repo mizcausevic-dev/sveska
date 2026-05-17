@@ -1,4 +1,5 @@
 import { type NoteAST } from './ast';
+import { renderMd } from './render';
 
 /**
  * One AST → three formats. Adding a format = one switch arm + one extension
@@ -39,11 +40,15 @@ function bodyFor(ast: NoteAST, format: ExportFormat): string {
     case 'txt':
       return normalized;
     case 'md':
-      // M1: plain text passes through as Markdown — no formatting yet. The
-      // file extension + MIME still mark it as Markdown for downstream tools.
+      // Markdown export is the raw source — downstream tools render it.
       return normalized;
     case 'html':
-      return htmlTemplate(ast, normalized);
+      // For md-mode notes we render markdown into the export. Text-mode notes
+      // still use the <pre> path so whitespace + monospace are preserved.
+      if (ast.mode === 'md') {
+        return htmlTemplate(ast, renderMd(normalized), { prose: true });
+      }
+      return htmlTemplate(ast, escapeHtml(normalized), { prose: false });
   }
 }
 
@@ -93,9 +98,8 @@ export function download(result: ExportResult): void {
 // Subset of tokens.css only: enough to render the note legibly without
 // pulling in app chrome. CSP-safe (no external requests).
 // ─────────────────────────────────────────────────────────────────
-function htmlTemplate(ast: NoteAST, body: string): string {
+function htmlTemplate(ast: NoteAST, bodyHtml: string, opts: { prose: boolean }): string {
   const safeTitle = escapeHtml(ast.title || 'Untitled');
-  const safeBody = escapeHtml(body);
   const exported = new Date(ast.exportedAt).toISOString();
   const updated = new Date(ast.updatedAt).toISOString();
   return `<!doctype html>
@@ -175,6 +179,21 @@ function htmlTemplate(ast: NoteAST, body: string): string {
     word-break: break-word;
     overflow-wrap: anywhere;
   }
+  .prose { font-size: 16px; line-height: 1.7; color: var(--text); }
+  .prose h1, .prose h2, .prose h3 { font-family: "Bricolage Grotesque", ui-serif, Georgia, serif; line-height: 1.2; margin: 1.6em 0 0.4em; }
+  .prose h1 { font-size: 1.8em; }
+  .prose h2 { font-size: 1.4em; }
+  .prose h3 { font-size: 1.15em; }
+  .prose p { margin: 0 0 1em; }
+  .prose code { background: var(--paper); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-family: ui-monospace, monospace; font-size: 0.95em; }
+  .prose pre { background: var(--paper); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow-x: auto; }
+  .prose pre code { border: 0; padding: 0; background: transparent; }
+  .prose a { color: var(--accent); }
+  .prose blockquote { border-left: 3px solid var(--border); margin: 1em 0; padding: 0.2em 1em; color: var(--text-dim); }
+  .prose table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+  .prose th, .prose td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+  .prose ul, .prose ol { padding-left: 1.4em; margin: 0 0 1em; }
+  .prose hr { border: 0; border-top: 1px solid var(--border); margin: 1.5em 0; }
   footer {
     margin-top: 48px;
     padding-top: 18px;
@@ -202,7 +221,7 @@ function htmlTemplate(ast: NoteAST, body: string): string {
     <h1>${safeTitle}</h1>
     <p class="meta">Updated ${updated} · Exported ${exported} · <a href="https://sveska.studio">sveska.studio</a></p>
   </header>
-  <pre class="note">${safeBody}</pre>
+  ${opts.prose ? `<div class="prose">${bodyHtml}</div>` : `<pre class="note">${bodyHtml}</pre>`}
   <footer>
     <span>Sveska · local-first · studio-grade</span>
     <span>Prazna sveska. Najbolji početak.</span>

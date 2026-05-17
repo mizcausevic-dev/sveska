@@ -21,6 +21,7 @@ import { DraftRecoveryBanner } from './DraftRecoveryBanner';
 import { useDraftRecovery } from './draftRecoveryStore';
 import { readDraft } from '@/notes/draftRepo';
 import { SlashCommands } from './SlashCommands';
+import { PreviewPane } from './PreviewPane';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -42,6 +43,7 @@ export function Editor(): React.JSX.Element {
   const [body, setBody] = useState('');
   const [notesById, setNotesById] = useState<Record<string, Note>>({});
   const [selectionStart, setSelectionStart] = useState(0);
+  const [previewOn, setPreviewOn] = useState(true);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const noteId = activeNote?.id ?? null;
   const hydrated = ready && activeNote !== null;
@@ -173,6 +175,18 @@ export function Editor(): React.JSX.Element {
           >
             Stats
           </button>
+          {activeNote?.mode === 'md' && (
+            <button
+              type="button"
+              className={`snap-btn${previewOn ? ' snap-btn--primary' : ''}`}
+              onClick={() => setPreviewOn((v) => !v)}
+              aria-pressed={previewOn}
+              data-testid="preview-toggle"
+              title="Toggle Markdown preview pane"
+            >
+              {previewOn ? 'Hide preview' : 'Show preview'}
+            </button>
+          )}
           <ExportMenu note={activeNote} body={body} />
         </div>
       </div>
@@ -180,7 +194,11 @@ export function Editor(): React.JSX.Element {
       <ClearConfirmHost />
       <VersionsModalHost liveBody={body} onRestore={setBody} />
       <DraftRecoveryBanner onKeep={setBody} />
-      <div className="editor-input-wrap">
+      <div
+        className={`editor-input-wrap${
+          activeNote?.mode === 'md' && previewOn ? ' editor-input-wrap--split' : ''
+        }`}
+      >
         <textarea
           ref={textareaRef}
           className="editor-input"
@@ -219,6 +237,7 @@ export function Editor(): React.JSX.Element {
             });
           }}
         />
+        {activeNote?.mode === 'md' && previewOn && <PreviewPane body={body} />}
       </div>
       <SaveIndicator state={state} lastSavedAt={lastSavedAt} hydrated={hydrated} />
     </section>
