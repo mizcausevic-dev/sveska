@@ -94,7 +94,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 ### M1 — Core editor (notepad.js.org parity)
 
 - ✅ T1.1 Textarea editor + autosave to Dexie, **debounced 400ms**, immediate on blur/visibility change. Survives refresh.
-- ☐ T1.2 Snapshots: save/restore/clear point-in-time copy + dot indicator in toolbar.
+- ✅ T1.2 Snapshots: save/restore/clear point-in-time copy + dot indicator in toolbar.
 - ☐ T1.3 Export `.txt` / `.md` / `.html` (shared export module).
 - ☐ T1.4 Statistics modal: words, chars, lines, paragraphs, reading time, unique words.
 - ☐ T1.5 Focus mode (`Alt+F`): hide chrome, widen margins.

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getOrCreateActiveNote, migrateLegacyLocalStorage } from '@/notes/noteRepo';
 import { useAutosave, type SaveState } from './useAutosave';
+import { useSnapshots } from './useSnapshots';
+import { SnapshotToolbar } from './SnapshotToolbar';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -37,9 +39,11 @@ export function Editor(): React.JSX.Element {
   }, []);
 
   const { state, lastSavedAt } = useAutosave({ noteId, body });
+  const snapshots = useSnapshots({ noteId, body });
 
   return (
     <section className="editor" aria-busy={!hydrated}>
+      <SnapshotToolbar snapshots={snapshots} onAfterRestore={setBody} />
       <textarea
         className="editor-input"
         value={body}

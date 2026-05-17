@@ -308,10 +308,10 @@ button:disabled {
   color: var(--text-dim);
 }
 
-/* Editor — M1.T1.1 */
+/* Editor — M1.T1.1 + T1.2 */
 .editor {
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   height: calc(100vh - 180px);
   min-height: 420px;
   margin: 8px 0 0;
@@ -381,4 +381,133 @@ button:disabled {
 .save-dot--error {
   background: var(--danger);
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--danger) 22%, transparent);
+}
+
+/* Snapshot toolbar — M1.T1.2 */
+.snap-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+
+.snap-toolbar .snap-spacer {
+  flex: 1;
+}
+
+.snap-toolbar .snap-label {
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.snap-toolbar .snap-stamp {
+  color: var(--text);
+}
+
+.snap-toolbar .snap-count {
+  color: var(--text-dim);
+}
+
+.snap-dot {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  display: inline-block;
+  background: var(--text-dim);
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.snap-dot--saved {
+  background: var(--ok);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ok) 22%, transparent);
+}
+
+.snap-dot--pending {
+  background: var(--ai);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ai) 22%, transparent);
+}
+
+.snap-dot--pending::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  border: 1px solid var(--ai);
+  opacity: 0.35;
+  animation: snap-pulse 2.4s ease-out infinite;
+}
+
+@keyframes snap-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snap-dot--pending::after {
+    animation: none;
+  }
+}
+
+.snap-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: -0.005em;
+  box-shadow: inset 0 0 0 1px var(--border-soft);
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.snap-btn:hover:not(:disabled) {
+  background: var(--raised);
+}
+
+.snap-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.snap-btn--primary {
+  background: var(--accent);
+  color: var(--ink-900);
+  box-shadow: none;
+}
+
+.snap-btn--primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.snap-btn--danger {
+  color: var(--danger);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--danger) 30%, transparent);
+}
+
+.snap-btn--danger:hover:not(:disabled) {
+  background: color-mix(in oklab, var(--danger) 12%, transparent);
 }
