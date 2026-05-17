@@ -20,6 +20,25 @@ you opt in, no cloud dependency. The reference behaviour is `notepad.js.org` (Am
 Merchant, MIT). Sveska re-implements it as a typed, modular PWA with a platform surface
 from day one.
 
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><a href="docs/screenshots/01-app-shell.png"><img src="docs/screenshots/01-app-shell.png" alt="App shell — multi-note tabs, notes rail with filters, editor with inline /improve AI flow"></a><br><sub><strong>App shell</strong> — multi-note tabs, notes rail with All/Pinned/Inbox filters + tags + recents, editor mid-flow with the <code>/improve</code> streaming pill</sub></td>
+    <td width="50%"><a href="docs/screenshots/02-multinote.png"><img src="docs/screenshots/02-multinote.png" alt="Multi-note · search · history surfaces"></a><br><sub><strong>Multi-note · search · history</strong> — the tab chrome, fuzzy search modal, and version-history diff side by side</sub></td>
+  </tr>
+  <tr>
+    <td><a href="docs/screenshots/03-canvas.png"><img src="docs/screenshots/03-canvas.png" alt="Excalidraw canvas, dark theme, per-note"></a><br><sub><strong>Canvas (Excalidraw)</strong> — per-note drawing surface behind the <code>CanvasProvider</code> seam, lazy-loaded</sub></td>
+    <td><a href="docs/screenshots/04-ai-flows.png"><img src="docs/screenshots/04-ai-flows.png" alt="Cmd+K palette open with AI slash commands"></a><br><sub><strong>AI flows</strong> — <code>Ctrl+K</code> palette with the five slash commands, Notes→image, Copy as LinkedIn post</sub></td>
+  </tr>
+  <tr>
+    <td><a href="docs/screenshots/05-templates-snippets.png"><img src="docs/screenshots/05-templates-snippets.png" alt="Templates and snippet manager modal"></a><br><sub><strong>Templates + snippets</strong> — 5 built-in starts (meeting, daily, retro, standup, brief) plus user templates and the trigger-typeahead snippet manager</sub></td>
+    <td><a href="docs/screenshots/06-mobile-pwa.png"><img src="docs/screenshots/06-mobile-pwa.png" alt="Mobile PWA screen"></a><br><sub><strong>Mobile PWA</strong> — installable, offline-capable, same editor surface adapted to phone widths</sub></td>
+  </tr>
+</table>
+
+<sub>Source mockups in <a href="docs/design-mocks/"><code>docs/design-mocks/</code></a>; rendered to PNGs by <a href="scripts/capture-mocks.mjs"><code>scripts/capture-mocks.mjs</code></a> (Playwright + Chromium headless).</sub>
+
 ## Features (live as of M5)
 
 | Layer       | What's shipped                                                                                                  |
