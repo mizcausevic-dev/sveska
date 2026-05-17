@@ -8,6 +8,7 @@ import { PrefsModalHost } from '@/ui/PrefsModal';
 import { ShortcutsModalHost } from '@/ui/ShortcutsModal';
 import { SearchModalHost } from '@/ui/SearchModal';
 import { InboxModalHost } from '@/ui/InboxModal';
+import { CommandPaletteHost } from '@/ui/CommandPalette';
 import { KeyBindings } from './KeyBindings';
 import { UpdateBanner } from './UpdateBanner';
 import { ConsentBar } from '@/platform/ConsentBar';
@@ -28,6 +29,7 @@ export function App(): React.JSX.Element {
       <ShortcutsModalHost />
       <SearchModalHost />
       <InboxModalHost />
+      <CommandPaletteHost />
       <UpdateBanner />
       <ConsentBar />
     </BrowserRouter>

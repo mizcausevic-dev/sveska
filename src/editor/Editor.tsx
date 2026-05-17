@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { type Note } from '@/notes/db';
 import { migrateLegacyLocalStorage, listNotes, getNoteById, saveNoteBody } from '@/notes/noteRepo';
 import { useTabs } from '@/notes/tabsStore';
@@ -20,6 +20,7 @@ import { VersionsModalHost } from './VersionsModal';
 import { DraftRecoveryBanner } from './DraftRecoveryBanner';
 import { useDraftRecovery } from './draftRecoveryStore';
 import { readDraft } from '@/notes/draftRepo';
+import { SlashCommands } from './SlashCommands';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -40,6 +41,8 @@ export function Editor(): React.JSX.Element {
 
   const [body, setBody] = useState('');
   const [notesById, setNotesById] = useState<Record<string, Note>>({});
+  const [selectionStart, setSelectionStart] = useState(0);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const noteId = activeNote?.id ?? null;
   const hydrated = ready && activeNote !== null;
 
@@ -177,23 +180,46 @@ export function Editor(): React.JSX.Element {
       <ClearConfirmHost />
       <VersionsModalHost liveBody={body} onRestore={setBody} />
       <DraftRecoveryBanner onKeep={setBody} />
-      <textarea
-        className="editor-input"
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-        onKeyDown={onTextareaKeyDown}
-        placeholder={PLACEHOLDER}
-        spellCheck={prefs.spellcheck}
-        autoFocus
-        aria-label="Note body"
-        data-testid="editor-textarea"
-        style={{
-          fontSize: `${prefs.fontSize}px`,
-          lineHeight: prefs.lineHeight,
-          fontFamily: FONT_FAMILY_CSS[prefs.fontFamily],
-          tabSize: prefs.tabSize,
-        }}
-      />
+      <div className="editor-input-wrap">
+        <textarea
+          ref={textareaRef}
+          className="editor-input"
+          value={body}
+          onChange={(e) => {
+            setBody(e.target.value);
+            setSelectionStart(e.target.selectionStart);
+          }}
+          onKeyUp={(e) => setSelectionStart(e.currentTarget.selectionStart)}
+          onClick={(e) => setSelectionStart(e.currentTarget.selectionStart)}
+          onKeyDown={onTextareaKeyDown}
+          placeholder={PLACEHOLDER}
+          spellCheck={prefs.spellcheck}
+          autoFocus
+          aria-label="Note body"
+          data-testid="editor-textarea"
+          style={{
+            fontSize: `${prefs.fontSize}px`,
+            lineHeight: prefs.lineHeight,
+            fontFamily: FONT_FAMILY_CSS[prefs.fontFamily],
+            tabSize: prefs.tabSize,
+          }}
+        />
+        <SlashCommands
+          textareaRef={textareaRef}
+          value={body}
+          selectionStart={selectionStart}
+          onApply={(nextValue, nextCursor) => {
+            setBody(nextValue);
+            setSelectionStart(nextCursor);
+            requestAnimationFrame(() => {
+              const el = textareaRef.current;
+              if (!el) return;
+              el.selectionStart = el.selectionEnd = nextCursor;
+              el.focus();
+            });
+          }}
+        />
+      </div>
       <SaveIndicator state={state} lastSavedAt={lastSavedAt} hydrated={hydrated} />
     </section>
   );

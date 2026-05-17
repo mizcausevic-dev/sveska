@@ -7,13 +7,19 @@
 
 ## In progress
 
-- [ ] **M2 close — tag `v0.2.0-m2` + release notes**
-  - **Why**: M2 ticket set (T2.1–T2.5) is shipped. Tagging marks the rollup so M3 work can start with a clean checkpoint.
-  - **AC**: tag pushed to GitHub, release notes (per-ticket bullets), CLAUDE.md M2 block reflected.
+- [ ] **T3.2 — Per-note Markdown mode + split / overlay live preview**
+  - **Why**: notes today are plain text. M3 unlocks Markdown rendering for notes whose `mode === 'md'`, with a live preview pane (split or overlay) using the already-vendored `markdown-it` + DOMPurify pipeline.
+  - **AC**: per-note mode toggle (text ↔ md) persists in the `notes.mode` field; opening an md-mode note shows a Preview button that splits the editor 50/50; live update on type; XSS-safe (DOMPurify) ; export pipeline already shares the AST so .md/.html exports stay consistent.
+  - **Don't**: swap in CodeMirror yet (M3.2 spec sticks to `<textarea>` for v1; CodeMirror was reserved for slash-power-mode in a later ticket).
 
 ## Next up (sequential, top-down)
 
-- [ ] **M3** — Command palette (`Ctrl+K`) · per-note Markdown mode · checklist mode · templates + snippets · typewriter + sounds · paper textures + writing timer + word-count goal + find&replace · import / share-target / PDF
+- [ ] T3.3 — Checklist mode: nested checklists, drag-reorder, filter unchecked
+- [ ] T3.4 — Templates (incl. meeting-notes) + snippet manager + prompt library
+- [ ] T3.5 — Typewriter mode + typing sounds (key / space / enter, volume)
+- [ ] T3.6 — Paper textures · writing timer · word-count goal · find & replace
+- [ ] T3.7 — Import .txt/.md · Web Share target · share-via-URL hash · PDF export
+- [ ] **M3 close** — tag `v0.3.0-m3`, release notes
 
 ## Recently done (this branch only)
 
@@ -32,6 +38,9 @@
 - ✅ T2.3 — Crash-safe draft shadow per note (`prefs.draft.<noteId>`) · written on every keystroke · cleared on debounced save · recovery banner with Keep / Discard on stale shadow · 10 unit tests
 - ✅ T2.4 — Per-note tag chips · pin toggle · NotesRail sidebar with Pinned/Recent sections · saved-filter dropdown (All/Pinned/Untagged/#tag) · collapsible rail · 12 unit tests + browser preview verified
 - ✅ T2.5 — Hand-rolled fuzzy scorer (1k notes <50ms) · Ctrl+P SearchModal (title+body fuzzy, ↑↓ Enter) · Inbox repo + Ctrl+Shift+K InboxModal (capture, promote-to-note, mark processed) · rail badge for unprocessed count · 19 unit tests + browser preview verified
+- ✅ **M2 ship** — tagged [v0.2.0-m2](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.2.0-m2), GitHub release with per-ticket bullets
+- ✅ Layout fix — `.editor` switched from grid to flex (TagsBar broke the 4-track grid; textarea now always `flex: 1`)
+- ✅ T3.1 — Command catalog (12 entries across editor/view/navigate/note/app groups) · Ctrl+K CommandPalette modal (fuzzy filter, ↑↓ Enter) · inline slash-command popover in the editor (cursor on `/`-line triggers, Enter runs + strips `/query`) · 12 unit tests + browser preview verified
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 
