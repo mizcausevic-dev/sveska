@@ -6,6 +6,7 @@ import './styles/fonts.css';
 import './styles/global.css';
 
 import { App } from '@/app/App';
+import { ErrorBoundary } from '@/app/ErrorBoundary';
 import { bootstrapTheme } from '@/notes/themeStore';
 import { bootstrapUI } from '@/notes/uiStore';
 import { bootstrapEditorPrefs } from '@/notes/editorPrefs';
@@ -28,7 +29,9 @@ async function bootstrap(): Promise<void> {
 
   createRoot(rootEl).render(
     <StrictMode>
-      <App />
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
     </StrictMode>,
   );
 }

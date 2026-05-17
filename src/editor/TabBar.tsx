@@ -29,31 +29,37 @@ export function TabBar({
     setRenamingId(null);
   }
 
+  // a11y: we use role="toolbar" instead of role="tablist". Tabs would be
+  // semantically correct, but tablist forbids non-tab children — and each
+  // chip ships a close button next to the activate button. Toolbar accepts
+  // a mixed row of buttons cleanly. Active state goes on aria-current.
   return (
-    <div className="tab-bar" role="tablist" aria-label="Open notes" data-testid="tab-bar">
-      {tabs.map((t) => {
-        const note = notesById[t.noteId];
-        const active = t.id === activeTabId;
-        const title = note?.title.trim() || 'Untitled';
-        const dirty = active && note ? activeBody !== note.body : false;
-        return (
-          <TabChip
-            key={t.id}
-            tab={t}
-            title={title}
-            active={active}
-            dirty={dirty}
-            renaming={renamingId === t.id}
-            onActivate={() => void activate(t.id)}
-            onClose={() => void close(t.id)}
-            onStartRename={() => active && setRenamingId(t.id)}
-            onCommitRename={(value) => {
-              if (note) void commitRename(note.id, value);
-            }}
-            onCancelRename={() => setRenamingId(null)}
-          />
-        );
-      })}
+    <div className="tab-bar" role="toolbar" aria-label="Open notes" data-testid="tab-bar">
+      <div className="tab-bar-list">
+        {tabs.map((t) => {
+          const note = notesById[t.noteId];
+          const active = t.id === activeTabId;
+          const title = note?.title.trim() || 'Untitled';
+          const dirty = active && note ? activeBody !== note.body : false;
+          return (
+            <TabChip
+              key={t.id}
+              tab={t}
+              title={title}
+              active={active}
+              dirty={dirty}
+              renaming={renamingId === t.id}
+              onActivate={() => void activate(t.id)}
+              onClose={() => void close(t.id)}
+              onStartRename={() => active && setRenamingId(t.id)}
+              onCommitRename={(value) => {
+                if (note) void commitRename(note.id, value);
+              }}
+              onCancelRename={() => setRenamingId(null)}
+            />
+          );
+        })}
+      </div>
       <button
         type="button"
         className="tab-new"
@@ -104,20 +110,15 @@ function TabChip({
     }
   }, [renaming, title]);
 
+  // a11y: the wrapper is a plain flex container; activate + close are
+  // sibling <button>s inside, so neither nests an interactive element.
   return (
     <div
-      role="tab"
-      aria-selected={active}
       className={`tab-chip${active ? ' tab-chip--active' : ''}${dirty ? ' tab-chip--dirty' : ''}`}
       onClick={() => !renaming && !active && onActivate()}
       onDoubleClick={() => onStartRename()}
       data-testid={`tab-${tab.id}`}
     >
-      <span
-        className="tab-dot"
-        aria-hidden="true"
-        data-testid={dirty ? 'tab-dot-dirty' : 'tab-dot'}
-      />
       {renaming ? (
         <input
           ref={inputRef}
@@ -138,23 +139,36 @@ function TabChip({
           data-testid="tab-rename-input"
         />
       ) : (
-        <span className="tab-title" title={`${title} — double-click to rename`}>
-          {title}
-        </span>
+        <button
+          type="button"
+          aria-current={active ? 'page' : undefined}
+          className="tab-activate"
+          onClick={() => !active && onActivate()}
+          title={`${title} — double-click to rename`}
+        >
+          <span
+            className="tab-dot"
+            aria-hidden="true"
+            data-testid={dirty ? 'tab-dot-dirty' : 'tab-dot'}
+          />
+          <span className="tab-title">{title}</span>
+        </button>
       )}
-      <button
-        type="button"
-        className="tab-close"
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
-        }}
-        title="Close"
-        aria-label={`Close ${title}`}
-        data-testid="tab-close"
-      >
-        ×
-      </button>
+      {!renaming && (
+        <button
+          type="button"
+          className="tab-close"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+          title="Close"
+          aria-label={`Close ${title}`}
+          data-testid="tab-close"
+        >
+          ×
+        </button>
+      )}
     </div>
   );
 }

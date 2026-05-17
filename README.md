@@ -10,8 +10,8 @@
 </p>
 
 [![PWA](https://img.shields.io/badge/PWA-installable-F2B544?style=flat-square)](https://sveska.studio)
-[![M6](https://img.shields.io/badge/milestone-M6_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.6.0-m6)
-[![Tests](https://img.shields.io/badge/tests-254_passing-7AD29C?style=flat-square)](#milestone-status)
+[![M7](https://img.shields.io/badge/milestone-M7_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.7.0-m7)
+[![Tests](https://img.shields.io/badge/tests-260_passing-7AD29C?style=flat-square)](#milestone-status)
 [![License](https://img.shields.io/badge/license-MIT-0C0C0E?style=flat-square)](LICENSE)
 
 Multi-note tabs, Markdown + checklist modes, command palette, fuzzy search across notes,
@@ -39,7 +39,7 @@ from day one.
 
 <sub>Source mockups in <a href="docs/design-mocks/"><code>docs/design-mocks/</code></a>; rendered to PNGs by <a href="scripts/capture-mocks.mjs"><code>scripts/capture-mocks.mjs</code></a> (Playwright + Chromium headless).</sub>
 
-## Features (live as of M6)
+## Features (live as of M7)
 
 | Layer       | What's shipped                                                                                                   |
 | ----------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -57,24 +57,25 @@ from day one.
 | Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                   |
 | Platform    | `/glossary` (20-term auto-linker) · `/blog` + `/changelog` (Markdown content) · `/pricing` · `/funnel` dashboard |
 | Lead-gen    | Email capture · CTA slots · MDX export with frontmatter · HTML-export footer back-links                          |
-| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored                                                    |
+| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored, axe-clean App / Glossary / Pricing                |
+| Hardening   | Top-level `ErrorBoundary` (Reload / Copy report / Reset) · on-demand Playwright smoke suite (`pnpm test:e2e`)    |
 | Persistence | Dexie (IndexedDB) — 8 tables, soft-delete, legacy-localStorage import on first run                               |
 
 ## Stack (locked at M0)
 
-| Concern     | Choice                                                                                          |
-| ----------- | ----------------------------------------------------------------------------------------------- |
-| Build       | Vite + React 18 + TypeScript (strict, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`) |
-| State       | Zustand                                                                                         |
-| Storage     | Dexie (IndexedDB)                                                                               |
-| Markdown    | `markdown-it` + DOMPurify                                                                       |
-| PWA         | `vite-plugin-pwa` (Workbox, `registerType: 'autoUpdate'`)                                       |
-| Router      | `react-router-dom` v6                                                                           |
-| Tests       | Vitest + Testing Library + `fake-indexeddb` (254 tests, 100% pass)                              |
-| Lint/format | ESLint 9 (flat config, typed) + Prettier 3                                                      |
-| Pre-commit  | Husky 9 + lint-staged                                                                           |
-| Edge        | **Netlify Edge Functions** (Deno) — same-origin AI proxy at `/api/ai`                           |
-| Canvas (M5) | Excalidraw (MIT), vendored, lazy-loaded behind `CanvasProvider`                                 |
+| Concern     | Choice                                                                                                                  |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Build       | Vite + React 18 + TypeScript (strict, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`)                         |
+| State       | Zustand                                                                                                                 |
+| Storage     | Dexie (IndexedDB)                                                                                                       |
+| Markdown    | `markdown-it` + DOMPurify                                                                                               |
+| PWA         | `vite-plugin-pwa` (Workbox, `registerType: 'autoUpdate'`)                                                               |
+| Router      | `react-router-dom` v6                                                                                                   |
+| Tests       | Vitest + Testing Library + `fake-indexeddb` (260 tests, 100% pass) · `vitest-axe` a11y sweep · on-demand Playwright e2e |
+| Lint/format | ESLint 9 (flat config, typed) + Prettier 3                                                                              |
+| Pre-commit  | Husky 9 + lint-staged                                                                                                   |
+| Edge        | **Netlify Edge Functions** (Deno) — same-origin AI proxy at `/api/ai`                                                   |
+| Canvas (M5) | Excalidraw (MIT), vendored, lazy-loaded behind `CanvasProvider`                                                         |
 
 ## Getting started
 
@@ -83,7 +84,8 @@ pnpm install
 pnpm dev            # http://localhost:5173
 pnpm build          # builds, generates sitemap, runs key-leak + bundle-budget gates
 pnpm preview        # serves the built bundle
-pnpm test           # Vitest + Testing Library (254 tests)
+pnpm test           # Vitest + Testing Library (260 tests, ~10s)
+pnpm test:e2e       # on-demand: builds dist/, runs Playwright smoke suite (offline + 3 routes + manifest)
 pnpm typecheck
 pnpm lint
 ```
@@ -124,12 +126,12 @@ references, so `import()` chunks (jsPDF, html2canvas) don't count against the bu
 
 | Surface              | Gzip      | Loaded                                         |
 | -------------------- | --------- | ---------------------------------------------- |
-| Initial JS           | 177.81 KB | every page load (editor + Home only)           |
-| Initial CSS          | 7.90 KB   | every page load                                |
+| Initial JS           | 178.47 KB | every page load (editor + Home only)           |
+| Initial CSS          | 8.09 KB   | every page load                                |
 | Lazy platform routes | ~25 KB    | per route — glossary / blog / pricing / funnel |
 | Lazy `.pdf` chunk    | ~223 KB   | first `.pdf` export click only                 |
 | Lazy canvas chunk    | ~2.6 MB   | first canvas open (Excalidraw + deps)          |
-| **Budget**           | 180 KB    | initial JS — under by 2.19 KB                  |
+| **Budget**           | 180 KB    | initial JS — under by 1.53 KB                  |
 
 ## Milestone status
 
@@ -142,7 +144,7 @@ references, so `import()` chunks (jsPDF, html2canvas) don't count against the bu
 | **M4** | AI proxy (Netlify Edge) · slash AI commands · Notes → image                                             | ✅ [v0.4.0-m4](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4) |
 | **M5** | Canvas (Excalidraw, vendored + lazy + behind seam)                                                      | ✅ [v0.5.0-m5](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.5.0-m5) |
 | **M6** | Platform & monetisation (glossary engine, blog, lead-gen, pricing)                                      | ✅ [v0.6.0-m6](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.6.0-m6) |
-| M7     | Hardening (Playwright offline, perf CI, a11y, security)                                                 | ☐                                                                                |
+| **M7** | Hardening (Playwright offline, perf CI, a11y, security review, ErrorBoundary)                           | ✅ [v0.7.0-m7](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.7.0-m7) |
 
 ## Architecture
 
@@ -184,12 +186,15 @@ sveska/
 
 ## Doc map
 
-| Doc                                  | Purpose                                             |
-| ------------------------------------ | --------------------------------------------------- |
-| [CLAUDE.md](CLAUDE.md)               | Full spec, milestones, ticket-level acceptance      |
-| [tasks.md](tasks.md)                 | Live TODO + completed work log                      |
-| [memory.md](memory.md)               | Locked decisions, gotchas, perf snapshot per ticket |
-| [src/ai/README.md](src/ai/README.md) | AI threat model + secret-setup command              |
+| Doc                                                | Purpose                                              |
+| -------------------------------------------------- | ---------------------------------------------------- |
+| [CLAUDE.md](CLAUDE.md)                             | Full spec, milestones, ticket-level acceptance       |
+| [tasks.md](tasks.md)                               | Live TODO + completed work log                       |
+| [memory.md](memory.md)                             | Locked decisions, gotchas, perf snapshot per ticket  |
+| [docs/threat-model.md](docs/threat-model.md)       | What we defend, what we accept                       |
+| [docs/security-review.md](docs/security-review.md) | M7 walkthrough of CLAUDE.md §5 — controls + evidence |
+| [docs/roi.md](docs/roi.md)                         | Path-to-$15K MRR math + funnel + acquisition lanes   |
+| [src/ai/README.md](src/ai/README.md)               | AI threat model + secret-setup command               |
 
 ## License
 

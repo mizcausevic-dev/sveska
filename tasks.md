@@ -7,13 +7,12 @@
 
 ## In progress
 
-- [ ] **M5 close — tag `v0.5.0-m5` + release notes**
-  - **AC**: tag pushed, release notes for T5.1 (T5.2 ~~tldraw~~ permanently dropped per parking lot row 1), both CLAUDE.md copies ticked.
+- [ ] **M7 close — tag `v0.7.0-m7` + release notes + final repo metadata refresh**
+  - **AC**: tag pushed, GitHub release lists T7.1 sub-items (a/b/c/d/e), both CLAUDE.md copies ticked, README badge bumped to M7, hero "milestones shipped" counter → 8.
 
-## Next up (sequential, top-down)
+## Next up
 
-- [ ] **M6** — Glossary engine · content surface · lead-gen · pricing
-- [ ] **M7** — Hardening (Playwright offline + perf budget CI + a11y audit + security review)
+- [ ] Post-M7 — Lighthouse PWA report on prod, Pro-tier sync design (E2E-encrypted per §5.5), analytics vendor pick (parking lot row 4)
 
 ## Recently done (this branch only)
 
@@ -49,8 +48,19 @@
 - ✅ **M4 ship** — tagged [v0.4.0-m4](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4), GitHub release with per-ticket bullets; user advised to `netlify env:set ANTHROPIC_API_KEY` when ready to enable AI flows
 - ✅ T5.1 — `@excalidraw/excalidraw` installed + lazy-loaded via `import()` (chunk 2.6 MB but kept out of initial bundle); `CanvasProvider` seam already existed at `src/canvas/CanvasProvider.ts`; `canvasRepo` writes per-note doc Blobs to Dexie's existing `canvas` table; `ExcalidrawCanvas` adapter mounts vendor with hydrated initialData + debounced 400ms autosave; `useCanvasView` Zustand store tracks open/close per session; canvas-toggle button (✎) in TagsBar; pane replaces textarea when open; closes on note switch; 2 palette commands (open canvas + export canvas as PNG via vendor `exportToBlob`); vitest aliases vendor to `src/__mocks__/excalidraw.ts` (roughjs Node-ESM resolution failure); 7 unit tests
 - ✅ T5.2 — **DROPPED** (parking lot decision, kept in CLAUDE.md §6 for historical clarity)
-- ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
+- ✅ **M5 ship** — tagged [v0.5.0-m5](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.5.0-m5)
+- ✅ T6.1 — Glossary engine: 20 terms across concept/tech/brand, DOMParser autolinker (skips code/anchors), grouped `/glossary` route, deep-anchored entries, in-page search, 13 unit tests
+- ✅ T6.2 — Content surface: `public/content/changelog.md` + 2 seeded blog posts + JSON index · `/changelog` + `/blog` + `/blog/:slug` routes via the same DOMPurify pipeline · note → MDX export (YAML frontmatter + slugified body)
+- ✅ T6.3 — Lead-gen seam: typed `LeadEvent` written to Dexie `prefs.leadEvents` (vendor-swappable) · reusable `EmailCapture` form · dismissable `CTASlot` with per-id persistence · utm-tagged subscribe link in HTML export footer
+- ✅ T6.4 — Pricing page (Free / Pro $10/mo waitlist / Team) · `/funnel` internal MRR dashboard reading lead events · `docs/roi.md` path-to-$15K math · **all platform routes lazy-loaded** to keep initial bundle under 180 KB
+- ✅ **M6 ship** — tagged [v0.6.0-m6](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.6.0-m6), repo metadata refreshed
+- ✅ T7.1a — Top-level `ErrorBoundary` class wraps `<App />` in `main.tsx` · Reload / Copy-details / Open-editor recovery affordances · structured crash report to clipboard · 3 unit tests
+- ✅ T7.1b — `scripts/e2e.mjs` on-demand Playwright smoke suite (`pnpm test:e2e`): editor mounts · /glossary entries · /pricing tiers · manifest.json parses · offline reload still renders editor (SW cache)
+- ✅ T7.1c — `vitest-axe` accessibility sweep over App shell + /glossary + /pricing · uncovered + fixed: `tab` role nested an interactive close button (refactored to `role="toolbar"` + sibling buttons) and file input lacked a label · vitest-axe types augmented locally for vitest@2
+- ✅ T7.1d — `docs/security-review.md` walks every CLAUDE.md §5 clause with status + evidence · accepted-risks table · review cadence
+- ✅ T7.1e — bundle + key gates already chained into `pnpm build` (verified in `.github/workflows/deploy.yml`); Playwright stays on-demand to keep CI slim
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
+- ✅ Repo screenshots — `scripts/capture-mocks.mjs` (Playwright + static server + Babel-JSX wait) · 6 PNG screenshots in README table grid
 
 ## After M1
 

@@ -119,6 +119,7 @@ export function NotesRail(): React.JSX.Element {
           void handleImport(e.target.files);
           e.target.value = '';
         }}
+        aria-label="Import notes from .txt or .md files"
         data-testid="rail-import-input"
       />
       <header className="rail-header">

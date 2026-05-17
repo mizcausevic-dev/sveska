@@ -154,7 +154,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 
 ### M7 — Hardening
 
-- ☐ T7.1 Playwright offline + install + restore suite. Perf budget enforced in CI. Error boundary + crash recovery. a11y audit. Security review vs §5.
+- ✅ T7.1 Playwright offline + install + restore suite. Perf budget enforced in CI. Error boundary + crash recovery. a11y audit. Security review vs §5.
 
 ## 7. Conventions
 

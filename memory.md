@@ -48,6 +48,11 @@
 - **check-no-keys catches env-var NAMES too (T4.2)**: the gate's `/\bANTHROPIC_API_KEY\b/` regex flags any occurrence of the literal name, not just shaped values. Burned 5 min when the slash AI's "AI offline — set `ANTHROPIC_API_KEY` in env" toast made the build fail. Fix: keep client-facing copy generic ("see src/ai/README.md") and let the README hold the env-var instructions.
 - **Netlify credit cap hit 2026-05-17**: team "fknmiz" exceeded the free-tier credit limit during M4 deploy churn; Netlify granted a few extras to keep the site up. Likely cause = build minutes from auto-deploy on every push. Three escape valves when this bites again: (1) gate CI deploys to tags only or add `[skip ci]` to docs commits, (2) upgrade to Netlify Pro (~$19/mo, 10× the limits), (3) migrate to Cloudflare Pages — same static + edge-function story, 500 builds/mo + unlimited bandwidth on free. **Edge-host decision (Netlify) still holds**; the migration concern is purely about plan ceilings, not architecture.
 - **@excalidraw/excalidraw fails under jsdom (T5.1)**: vendor pulls roughjs which uses bare `roughjs/bin/rough` imports Node ESM can't resolve. Fix in `vitest.config.ts`: alias `@excalidraw/excalidraw` → `src/__mocks__/excalidraw.ts` (stub renders a `<div data-testid="excalidraw-stub">`). Production builds use the real vendor via lazy `import()`. **Pattern applies to any vendor with deep Node-incompatible transitive imports** (e.g. Mermaid had similar issues historically).
+- **role="tablist" can only contain role="tab" children (T7.1c)**: axe's `aria-required-children` + `nested-interactive` rules form a vise — closable tabs naturally want a close button next to each tab activate, but a tab cannot contain interactive descendants and a tablist cannot contain non-tab children. Refactor: use `role="toolbar"` on the bar, sibling `<button>`s for activate/close, `aria-current="page"` on the active tab. Toolbar accepts mixed buttons natively. The functional UX is identical.
+- **vitest-axe@0.1 augmentation doesn't reach vitest@2 (T7.1c)**: package augments `Vi.Assertion<T>` but vitest@2 resolves `expect()` matchers via `import('vitest').Assertion`. `toHaveNoViolations` shows up at runtime but TS strict-mode build fails. Fix: tiny `src/test/vitest-axe.d.ts` that re-augments `declare module 'vitest' { interface Assertion … }`. Lint suppressions needed (`@typescript-eslint/no-empty-object-type`, unused `T`).
+- **Playwright `waitForFunction` is blocked by strict CSP (T7.1b)**: our `script-src 'self'` forbids `unsafe-eval`, and Playwright's predicate evaluator uses eval under the hood. Use CSS-selector waits (`waitForSelector`) instead. Same applies to `evaluate(() => …)` when the predicate runs via Runtime.evaluate — usually fine if it doesn't construct functions from strings.
+- **Vite preview on Windows binds to ::1 only (T7.1b)**: `connect(port, '127.0.0.1')` rejects ECONNREFUSED even though `localhost` works. Probe both stacks via `Promise.any` of `tryConnect(port, '127.0.0.1')` + `tryConnect(port, '::1')`. The actual page navigation via Chromium uses `localhost`, which resolves either way.
+- **`frame-ancestors` in CSP meta is ignored by browsers (T7.1d)**: directive only works in HTTP headers. Our `netlify.toml` already serves it as a header — the meta version is belt + suspenders for hosts that strip headers. The browser warning is benign and gets filtered out of the e2e console-error check.
 
 ## File map (where things live)
 
@@ -87,6 +92,7 @@
 | T6.2 (2026-05-17)    | 242   | 178.09 KB | 7.23 KB  | +changelog/blog routes + MDX export            |
 | T6.3 (2026-05-17)    | 248   | 179.35 KB | 7.44 KB  | +leadgen + email capture + CTA slot            |
 | T6.4 (2026-05-17)    | 254   | 177.81 KB | 7.90 KB  | +/pricing + /funnel; lazy platform routes      |
+| M7 ship (2026-05-17) | 260   | 178.47 KB | 8.09 KB  | +ErrorBoundary + a11y sweep + tab-bar refactor |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 
