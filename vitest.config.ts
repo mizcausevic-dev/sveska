@@ -30,11 +30,17 @@ const pwaRegisterStub = (): Plugin => ({
   },
 });
 
+// T5.1 — @excalidraw/excalidraw's transitive roughjs import breaks under
+// jsdom (Node ESM can't resolve `roughjs/bin/rough` without an extension).
+// Aliased to src/__mocks__/excalidraw.ts in `resolve.alias` below.
+// Production builds use the real package via lazy `import()`.
+
 export default defineConfig({
   plugins: [pwaRegisterStub(), react()],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      '@excalidraw/excalidraw': resolve(__dirname, 'src/__mocks__/excalidraw.ts'),
     },
   },
   test: {

@@ -35,6 +35,8 @@ import {
 } from './writingTimerStore';
 import { FindReplaceBar } from './FindReplace';
 import { AIResultPane } from '@/ai/AIResultPane';
+import { ExcalidrawCanvas } from '@/canvas/ExcalidrawCanvas';
+import { useCanvasView } from '@/canvas/canvasViewStore';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -57,6 +59,8 @@ export function Editor(): React.JSX.Element {
   const [notesById, setNotesById] = useState<Record<string, Note>>({});
   const [selectionStart, setSelectionStart] = useState(0);
   const [previewOn, setPreviewOn] = useState(true);
+  const canvasOpen = useCanvasView((s) => s.open);
+  const closeCanvas = useCanvasView((s) => s.set);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const noteId = activeNote?.id ?? null;
   const hydrated = ready && activeNote !== null;
@@ -78,6 +82,9 @@ export function Editor(): React.JSX.Element {
   // refetch (e.g. after rename/save), discarding live edits.
   useEffect(() => {
     if (activeNote) setBody(activeNote.body);
+    // T5.1 — close canvas view when switching notes so the canvas-per-note
+    // pane doesn't carry over to a different active note.
+    closeCanvas(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNote?.id]);
 
@@ -252,63 +259,69 @@ export function Editor(): React.JSX.Element {
           setSelectionStart(caret);
         }}
       />
-      <div
-        className={`editor-input-wrap${
-          (activeNote?.mode === 'md' && previewOn) || activeNote?.mode === 'checklist'
-            ? ' editor-input-wrap--split'
-            : ''
-        }`}
-      >
-        <textarea
-          ref={textareaRef}
-          className={`editor-input editor-input--paper-${prefs.paper}`}
-          value={body}
-          onChange={(e) => {
-            setBody(e.target.value);
-            setSelectionStart(e.target.selectionStart);
-            useWritingTimer.getState().registerInput();
-          }}
-          onKeyUp={(e) => setSelectionStart(e.currentTarget.selectionStart)}
-          onClick={(e) => setSelectionStart(e.currentTarget.selectionStart)}
-          onKeyDown={onTextareaKeyDown}
-          placeholder={PLACEHOLDER}
-          spellCheck={prefs.spellcheck}
-          autoFocus
-          aria-label="Note body"
-          data-testid="editor-textarea"
-          style={{
-            fontSize: `${prefs.fontSize}px`,
-            lineHeight: prefs.lineHeight,
-            fontFamily: FONT_FAMILY_CSS[prefs.fontFamily],
-            tabSize: prefs.tabSize,
-          }}
-        />
-        <SlashCommands
-          textareaRef={textareaRef}
-          value={body}
-          selectionStart={selectionStart}
-          onApply={(nextValue, nextCursor) => {
-            setBody(nextValue);
-            setSelectionStart(nextCursor);
-            requestAnimationFrame(() => {
-              const el = textareaRef.current;
-              if (!el) return;
-              el.selectionStart = el.selectionEnd = nextCursor;
-              el.focus();
-            });
-          }}
-        />
-        {activeNote?.mode === 'md' && previewOn && <PreviewPane body={body} />}
-        {activeNote?.mode === 'checklist' && <ChecklistPane body={body} onBodyChange={setBody} />}
-        <AIResultPane
-          onApply={(next) => {
-            setBody(next);
-            if (activeNote) {
-              void saveNoteBody(activeNote.id, next).then(() => refreshActiveNote());
-            }
-          }}
-        />
-      </div>
+      {canvasOpen && activeNote ? (
+        <div className="editor-input-wrap" data-testid="editor-canvas-wrap">
+          <ExcalidrawCanvas noteId={activeNote.id} />
+        </div>
+      ) : (
+        <div
+          className={`editor-input-wrap${
+            (activeNote?.mode === 'md' && previewOn) || activeNote?.mode === 'checklist'
+              ? ' editor-input-wrap--split'
+              : ''
+          }`}
+        >
+          <textarea
+            ref={textareaRef}
+            className={`editor-input editor-input--paper-${prefs.paper}`}
+            value={body}
+            onChange={(e) => {
+              setBody(e.target.value);
+              setSelectionStart(e.target.selectionStart);
+              useWritingTimer.getState().registerInput();
+            }}
+            onKeyUp={(e) => setSelectionStart(e.currentTarget.selectionStart)}
+            onClick={(e) => setSelectionStart(e.currentTarget.selectionStart)}
+            onKeyDown={onTextareaKeyDown}
+            placeholder={PLACEHOLDER}
+            spellCheck={prefs.spellcheck}
+            autoFocus
+            aria-label="Note body"
+            data-testid="editor-textarea"
+            style={{
+              fontSize: `${prefs.fontSize}px`,
+              lineHeight: prefs.lineHeight,
+              fontFamily: FONT_FAMILY_CSS[prefs.fontFamily],
+              tabSize: prefs.tabSize,
+            }}
+          />
+          <SlashCommands
+            textareaRef={textareaRef}
+            value={body}
+            selectionStart={selectionStart}
+            onApply={(nextValue, nextCursor) => {
+              setBody(nextValue);
+              setSelectionStart(nextCursor);
+              requestAnimationFrame(() => {
+                const el = textareaRef.current;
+                if (!el) return;
+                el.selectionStart = el.selectionEnd = nextCursor;
+                el.focus();
+              });
+            }}
+          />
+          {activeNote?.mode === 'md' && previewOn && <PreviewPane body={body} />}
+          {activeNote?.mode === 'checklist' && <ChecklistPane body={body} onBodyChange={setBody} />}
+          <AIResultPane
+            onApply={(next) => {
+              setBody(next);
+              if (activeNote) {
+                void saveNoteBody(activeNote.id, next).then(() => refreshActiveNote());
+              }
+            }}
+          />
+        </div>
+      )}
       <SaveIndicator
         state={state}
         lastSavedAt={lastSavedAt}

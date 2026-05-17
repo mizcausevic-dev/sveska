@@ -7,12 +7,11 @@
 
 ## In progress
 
-- [ ] **M4 close — tag `v0.4.0-m4` + release notes**
-  - **AC**: tag pushed, release notes summarize T4.1–T4.3, both CLAUDE.md copies ticked.
+- [ ] **M5 close — tag `v0.5.0-m5` + release notes**
+  - **AC**: tag pushed, release notes for T5.1 (T5.2 ~~tldraw~~ permanently dropped per parking lot row 1), both CLAUDE.md copies ticked.
 
 ## Next up (sequential, top-down)
 
-- [ ] **M5** — Canvas (Excalidraw vendored, lazy, behind CanvasProvider seam)
 - [ ] **M6** — Glossary engine · content surface · lead-gen · pricing
 - [ ] **M7** — Hardening (Playwright offline + perf budget CI + a11y audit + security review)
 
@@ -47,6 +46,9 @@
 - ✅ T4.1 — `netlify/edge-functions/ai.ts` streaming Anthropic `/v1/messages` proxy (per-IP token bucket, same-origin guard, schema gate, key in `Deno.env`) · `netlify.toml` `[[edge_functions]]` route at `/api/ai` · `src/ai/aiClient.ts` SSE consumer (yields text deltas, maps to `AIError` kinds) · threat model + secret docs in `src/ai/README.md` · 6 unit tests
 - ✅ T4.2 — `src/ai/prompts.ts` 5-command catalog (improve / summarize / continue / rewrite / linkedin) · `aiRunStore` single-concurrent-run with abort + toast on error · `AIResultPane` split-view stream with Apply / Copy / Discard · `AIToast` 4s auto-dismiss · `ai`-group entries in command palette + slash popover · `copyOnComplete` writes the result to clipboard (used by LinkedIn) · 503 degrades to "AI offline — see README" toast (never leaks env-var name to the SPA, key-leak gate still passes) · 8 unit tests
 - ✅ T4.3 — `imageSpec.ts` AI-returns-JSON spec for Concise (title/subtitle/3 bullets/accent) and Detailed (title/subtitle/4 sections/accent), with clamping + code-fence stripping + best-effort fallback when proxy is offline · `renderImage.ts` paints the spec on a 1200×630 canvas (OG-card friendly), exports a PNG Blob, triggers a download via ephemeral anchor · 2 palette commands ("AI · Render as image (concise/detailed)") · unconfigured proxy gracefully renders a basic card from the note itself · 8 unit tests
+- ✅ **M4 ship** — tagged [v0.4.0-m4](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4), GitHub release with per-ticket bullets; user advised to `netlify env:set ANTHROPIC_API_KEY` when ready to enable AI flows
+- ✅ T5.1 — `@excalidraw/excalidraw` installed + lazy-loaded via `import()` (chunk 2.6 MB but kept out of initial bundle); `CanvasProvider` seam already existed at `src/canvas/CanvasProvider.ts`; `canvasRepo` writes per-note doc Blobs to Dexie's existing `canvas` table; `ExcalidrawCanvas` adapter mounts vendor with hydrated initialData + debounced 400ms autosave; `useCanvasView` Zustand store tracks open/close per session; canvas-toggle button (✎) in TagsBar; pane replaces textarea when open; closes on note switch; 2 palette commands (open canvas + export canvas as PNG via vendor `exportToBlob`); vitest aliases vendor to `src/__mocks__/excalidraw.ts` (roughjs Node-ESM resolution failure); 7 unit tests
+- ✅ T5.2 — **DROPPED** (parking lot decision, kept in CLAUDE.md §6 for historical clarity)
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

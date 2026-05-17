@@ -16,6 +16,7 @@ import { useAIRun } from '@/ai/aiRunStore';
 import { fallbackSpec, parseImageSpec, specPromptFor, type ImageVariant } from '@/ai/imageSpec';
 import { downloadImage } from '@/ai/renderImage';
 import { runAI, type AIError } from '@/ai/aiClient';
+import { openCanvasView, useCanvasView } from '@/canvas/canvasViewStore';
 
 /**
  * Static catalog of every user-facing action (M3.T3.1).
@@ -91,6 +92,53 @@ export function buildCommandCatalog(): PaletteCommand[] {
       keywords: 'versions snapshots diff',
       group: 'note',
       run: openVersions,
+    },
+    {
+      id: 'note.canvas.open',
+      label: 'Open canvas (Excalidraw)',
+      keywords: 'draw sketch diagram canvas excalidraw',
+      group: 'note',
+      run: openCanvasView,
+    },
+    {
+      id: 'note.canvas.export',
+      label: 'Export canvas as PNG',
+      keywords: 'image export png canvas drawing',
+      group: 'note',
+      run: () => {
+        if (!useCanvasView.getState().open) {
+          useAIRun.getState().setToast({
+            kind: 'warn',
+            text: 'Open the canvas first (✎ in the tags bar) before exporting.',
+          });
+          return;
+        }
+        const exporter = (window as { __sveskaCanvasExport?: () => Promise<Blob | null> })
+          .__sveskaCanvasExport;
+        if (!exporter) {
+          useAIRun.getState().setToast({ kind: 'error', text: 'Canvas not ready yet.' });
+          return;
+        }
+        void exporter().then((blob) => {
+          if (!blob) {
+            useAIRun.getState().setToast({ kind: 'error', text: 'Canvas export failed.' });
+            return;
+          }
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const note = useTabs.getState().activeNote;
+          a.href = url;
+          a.download = `${slugForCanvas(note?.title ?? 'sveska')}-canvas.png`;
+          a.style.display = 'none';
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }, 0);
+          useAIRun.getState().setToast({ kind: 'info', text: 'Canvas PNG downloaded.' });
+        });
+      },
     },
     {
       id: 'note.from.template',
@@ -254,4 +302,8 @@ function slugify(s: string): string {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 64);
+}
+
+function slugForCanvas(s: string): string {
+  return slugify(s) || 'sveska';
 }

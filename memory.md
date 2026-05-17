@@ -47,6 +47,7 @@
 - **Edge functions are NOT lint-checked by SPA tsconfig (T4.1)**: `netlify/edge-functions/` uses Deno (imports from `https://edge.netlify.com`) and is bundled by Netlify, not Vite. Added to ESLint ignores; type-checking happens via `netlify deploy --build` / `netlify dev`. Review function files in-PR carefully since the lint gate doesn't cover them.
 - **check-no-keys catches env-var NAMES too (T4.2)**: the gate's `/\bANTHROPIC_API_KEY\b/` regex flags any occurrence of the literal name, not just shaped values. Burned 5 min when the slash AI's "AI offline — set `ANTHROPIC_API_KEY` in env" toast made the build fail. Fix: keep client-facing copy generic ("see src/ai/README.md") and let the README hold the env-var instructions.
 - **Netlify credit cap hit 2026-05-17**: team "fknmiz" exceeded the free-tier credit limit during M4 deploy churn; Netlify granted a few extras to keep the site up. Likely cause = build minutes from auto-deploy on every push. Three escape valves when this bites again: (1) gate CI deploys to tags only or add `[skip ci]` to docs commits, (2) upgrade to Netlify Pro (~$19/mo, 10× the limits), (3) migrate to Cloudflare Pages — same static + edge-function story, 500 builds/mo + unlimited bandwidth on free. **Edge-host decision (Netlify) still holds**; the migration concern is purely about plan ceilings, not architecture.
+- **@excalidraw/excalidraw fails under jsdom (T5.1)**: vendor pulls roughjs which uses bare `roughjs/bin/rough` imports Node ESM can't resolve. Fix in `vitest.config.ts`: alias `@excalidraw/excalidraw` → `src/__mocks__/excalidraw.ts` (stub renders a `<div data-testid="excalidraw-stub">`). Production builds use the real vendor via lazy `import()`. **Pattern applies to any vendor with deep Node-incompatible transitive imports** (e.g. Mermaid had similar issues historically).
 
 ## File map (where things live)
 
@@ -81,6 +82,7 @@
 | T4.1 (2026-05-17)    | 201   | 167.31 KB | 6.48 KB  | +edge AI proxy + SSE client (no client growth) |
 | T4.2 (2026-05-17)    | 209   | 169.52 KB | 6.68 KB  | +slash AI commands + result pane + toast       |
 | T4.3 (2026-05-17)    | 217   | 171.34 KB | 6.68 KB  | +Notes → image (canvas OG cards, M4 close)     |
+| T5.1 (2026-05-17)    | 224   | 172.49 KB | 6.75 KB  | +Excalidraw canvas (lazy 2.6 MB, M5 close)     |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 

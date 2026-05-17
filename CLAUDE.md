@@ -142,7 +142,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 
 ### M5 — Canvas module
 
-- ☐ T5.1 `CanvasProvider` interface + Excalidraw (MIT) impl, canvas-per-note, export to image, offline.
+- ✅ T5.1 `CanvasProvider` interface + Excalidraw (MIT) impl, canvas-per-note, export to image, offline.
 - ☐ T5.2 ~~tldraw adapter~~ **DROPPED.** No tldraw. Excalidraw is the only canvas. Seam retained for optionality, no second adapter built.
 
 ### M6 — Platform & monetization (Kinetic Gain doctrine)

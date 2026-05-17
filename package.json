@@ -23,6 +23,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.1",
     "dexie": "^4.0.10",
     "dompurify": "^3.4.3",
     "jspdf": "^4.2.1",

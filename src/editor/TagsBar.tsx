@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { type Note } from '@/notes/db';
 import { setNoteMode, setNotePinned, updateNoteTags } from '@/notes/noteRepo';
 import { useTabs } from '@/notes/tabsStore';
+import { useCanvasView } from '@/canvas/canvasViewStore';
 
 interface Props {
   note: Note;
@@ -29,6 +30,9 @@ export function TagsBar({ note }: Props): React.JSX.Element {
     await updateNoteTags(note.id, next);
     await refreshActiveNote();
   }
+
+  const canvasOpen = useCanvasView((s) => s.open);
+  const toggleCanvas = useCanvasView((s) => s.toggle);
 
   async function togglePin(): Promise<void> {
     await setNotePinned(note.id, !note.pinned);
@@ -71,6 +75,16 @@ export function TagsBar({ note }: Props): React.JSX.Element {
         data-testid="mode-toggle"
       >
         {note.mode === 'md' ? 'MD' : note.mode === 'checklist' ? 'CHK' : 'TXT'}
+      </button>
+      <button
+        type="button"
+        className={`mode-toggle${canvasOpen ? ' mode-toggle--canvas' : ''}`}
+        onClick={toggleCanvas}
+        aria-pressed={canvasOpen}
+        title={canvasOpen ? 'Close canvas view' : 'Open canvas (Excalidraw)'}
+        data-testid="canvas-toggle"
+      >
+        ✎
       </button>
       <ul className="tag-list" data-testid="tag-list">
         {note.tags.map((tag) => (
