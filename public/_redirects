@@ -1,0 +1,14 @@
+# Cloudflare Pages redirects + SPA fallback.
+# Syntax docs: https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# Order matters — specific rules first, SPA fallback LAST.
+# CF Pages always serves real Pages Functions ahead of any redirect, so
+# /api/ai → functions/api/ai.ts works without an explicit rule.
+
+# Canonical: force www → apex. .pages.dev + .kineticgain.com aliases stay
+# reachable as warm spares (same reasoning as the prior Netlify config).
+https://www.sveska.studio/* https://sveska.studio/:splat 301!
+
+# SPA fallback — every unmatched static path returns index.html so React
+# Router can take over. 200 (rewrite) preserves the URL.
+/* /index.html 200

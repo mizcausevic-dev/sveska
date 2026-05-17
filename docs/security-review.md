@@ -12,7 +12,7 @@ Date: 2026-05-17 · Reviewer: maintainer · Pass = ✅, Watch = ⚠️, Fail = �
 
 | Check                                                    | Status | Evidence                                                                                                                                            |
 | -------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AI key reads from `Deno.env`, never a `VITE_*` var       | ✅     | [`netlify/edge-functions/ai.ts`](../netlify/edge-functions/ai.ts) — `Deno.env.get('ANTHROPIC_API_KEY')`                                             |
+| AI key reads from CF Pages env, never a `VITE_*` var     | ✅     | [`functions/api/ai.ts`](../functions/api/ai.ts) — `env.ANTHROPIC_API_KEY` (Workers runtime; encrypted at rest)                                      |
 | Client bundle scanned for key-shaped strings every build | ✅     | [`scripts/check-no-keys.mjs`](../scripts/check-no-keys.mjs) — runs in `pnpm build`; fails the build on any `VITE_*_API_KEY`, `sk-ant-*`, `Bearer …` |
 | AI client only POSTs to `/api/ai` (same-origin)          | ✅     | [`src/ai/aiClient.ts`](../src/ai/aiClient.ts) — no other origin                                                                                     |
 | Graceful degradation if proxy missing (503/401)          | ✅     | Edge function 503s when key unset; client surfaces a single-line warning and disables AI commands                                                   |
@@ -24,14 +24,14 @@ allowlist empty.
 
 ## §5.2 — "CSP header: `default-src 'self'`; allow only the AI proxy origin + self."
 
-| Check                                            | Status | Evidence                                                                                                                                                          |
-| ------------------------------------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| CSP meta in `index.html`                         | ✅     | `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; …; connect-src 'self'; frame-ancestors 'none'`                                          |
-| CSP header in `netlify.toml` (belt + suspenders) | ✅     | Mirrors the meta exactly                                                                                                                                          |
-| AI proxy origin allowlisted in `connect-src`     | ✅     | Proxy is same-origin (`/api/ai`) so `'self'` already covers it. No third-party origin needed — that's the whole point of the Netlify Edge choice (parking-lot #2) |
-| `frame-ancestors 'none'` (anti-clickjack)        | ✅     | Both meta + header                                                                                                                                                |
-| `object-src 'none'` (anti-Flash/plugin)          | ✅     | Both                                                                                                                                                              |
-| `style-src` allows `'unsafe-inline'`             | ⚠️     | Required for `tokens.css` runtime theme switching (CSS vars on `:root`). Acceptable risk; no inline `<script>` allowed                                            |
+| Check                                        | Status | Evidence                                                                                                                                                                |
+| -------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CSP meta in `index.html`                     | ✅     | `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; …; connect-src 'self'; frame-ancestors 'none'`                                                |
+| CSP header in `public/_headers` (CF Pages)   | ✅     | Mirrors the meta exactly                                                                                                                                                |
+| AI proxy origin allowlisted in `connect-src` | ✅     | Proxy is same-origin (`/api/ai`) so `'self'` already covers it. No third-party origin needed — same-origin was the whole point of picking an edge host (parking-lot #2) |
+| `frame-ancestors 'none'` (anti-clickjack)    | ✅     | Both meta + header                                                                                                                                                      |
+| `object-src 'none'` (anti-Flash/plugin)      | ✅     | Both                                                                                                                                                                    |
+| `style-src` allows `'unsafe-inline'`         | ⚠️     | Required for `tokens.css` runtime theme switching (CSS vars on `:root`). Acceptable risk; no inline `<script>` allowed                                                  |
 
 **Verdict:** Pass with one tracked exception (`style-src 'unsafe-inline'`).
 The exception does not enable script injection.

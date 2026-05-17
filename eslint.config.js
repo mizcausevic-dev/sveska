@@ -13,10 +13,12 @@ export default tseslint.config(
       'coverage',
       'public/brand',
       '_tmp_final',
-      // T4.1 — Netlify Edge Functions run in Deno and import from
-      // https://edge.netlify.com. They're bundled by Netlify, not by Vite,
-      // and intentionally aren't part of the SPA TS project. Lint is skipped
-      // here; the function file is small + reviewed in-PR.
+      // Edge / Pages Functions live outside the SPA TS project and run on
+      // a different runtime (Workers / Deno). They're typechecked via
+      // `tsconfig.functions.json` (`@cloudflare/workers-types`) and bundled
+      // by the host, not Vite. Lint is skipped here; files are small +
+      // reviewed in-PR.
+      'functions',
       'netlify/edge-functions',
       // T6.1 — one-off Node script that runs Playwright in a browser context;
       // intentionally uses `document` inside `page.waitForFunction`. Not part

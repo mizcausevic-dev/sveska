@@ -17,16 +17,18 @@
 ## Deployment topology
 
 - **GitHub**: [mizcausevic-dev/sveska](https://github.com/mizcausevic-dev/sveska), `main` = production, branch protection not yet enabled.
-- **CI/CD**: `.github/workflows/deploy.yml` — push to main → typecheck → lint → test → build → Netlify deploy. Requires `NETLIFY_AUTH_TOKEN` secret (set 2026-05-16).
-- **Netlify**: project ID `0f0d7b94-c208-4af6-a321-df2623367629`, slug `sveska`, owner `causevic.miz@gmail.com`, team `fknmiz`.
+- **CI/CD**: `.github/workflows/deploy.yml` — push to main → typecheck → lint → test → build → `wrangler pages deploy`. Requires `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` GH secrets.
+- **Host (current, M7+)**: **Cloudflare Pages** project `sveska`, deployed via wrangler. Free tier: 500 builds/mo + unlimited bandwidth + 100k function invocations/day. Migrated 2026-05-17 after Netlify credit cap.
+- **Host (former, M0–M6)**: Netlify project `0f0d7b94-c208-4af6-a321-df2623367629`, team `fknmiz`. Decommissioned at M7+ migration; Pages-Function deploy = same architecture, free tier headroom. Netlify dashboard still owns the historical deploys for reference.
 - **Canonical**: `https://sveska.studio` (Hostinger registrar, DNS at Hostinger).
-- **Aliases** all 301 → canonical via `netlify.toml`:
-  - `www.sveska.studio` (CNAME → sveska.netlify.app)
-  - `sveska.netlify.app` (Netlify's default)
+- **Aliases** all 301 → canonical via `public/_redirects`:
+  - `www.sveska.studio` (CNAME → sveska.pages.dev)
+  - `sveska.pages.dev` (CF Pages default)
   - `sveska.kineticgain.com` (ALIAS — type ALIAS not CNAME!)
-  - `notepad.kineticgain.com` (CNAME → sveska.netlify.app)
+  - `notepad.kineticgain.com` (CNAME → sveska.pages.dev)
 - **DNS via Hostinger API**: `~/ftpkred.txt` holds the token (rotated 2026-05-16 after the original leaked in conversation logs). Token has DNS + portfolio scope. Endpoint: `https://developers.hostinger.com/api/dns/v1/zones/{domain}`. Auth: `Bearer`.
-- **SSL**: Let's Encrypt via Netlify, single cert with SAN covering all 4 hostnames. Provisions automatically once DNS resolves.
+- **SSL**: Universal SSL via Cloudflare (was Let's Encrypt via Netlify). Provisions automatically when the custom domain attaches to the Pages project.
+- **AI key**: `ANTHROPIC_API_KEY` set in CF Pages → Settings → Environment variables → Production (Secret). Was previously `netlify env:set`.
 
 ## Gotchas
 
@@ -44,15 +46,15 @@
 - **jsdom's Blob lacks both `.text()` and `.arrayBuffer()`**: tests that read export Blobs must use a FileReader-based helper (`fr.readAsText(blob)`). See `src/__tests__/export.test.tsx#blobText` for the pattern — markdown.test.tsx reused it after I burned 5 min discovering arrayBuffer also missing.
 - **Markdown bundle = +56KB gzip (T3.2)**: markdown-it (~45KB) + dompurify (~11KB) live in the main bundle. Total JS gzip jumped 104→160 KB; still under the 180 KB budget but tight. If M3 closes near budget, lazy-load `@/markdown/render` behind `import()` so plain-text users don't pay for the parser.
 - **check-bundle counts only initial-load chunks (T3.7)**: jsPDF is ~125KB gzip (plus html2canvas ~47KB + es helpers ~50KB = 223KB total). `scripts/check-bundle.mjs` parses dist/index.html and only sums assets it references, so `import('jspdf')` chunks don't count against the 180KB budget. Apply the same pattern for any future heavy vendor (Excalidraw at M5, anything M4 brings).
-- **Edge functions are NOT lint-checked by SPA tsconfig (T4.1)**: `netlify/edge-functions/` uses Deno (imports from `https://edge.netlify.com`) and is bundled by Netlify, not Vite. Added to ESLint ignores; type-checking happens via `netlify deploy --build` / `netlify dev`. Review function files in-PR carefully since the lint gate doesn't cover them.
+- **Edge functions are NOT lint-checked by SPA tsconfig**: `functions/` (CF Pages, Workers runtime) is bundled by CF, not Vite. It IS typechecked via a separate `tsconfig.functions.json` referencing `@cloudflare/workers-types`. Added to ESLint ignores; review function files in-PR carefully since the lint gate doesn't cover them. _Historical: M0–M6 used `netlify/edge-functions/` (Deno) — same exclusion pattern._
 - **check-no-keys catches env-var NAMES too (T4.2)**: the gate's `/\bANTHROPIC_API_KEY\b/` regex flags any occurrence of the literal name, not just shaped values. Burned 5 min when the slash AI's "AI offline — set `ANTHROPIC_API_KEY` in env" toast made the build fail. Fix: keep client-facing copy generic ("see src/ai/README.md") and let the README hold the env-var instructions.
-- **Netlify credit cap hit 2026-05-17**: team "fknmiz" exceeded the free-tier credit limit during M4 deploy churn; Netlify granted a few extras to keep the site up. Likely cause = build minutes from auto-deploy on every push. Three escape valves when this bites again: (1) gate CI deploys to tags only or add `[skip ci]` to docs commits, (2) upgrade to Netlify Pro (~$19/mo, 10× the limits), (3) migrate to Cloudflare Pages — same static + edge-function story, 500 builds/mo + unlimited bandwidth on free. **Edge-host decision (Netlify) still holds**; the migration concern is purely about plan ceilings, not architecture.
+- **Netlify → Cloudflare Pages migration (2026-05-17)**: Netlify free-tier credit cap exceeded mid-M6 (team "fknmiz", `JSONHTTPError: Forbidden` on the `netlify-cli deploy` step). Three escape valves were on the table: stay on Netlify Pro ($19/mo), gate CI to tags only, or migrate. **Picked migration** — same architecture (static + edge function), CF free tier ~10× the headroom. Migration delta: `Deno.env.get` → `env.X` parameter (Workers runtime), `context.ip` → `cf-connecting-ip` header, `netlify.toml [[headers]]` → `public/_headers` (same conventions), `netlify.toml [[redirects]]` → `public/_redirects` (same syntax), `netlify-cli` → `wrangler pages deploy` (uses `cloudflare/wrangler-action@v3` in CI). One-time setup on user side: create CF Pages project, set `ANTHROPIC_API_KEY` secret, generate API token, flip DNS.
 - **@excalidraw/excalidraw fails under jsdom (T5.1)**: vendor pulls roughjs which uses bare `roughjs/bin/rough` imports Node ESM can't resolve. Fix in `vitest.config.ts`: alias `@excalidraw/excalidraw` → `src/__mocks__/excalidraw.ts` (stub renders a `<div data-testid="excalidraw-stub">`). Production builds use the real vendor via lazy `import()`. **Pattern applies to any vendor with deep Node-incompatible transitive imports** (e.g. Mermaid had similar issues historically).
 - **role="tablist" can only contain role="tab" children (T7.1c)**: axe's `aria-required-children` + `nested-interactive` rules form a vise — closable tabs naturally want a close button next to each tab activate, but a tab cannot contain interactive descendants and a tablist cannot contain non-tab children. Refactor: use `role="toolbar"` on the bar, sibling `<button>`s for activate/close, `aria-current="page"` on the active tab. Toolbar accepts mixed buttons natively. The functional UX is identical.
 - **vitest-axe@0.1 augmentation doesn't reach vitest@2 (T7.1c)**: package augments `Vi.Assertion<T>` but vitest@2 resolves `expect()` matchers via `import('vitest').Assertion`. `toHaveNoViolations` shows up at runtime but TS strict-mode build fails. Fix: tiny `src/test/vitest-axe.d.ts` that re-augments `declare module 'vitest' { interface Assertion … }`. Lint suppressions needed (`@typescript-eslint/no-empty-object-type`, unused `T`).
 - **Playwright `waitForFunction` is blocked by strict CSP (T7.1b)**: our `script-src 'self'` forbids `unsafe-eval`, and Playwright's predicate evaluator uses eval under the hood. Use CSS-selector waits (`waitForSelector`) instead. Same applies to `evaluate(() => …)` when the predicate runs via Runtime.evaluate — usually fine if it doesn't construct functions from strings.
 - **Vite preview on Windows binds to ::1 only (T7.1b)**: `connect(port, '127.0.0.1')` rejects ECONNREFUSED even though `localhost` works. Probe both stacks via `Promise.any` of `tryConnect(port, '127.0.0.1')` + `tryConnect(port, '::1')`. The actual page navigation via Chromium uses `localhost`, which resolves either way.
-- **`frame-ancestors` in CSP meta is ignored by browsers (T7.1d)**: directive only works in HTTP headers. Our `netlify.toml` already serves it as a header — the meta version is belt + suspenders for hosts that strip headers. The browser warning is benign and gets filtered out of the e2e console-error check.
+- **`frame-ancestors` in CSP meta is ignored by browsers (T7.1d)**: directive only works in HTTP headers. Our `public/_headers` ships it as a header on CF Pages — the meta version is belt + suspenders for hosts that strip headers. The browser warning is benign and gets filtered out of the e2e console-error check.
 
 ## File map (where things live)
 
@@ -60,7 +62,7 @@
 - **Design specs** (read-only, M1+): `docs/design-mocks/*.{html,jsx}` — 17 HTML harnesses + 13 JSX modules from Claude Code Design.
 - **Brand kit doc**: `docs/design-kit/` — `system.css`, full design-system HTML, fonts.
 - **sveska.studio marketing pages** (planned M6): `docs/landing/*.html` — 8 pages (landing, about, changelog, glossary, privacy, roadmap, press, field-note).
-- **CI workflows**: `.github/workflows/deploy.yml` (auto on push) + `netlify-domain.yml` (one-shot domain ops).
+- **CI workflows**: `.github/workflows/deploy.yml` (auto on push → CF Pages via wrangler). `netlify-domain.yml` was deleted at the CF migration; domain ops happen via CF dashboard or `wrangler pages domain` commands.
 - **Brand assets in app**: `public/brand/` — favicon, icons (48–512 + maskable), logos, fonts, manifest.json mirror.
 
 ## Performance snapshot (rolling)
@@ -98,7 +100,7 @@ Budget: 180 KB JS gzip pre-canvas/AI.
 
 ## Open decisions (parking lot)
 
-- ~~**Edge host** (M4): Cloudflare Workers vs Vercel Edge~~ — **DECIDED 2026-05-17: Netlify Edge Functions**. Same origin (CSP `default-src 'self'` stays clean), single deploy pipeline (already wired), no new secrets / domains / CORS. Deno runtime; ~50ms cold start. Decision rationale in M4.T4.1 commit.
+- ~~**Edge host** (M4): Cloudflare Workers vs Vercel Edge~~ — **DECIDED 2026-05-17: Netlify Edge Functions**. _Re-decided same day post-M7_: migrated to **Cloudflare Pages Functions** (Workers runtime) after Netlify credit cap. Same architectural rationale (same origin, single deploy, no new auth) — different host. See gotcha "Netlify → Cloudflare Pages migration".
 - **Analytics vendor** (M6.3): cookieless / self-host. Consent gate already wired.
 - **OpenDyslexic font** (M1.6): need to vendor. Currently not in `public/brand/fonts/`.
 - **Lighthouse PWA score** on prod: not yet validated (CLI doesn't run Lighthouse). User to verify in Chrome DevTools.

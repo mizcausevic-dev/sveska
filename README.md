@@ -41,25 +41,25 @@ from day one.
 
 ## Features (live as of M7)
 
-| Layer       | What's shipped                                                                                                   |
-| ----------- | ---------------------------------------------------------------------------------------------------------------- |
-| Editor      | Native textarea · autosave (400 ms debounce + flush on blur/visibility) · crash-safe draft shadow                |
-| Modes       | TXT · MD (split preview, DOMPurify XSS gate) · CHK (click-toggle, drag-reorder, indent levels, hide done)        |
-| Navigation  | Multi-note tabs · session restore · NotesRail (pinned / recent / saved filters / tags)                           |
-| Discovery   | `Ctrl+K` command palette (fuzzy) · inline slash commands · `Ctrl+P` fuzzy search across all notes (<50 ms / 1k)  |
-| Capture     | Inbox (`Ctrl+Shift+K`) · Web Share Target → inbox · import .txt / .md (file picker + drag-drop)                  |
-| Snapshots   | Per-note version history with side-by-side LCS diff + Restore                                                    |
-| Writing     | Typewriter mode · WebAudio typing clicks · paper textures · writing-session timer · word goal · `Ctrl+F` find    |
-| Templates   | 5 built-in note templates · user templates · snippet typeahead (`;date`, `;todo`, `;hr`)                         |
-| Export      | `.txt` / `.md` / `.html` (prose for md) · share-via-URL hash · `.pdf` (lazy jsPDF)                               |
-| AI          | Streaming Anthropic proxy on Netlify Edge · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy  |
-| AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                 |
-| Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                   |
-| Platform    | `/glossary` (20-term auto-linker) · `/blog` + `/changelog` (Markdown content) · `/pricing` · `/funnel` dashboard |
-| Lead-gen    | Email capture · CTA slots · MDX export with frontmatter · HTML-export footer back-links                          |
-| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored, axe-clean App / Glossary / Pricing                |
-| Hardening   | Top-level `ErrorBoundary` (Reload / Copy report / Reset) · on-demand Playwright smoke suite (`pnpm test:e2e`)    |
-| Persistence | Dexie (IndexedDB) — 8 tables, soft-delete, legacy-localStorage import on first run                               |
+| Layer       | What's shipped                                                                                                                |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Editor      | Native textarea · autosave (400 ms debounce + flush on blur/visibility) · crash-safe draft shadow                             |
+| Modes       | TXT · MD (split preview, DOMPurify XSS gate) · CHK (click-toggle, drag-reorder, indent levels, hide done)                     |
+| Navigation  | Multi-note tabs · session restore · NotesRail (pinned / recent / saved filters / tags)                                        |
+| Discovery   | `Ctrl+K` command palette (fuzzy) · inline slash commands · `Ctrl+P` fuzzy search across all notes (<50 ms / 1k)               |
+| Capture     | Inbox (`Ctrl+Shift+K`) · Web Share Target → inbox · import .txt / .md (file picker + drag-drop)                               |
+| Snapshots   | Per-note version history with side-by-side LCS diff + Restore                                                                 |
+| Writing     | Typewriter mode · WebAudio typing clicks · paper textures · writing-session timer · word goal · `Ctrl+F` find                 |
+| Templates   | 5 built-in note templates · user templates · snippet typeahead (`;date`, `;todo`, `;hr`)                                      |
+| Export      | `.txt` / `.md` / `.html` (prose for md) · share-via-URL hash · `.pdf` (lazy jsPDF)                                            |
+| AI          | Streaming Anthropic proxy on Cloudflare Pages Functions · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy |
+| AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                              |
+| Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                                |
+| Platform    | `/glossary` (20-term auto-linker) · `/blog` + `/changelog` (Markdown content) · `/pricing` · `/funnel` dashboard              |
+| Lead-gen    | Email capture · CTA slots · MDX export with frontmatter · HTML-export footer back-links                                       |
+| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored, axe-clean App / Glossary / Pricing                             |
+| Hardening   | Top-level `ErrorBoundary` (Reload / Copy report / Reset) · on-demand Playwright smoke suite (`pnpm test:e2e`)                 |
+| Persistence | Dexie (IndexedDB) — 8 tables, soft-delete, legacy-localStorage import on first run                                            |
 
 ## Stack (locked at M0)
 
@@ -74,7 +74,7 @@ from day one.
 | Tests       | Vitest + Testing Library + `fake-indexeddb` (260 tests, 100% pass) · `vitest-axe` a11y sweep · on-demand Playwright e2e |
 | Lint/format | ESLint 9 (flat config, typed) + Prettier 3                                                                              |
 | Pre-commit  | Husky 9 + lint-staged                                                                                                   |
-| Edge        | **Netlify Edge Functions** (Deno) — same-origin AI proxy at `/api/ai`                                                   |
+| Edge        | **Cloudflare Pages Functions** (Workers runtime) — same-origin AI proxy at `/api/ai`                                    |
 | Canvas (M5) | Excalidraw (MIT), vendored, lazy-loaded behind `CanvasProvider`                                                         |
 
 ## Getting started
@@ -95,11 +95,14 @@ runs `lint-staged` (Prettier on touched files) plus `pnpm typecheck`.
 
 ### Optional: enable AI
 
-The AI proxy ships disabled. Set the secret once on Netlify to turn it on:
+The AI proxy ships disabled. Set the secret once on Cloudflare Pages:
 
 ```bash
-netlify env:set ANTHROPIC_API_KEY <your-key> --context production
+wrangler pages secret put ANTHROPIC_API_KEY --project-name=sveska
 ```
+
+Or via the dashboard: **CF Pages → sveska → Settings → Environment variables →
+Production → Add** · type **Secret**.
 
 Without the secret, `/api/ai` returns 503 and the in-app AI flows degrade to a friendly
 "AI offline" toast instead of crashing. Everything else works unchanged.
@@ -110,9 +113,9 @@ CLAUDE.md §5. Hard, enforced now (not deferred):
 
 1. **No API keys in the client.** `scripts/check-no-keys.mjs` runs at the end of every build
    and fails on any `VITE_*_API_KEY` / `ANTHROPIC_API_KEY` / `sk-…` / bearer-shaped string.
-2. **CSP `default-src 'self'`.** Declared as both an HTML meta tag (runtime) and a Netlify
-   header (defence-in-depth). The AI proxy lives at `/api/ai` (same origin), so no
-   `connect-src` expansion is needed.
+2. **CSP `default-src 'self'`.** Declared as both an HTML meta tag (runtime) and a
+   `public/_headers` rule shipped to Cloudflare Pages (defence-in-depth). The AI proxy
+   lives at `/api/ai` (same origin), so no `connect-src` expansion is needed.
 3. **No third-party trackers** in the app shell. Analytics is a seam with a no-op default and
    a consent gate (`ConsentBar`). Real vendor is decided at M6 and must be cookieless.
 4. **Self-hosted fonts.** Bricolage Grotesque 700 + JetBrains Mono 600 ship as TTFs in
@@ -141,7 +144,7 @@ references, so `import()` chunks (jsPDF, html2canvas) don't count against the bu
 | **M1** | Core editor (notepad.js.org parity)                                                                     | ✅ [v0.1.0-m1](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.1.0-m1) |
 | **M2** | Multi-note tabs · version history · tags/pins · fuzzy search · inbox                                    | ✅ [v0.2.0-m2](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.2.0-m2) |
 | **M3** | Command palette · MD/checklist modes · templates · typewriter · paper · find/replace · import/share/PDF | ✅ [v0.3.0-m3](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.3.0-m3) |
-| **M4** | AI proxy (Netlify Edge) · slash AI commands · Notes → image                                             | ✅ [v0.4.0-m4](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4) |
+| **M4** | AI proxy (Cloudflare Pages Function, ported from Netlify at M7+) · slash AI commands · Notes → image    | ✅ [v0.4.0-m4](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4) |
 | **M5** | Canvas (Excalidraw, vendored + lazy + behind seam)                                                      | ✅ [v0.5.0-m5](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.5.0-m5) |
 | **M6** | Platform & monetisation (glossary engine, blog, lead-gen, pricing)                                      | ✅ [v0.6.0-m6](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.6.0-m6) |
 | **M7** | Hardening (Playwright offline, perf CI, a11y, security review, ErrorBoundary)                           | ✅ [v0.7.0-m7](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.7.0-m7) |
@@ -149,7 +152,7 @@ references, so `import()` chunks (jsPDF, html2canvas) don't count against the bu
 ## Architecture
 
 <p align="center">
-  <img src="docs/architecture.svg" alt="Sveska architecture: UI shell + Zustand state + Dexie storage + Markdown pipeline + Canvas seam + AI client through Netlify Edge Function with vaulted key, plus the milestone build order ribbon" width="100%">
+  <img src="docs/architecture.svg" alt="Sveska architecture: UI shell + Zustand state + Dexie storage + Markdown pipeline + Canvas seam + AI client through Cloudflare Pages Function with vaulted key, plus the milestone build order ribbon" width="100%">
 </p>
 
 ## Repo map
@@ -159,7 +162,10 @@ sveska/
   index.html
   /public                  manifest, /brand (icons, fonts, logos), robots, sitemap
   /scripts                 check-no-keys · check-bundle · generate-sitemap
-  /netlify/edge-functions  /api/ai — Anthropic streaming proxy (Deno)
+  /functions/api          /ai.ts — Anthropic streaming proxy (Cloudflare Pages Function, Workers runtime)
+  /public/_headers        security headers (CSP + frame-ancestors + permissions-policy)
+  /public/_redirects      SPA fallback + canonical www → apex
+  /wrangler.toml          CF Pages build config
   /src
     /app         router, layout, KeyBindings, UpdateBanner
     /editor      Editor + TabBar + TagsBar + SnapshotToolbar + VersionsModal +

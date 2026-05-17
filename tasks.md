@@ -7,8 +7,13 @@
 
 ## In progress
 
-- [ ] **M7 close — tag `v0.7.0-m7` + release notes + final repo metadata refresh**
-  - **AC**: tag pushed, GitHub release lists T7.1 sub-items (a/b/c/d/e), both CLAUDE.md copies ticked, README badge bumped to M7, hero "milestones shipped" counter → 8.
+- [ ] **Hand off CF Pages setup (one-time, user-side)**
+  - Create CF account if needed → CF Pages → create project `sveska` (production branch `main`)
+  - Set `ANTHROPIC_API_KEY` in CF Pages → Settings → Environment variables → Production (Secret)
+  - Generate CF API token (My Profile → API Tokens → "Edit Cloudflare Workers" template; scope to Pages:Edit + Account)
+  - Add `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` GH secrets
+  - Attach custom domain `sveska.studio` to the Pages project; CF prints the DNS target
+  - Flip Hostinger DNS apex (A/CNAME) to that target
 
 ## Next up
 
@@ -41,11 +46,11 @@
 - ✅ T3.6 — Paper textures (dotted/graph/linen/grain, CSS-only, no assets) + Pomodoro-style writing timer (auto-pauses on 60s idle) + word-count goal progress bar in SaveIndicator + Ctrl+F find/replace bar with match counter and case-sensitive toggle · 2 new persisted editor prefs (paper / wordGoal) · 12 unit tests + browser preview verified
 - ✅ T3.7 — Import .txt/.md (file picker + drag-drop on rail) · Web Share target → inbox · share-via-URL `#note=<base64url>` (pack + parse + auto-open on load + "Copy share link" palette command) · lazy `.pdf` export (jsPDF dynamic import; 223 KB into separate chunks, not initial bundle) · check-bundle.mjs updated to only count initial-load chunks · 8 unit tests + browser preview verified
 - ✅ **M3 ship** — tagged [v0.3.0-m3](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.3.0-m3), GitHub release with per-ticket bullets
-- ✅ M4 edge-host decision — **Netlify Edge Functions** (over CF Workers / Vercel Edge). Same origin, single deploy pipeline.
-- ✅ T4.1 — `netlify/edge-functions/ai.ts` streaming Anthropic `/v1/messages` proxy (per-IP token bucket, same-origin guard, schema gate, key in `Deno.env`) · `netlify.toml` `[[edge_functions]]` route at `/api/ai` · `src/ai/aiClient.ts` SSE consumer (yields text deltas, maps to `AIError` kinds) · threat model + secret docs in `src/ai/README.md` · 6 unit tests
+- ✅ M4 edge-host decision — Netlify Edge Functions (M0–M6); migrated to **Cloudflare Pages Functions** at M7+ (Netlify credit cap forced the move; same architecture, free-tier headroom).
+- ✅ T4.1 — Anthropic `/v1/messages` streaming proxy at `/api/ai`. Initially `netlify/edge-functions/ai.ts` (Deno, `Deno.env`, `context.ip`); rewritten 2026-05-17 as `functions/api/ai.ts` (Workers runtime, `env.ANTHROPIC_API_KEY`, `cf-connecting-ip`). Per-IP token bucket, same-origin guard, schema gate. `src/ai/aiClient.ts` unchanged (SSE consumer). 6 unit tests.
 - ✅ T4.2 — `src/ai/prompts.ts` 5-command catalog (improve / summarize / continue / rewrite / linkedin) · `aiRunStore` single-concurrent-run with abort + toast on error · `AIResultPane` split-view stream with Apply / Copy / Discard · `AIToast` 4s auto-dismiss · `ai`-group entries in command palette + slash popover · `copyOnComplete` writes the result to clipboard (used by LinkedIn) · 503 degrades to "AI offline — see README" toast (never leaks env-var name to the SPA, key-leak gate still passes) · 8 unit tests
 - ✅ T4.3 — `imageSpec.ts` AI-returns-JSON spec for Concise (title/subtitle/3 bullets/accent) and Detailed (title/subtitle/4 sections/accent), with clamping + code-fence stripping + best-effort fallback when proxy is offline · `renderImage.ts` paints the spec on a 1200×630 canvas (OG-card friendly), exports a PNG Blob, triggers a download via ephemeral anchor · 2 palette commands ("AI · Render as image (concise/detailed)") · unconfigured proxy gracefully renders a basic card from the note itself · 8 unit tests
-- ✅ **M4 ship** — tagged [v0.4.0-m4](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4), GitHub release with per-ticket bullets; user advised to `netlify env:set ANTHROPIC_API_KEY` when ready to enable AI flows
+- ✅ **M4 ship** — tagged [v0.4.0-m4](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4), GitHub release with per-ticket bullets; AI key now set via CF Pages env (was `netlify env:set` until the M7+ migration)
 - ✅ T5.1 — `@excalidraw/excalidraw` installed + lazy-loaded via `import()` (chunk 2.6 MB but kept out of initial bundle); `CanvasProvider` seam already existed at `src/canvas/CanvasProvider.ts`; `canvasRepo` writes per-note doc Blobs to Dexie's existing `canvas` table; `ExcalidrawCanvas` adapter mounts vendor with hydrated initialData + debounced 400ms autosave; `useCanvasView` Zustand store tracks open/close per session; canvas-toggle button (✎) in TagsBar; pane replaces textarea when open; closes on note switch; 2 palette commands (open canvas + export canvas as PNG via vendor `exportToBlob`); vitest aliases vendor to `src/__mocks__/excalidraw.ts` (roughjs Node-ESM resolution failure); 7 unit tests
 - ✅ T5.2 — **DROPPED** (parking lot decision, kept in CLAUDE.md §6 for historical clarity)
 - ✅ **M5 ship** — tagged [v0.5.0-m5](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.5.0-m5)
@@ -61,6 +66,8 @@
 - ✅ T7.1e — bundle + key gates already chained into `pnpm build` (verified in `.github/workflows/deploy.yml`); Playwright stays on-demand to keep CI slim
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 - ✅ Repo screenshots — `scripts/capture-mocks.mjs` (Playwright + static server + Babel-JSX wait) · 6 PNG screenshots in README table grid
+- ✅ **M7 ship** — tagged [v0.7.0-m7](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.7.0-m7), Netlify deploy hit credit cap (`JSONHTTPError: Forbidden`)
+- ✅ **Netlify → Cloudflare Pages migration** (2026-05-17) — ported `netlify/edge-functions/ai.ts` → `functions/api/ai.ts` (Deno → Workers runtime; `Deno.env` → `env.X` param; `context.ip` → `cf-connecting-ip` header), `netlify.toml` headers/redirects → `public/_headers` + `public/_redirects`, deploy.yml `netlify-cli` → `cloudflare/wrangler-action@v3`, added `tsconfig.functions.json` with `@cloudflare/workers-types`; deleted Netlify configs to prevent drift. Awaiting user-side CF project + DNS flip.
 
 ## After M1
 

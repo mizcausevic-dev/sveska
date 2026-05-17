@@ -1,0 +1,20 @@
+# Cloudflare Pages config.
+#
+# Used by `wrangler pages deploy` (locally + in CI). The CF dashboard project
+# settings still source-of-truth for env vars + custom domain — this file
+# pins build behavior so CI runs are reproducible.
+#
+# Project name must match the CF Pages project. Create with:
+#   wrangler pages project create sveska --production-branch main
+
+name = "sveska"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-01-15"
+
+# Production env vars are set in the CF dashboard (Settings → Environment
+# variables). Do NOT add ANTHROPIC_API_KEY here — secrets must not live
+# in the repo. The key-leak grep gate (scripts/check-no-keys.mjs) would
+# catch the variable name anyway.
+
+[observability]
+enabled = true

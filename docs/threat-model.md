@@ -17,7 +17,7 @@ The browser is **untrusted** for secrets. Everything inside the SW is local-only
 | #   | Control                                       | Status                | Where                                               |
 | --- | --------------------------------------------- | --------------------- | --------------------------------------------------- |
 | 1   | No `VITE_*_API_KEY` in client bundle          | **[gated]**           | `scripts/check-no-keys.mjs` runs in `pnpm build`    |
-| 2   | CSP `default-src 'self'`                      | **[gated]**           | `index.html` meta + `netlify.toml` header           |
+| 2   | CSP `default-src 'self'`                      | **[gated]**           | `index.html` meta + `public/_headers` (CF Pages)    |
 | 3   | DOMPurify on rendered HTML/MD                 | **[planned M3]**      | `src/markdown/`                                     |
 | 4   | Hash-share = URL fragment only                | **[planned M3]**      | `src/lib/hash-share.ts`                             |
 | 5   | Edge proxy rate-limit + key vault             | **[planned M4]**      | `server/`                                           |

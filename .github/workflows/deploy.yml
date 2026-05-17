@@ -1,4 +1,4 @@
-name: Deploy to Netlify
+name: Deploy to Cloudflare Pages
 
 on:
   push:
@@ -6,20 +6,21 @@ on:
   workflow_dispatch:
 
 concurrency:
-  # Serialize deploys — never let two builds race for the same Netlify site.
-  group: netlify-prod
+  # Serialize deploys — never let two builds race for the same Pages project.
+  group: cf-pages-prod
   cancel-in-progress: false
 
 permissions:
   contents: read
+  deployments: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      NETLIFY_SITE_ID: 0f0d7b94-c208-4af6-a321-df2623367629
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -46,5 +47,12 @@ jobs:
       - name: Build (runs key-leak + bundle-budget gates)
         run: pnpm build
 
-      - name: Deploy to Netlify (production)
-        run: npx -y netlify-cli@latest deploy --dir=dist --prod --site=$NETLIFY_SITE_ID --message "GHA · ${{ github.sha }}"
+      # Deploy via wrangler — secrets-driven, no `npx -y` surprises.
+      # The CF project must already exist (one-time `wrangler pages project
+      # create sveska --production-branch main`).
+      - name: Deploy to Cloudflare Pages (production)
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=sveska --branch=main --commit-hash=${{ github.sha }} --commit-message="GHA · ${{ github.sha }}"

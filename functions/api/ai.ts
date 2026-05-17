@@ -1,34 +1,37 @@
 /**
- * Sveska AI proxy — Netlify Edge Function (M4.T4.1).
+ * Sveska AI proxy — Cloudflare Pages Function (M4.T4.1, ported from
+ * Netlify Edge at the M7+ migration).
  *
  * The browser MUST NOT carry an Anthropic API key — that's a M0
  * non-negotiable (CLAUDE.md §5). This function holds the key in env,
  * validates the request, applies a per-IP token-bucket rate limit, and
  * pipes the upstream SSE stream back to the browser unchanged.
  *
+ * Routing: CF Pages turns `functions/api/ai.ts` into `POST /api/ai`
+ * automatically. `onRequestPost` only matches POST; other methods 405.
+ *
  * Threat model (kept terse so we re-read it):
  *  - **Stolen key**: the key never leaves env. Even if this proxy is
- *    compromised, the bound `x-api-key` header is set server-side.
+ *    compromised, the `x-api-key` header is set server-side.
  *  - **Abuse / overrun**: per-IP token bucket caps cost. The bucket lives
- *    in module scope — fine for an isolate, gets reset on cold start.
- *    If sustained abuse hits we move to Netlify Blobs.
+ *    in module scope — fine for an isolate, resets on cold start.
+ *    If sustained abuse hits we move to Workers KV.
  *  - **Prompt injection**: the proxy is content-blind by design. We pass
- *    the user's message through verbatim; safety is enforced upstream by
- *    Anthropic. We DO refuse calls without a `messages` array (basic
- *    schema gate so callers can't repurpose the proxy).
- *  - **Replay / CSRF**: no cookies; same-origin only (CORS reject
- *    cross-origin POSTs). The client only fetches from sveska.studio.
- *  - **PII leak via logs**: we never log the user message body. Errors
- *    log status + size only.
+ *    the user's message through verbatim; safety is enforced upstream.
+ *    We DO refuse calls without a `messages` array (basic schema gate).
+ *  - **Replay / CSRF**: no cookies; same-origin only.
+ *  - **PII leak via logs**: we never log the user message body.
  *
  * Wire-up:
- *  - Route is `/api/ai` (declared in `netlify.toml [[edge_functions]]`).
- *  - Secret: `ANTHROPIC_API_KEY` set via `netlify env:set`.
- *  - Model: `claude-haiku-4-5-20251001` by default (cheap + fast for
- *    short editor flows). Caller can override via `model` field.
+ *  - Secret: `ANTHROPIC_API_KEY` set via CF Pages → Settings → Environment
+ *    variables (production scope). Without it the function 503s and the
+ *    client degrades silently.
+ *  - Default model: `claude-haiku-4-5-20251001`. Caller can override.
  */
 
-import type { Context } from 'https://edge.netlify.com';
+interface Env {
+  ANTHROPIC_API_KEY?: string;
+}
 
 interface IncomingBody {
   messages?: Array<{ role: 'user' | 'assistant'; content: string }>;
@@ -42,6 +45,7 @@ const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
 
 // Per-IP token bucket. 20 tokens, refilled at 1/3s (≈20 reqs/min steady).
+// Module-scope state lives for the lifetime of the Worker isolate.
 const RATE_LIMIT: Map<string, { tokens: number; updatedAt: number }> = new Map();
 const RATE_REFILL_PER_SEC = 1 / 3;
 const RATE_BUCKET_MAX = 20;
@@ -65,11 +69,7 @@ function take(ip: string): boolean {
   return true;
 }
 
-export default async (request: Request, context: Context): Promise<Response> => {
-  if (request.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
-  }
-
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   // Same-origin guard: reject cross-origin POSTs even though CSP already
   // blocks them in the browser. Belt + suspenders.
   const origin = request.headers.get('origin');
@@ -78,8 +78,8 @@ export default async (request: Request, context: Context): Promise<Response> => 
     return new Response('Forbidden', { status: 403 });
   }
 
-  // Rate limit by IP (Netlify provides `context.ip`).
-  const ip = context.ip ?? 'unknown';
+  // CF puts the real client IP in cf-connecting-ip (vs Netlify's context.ip).
+  const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
   if (!take(ip)) {
     return new Response(JSON.stringify({ error: 'rate_limited' }), {
       status: 429,
@@ -87,8 +87,7 @@ export default async (request: Request, context: Context): Promise<Response> => 
     });
   }
 
-  const apiKey = Deno.env.get('ANTHROPIC_API_KEY');
-  if (!apiKey) {
+  if (!env.ANTHROPIC_API_KEY) {
     return new Response(JSON.stringify({ error: 'unconfigured' }), {
       status: 503,
       headers: { 'content-type': 'application/json' },
@@ -109,7 +108,7 @@ export default async (request: Request, context: Context): Promise<Response> => 
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'x-api-key': apiKey,
+      'x-api-key': env.ANTHROPIC_API_KEY,
       'anthropic-version': ANTHROPIC_VERSION,
       accept: 'text/event-stream',
     },
@@ -141,4 +140,7 @@ export default async (request: Request, context: Context): Promise<Response> => 
   });
 };
 
-export const config = { path: '/api/ai' };
+// Explicit 405 for non-POST so callers see a clear error instead of a
+// 404 from CF Pages' static fallback.
+export const onRequest: PagesFunction = () =>
+  new Response('Method Not Allowed', { status: 405, headers: { allow: 'POST' } });

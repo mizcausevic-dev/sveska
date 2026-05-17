@@ -78,7 +78,7 @@
   <!-- Edge function -->
   <rect x="880" y="360" width="312" height="150" rx="16" fill="#0F1614" stroke="#4FD6C4" stroke-width="1.8"/>
   <text x="904" y="392" class="ai" font-size="18" font-weight="700">Edge function /api/ai</text>
-  <text x="904" y="420" class="sm">Netlify Edge (Deno)</text>
+  <text x="904" y="420" class="sm">Cloudflare Pages (Workers)</text>
   <text x="904" y="444" class="sm">key in env · rate-limited</text>
   <text x="904" y="468" class="sm">streamed · stateless</text>
   <text x="904" y="492" class="sm">only network dependency</text>

@@ -33,18 +33,18 @@ Non-negotiables:
 
 ## 1. Stack (locked)
 
-| Concern           | Choice                                                       | Why                                                                  |
-| ----------------- | ------------------------------------------------------------ | -------------------------------------------------------------------- |
-| Build             | **Vite + React 18 + TypeScript (strict)**                    | Fast, typed, plays clean with Excalidraw/React                       |
-| State             | **Zustand**                                                  | Minimal, no boilerplate, easy persistence middleware                 |
-| Storage           | **Dexie.js** (IndexedDB)                                     | Multi-note, versions, blobs; localStorage only as legacy-import path |
-| PWA               | **vite-plugin-pwa** (Workbox)                                | Generated SW + manifest; no hand-rolled `sw.js`                      |
-| Styling           | CSS + tokens (`tokens.css`), light Tailwind optional         | Tokens already defined in brand kit                                  |
-| Markdown          | `markdown-it` + `DOMPurify`                                  | Render + sanitize (XSS gate)                                         |
-| Editor            | Native `<textarea>` v1 → CodeMirror 6 when MD/slash needs it | Don't over-engineer M1                                               |
-| Backend (AI only) | Edge function (Cloudflare Worker **or** Vercel Edge)         | Stateless proxy; no DB server                                        |
-| Tests             | Vitest + Testing Library; Playwright for PWA/offline         |                                                                      |
-| Deploy            | Static host (Netlify/Cloudflare Pages) + edge fn             | Connector already available                                          |
+| Concern           | Choice                                                                  | Why                                                                  |
+| ----------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Build             | **Vite + React 18 + TypeScript (strict)**                               | Fast, typed, plays clean with Excalidraw/React                       |
+| State             | **Zustand**                                                             | Minimal, no boilerplate, easy persistence middleware                 |
+| Storage           | **Dexie.js** (IndexedDB)                                                | Multi-note, versions, blobs; localStorage only as legacy-import path |
+| PWA               | **vite-plugin-pwa** (Workbox)                                           | Generated SW + manifest; no hand-rolled `sw.js`                      |
+| Styling           | CSS + tokens (`tokens.css`), light Tailwind optional                    | Tokens already defined in brand kit                                  |
+| Markdown          | `markdown-it` + `DOMPurify`                                             | Render + sanitize (XSS gate)                                         |
+| Editor            | Native `<textarea>` v1 → CodeMirror 6 when MD/slash needs it            | Don't over-engineer M1                                               |
+| Backend (AI only) | Edge function (**Cloudflare Pages Functions** — was Netlify Edge M0–M6) | Stateless proxy; no DB server                                        |
+| Tests             | Vitest + Testing Library; Playwright for PWA/offline                    |                                                                      |
+| Deploy            | Static host (Netlify/Cloudflare Pages) + edge fn                        | Connector already available                                          |
 
 ## 2. Repo structure
 
@@ -169,12 +169,12 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 
 ## 9. Parking lot / open decisions
 
-| #   | Decision         | Owner      | Notes                                                                                                         |
-| --- | ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
-| 1   | Canvas vendor    | ✅ DECIDED | Excalidraw (MIT), vendored + pinned, lazy-loaded behind CanvasProvider. tldraw dropped — no license exposure. |
-| 2   | Edge host        | ✅ DECIDED | **Netlify Edge Functions** (2026-05-17). Same origin keeps CSP clean; existing deploy pipeline; no new auth.  |
-| 3   | Sync (post-M6)   | Miz        | Only if E2E-encrypted.                                                                                        |
-| 4   | Analytics vendor | Miz        | Cookieless/self-host; consent-gated.                                                                          |
+| #   | Decision         | Owner      | Notes                                                                                                                                                                                                                                      |
+| --- | ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | Canvas vendor    | ✅ DECIDED | Excalidraw (MIT), vendored + pinned, lazy-loaded behind CanvasProvider. tldraw dropped — no license exposure.                                                                                                                              |
+| 2   | Edge host        | ✅ DECIDED | **Cloudflare Pages Functions** (2026-05-17, M7+ migration). Same architecture as the prior Netlify Edge choice; switched after Netlify credit cap. Workers runtime, same-origin, free-tier headroom (500 builds/mo + unlimited bandwidth). |
+| 3   | Sync (post-M6)   | Miz        | Only if E2E-encrypted.                                                                                                                                                                                                                     |
+| 4   | Analytics vendor | Miz        | Cookieless/self-host; consent-gated.                                                                                                                                                                                                       |
 
 ---
 

@@ -5,39 +5,53 @@
 - **Client**: `src/ai/aiClient.ts` — `runAI({ messages, system?, model?, signal? })`
   returns an async generator of text deltas. Throws `AIError(kind)` where
   `kind ∈ {unconfigured | rate_limited | upstream | network | abort}`.
-- **Edge proxy**: `netlify/edge-functions/ai.ts` — Deno function at
-  `/api/ai`, declared in `netlify.toml [[edge_functions]]`. Streams
-  Anthropic `/v1/messages` SSE back to the browser unchanged.
+- **Edge proxy**: `functions/api/ai.ts` — Cloudflare Pages Function at
+  `/api/ai` (the directory layout under `functions/` maps directly to
+  the URL path). Streams Anthropic `/v1/messages` SSE back to the
+  browser unchanged.
 
 ## Secret
 
+Set in the Cloudflare dashboard:
+
+> **CF Pages → Project → Settings → Environment variables → Production →
+> Add variable** · Name: `ANTHROPIC_API_KEY` · Type: **Secret** (encrypted)
+
+Or via wrangler (after first deploy creates the project):
+
 ```
-netlify env:set ANTHROPIC_API_KEY <your-key> --context production
+wrangler pages secret put ANTHROPIC_API_KEY --project-name=sveska
 ```
 
 Without the secret, the proxy returns 503 and the client throws
-`AIError('unconfigured')` — slash AI surfaces (T4.2) catch this and
-show "AI offline" instead of crashing. Browser tests run without a key
-by design (mocks `globalThis.fetch` directly).
+`AIError('unconfigured')` — slash AI surfaces (T4.2) catch this and show
+"AI offline" instead of crashing. Browser tests run without a key by
+design (mocks `globalThis.fetch` directly).
 
 ## Threat model (re-read on every M4 change)
 
-| Vector               | Mitigation                                                                                                                              |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Stolen API key       | Key never leaves `Deno.env`. `check-no-keys.mjs` scans `dist/` to fail the build if a key shape leaks into the SPA.                     |
-| Abuse / cost overrun | Per-IP token bucket (20 reqs, refill 1/3s). In-isolate memory — resets on cold start. Move to Netlify Blobs if sustained abuse appears. |
-| Prompt injection     | Proxy is content-blind by design; safety enforced upstream by Anthropic. Schema gate: refuse calls without a `messages[]` array.        |
-| Replay / CSRF        | No cookies; same-origin only. Reject when `Origin` doesn't include `Host`.                                                              |
-| PII leak via logs    | Body never logged. Errors log status + size only.                                                                                       |
+| Vector               | Mitigation                                                                                                                           |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Stolen API key       | Key never leaves CF Pages env (encrypted). `check-no-keys.mjs` scans `dist/` to fail the build if a key shape leaks into the SPA.    |
+| Abuse / cost overrun | Per-IP token bucket (20 reqs, refill 1/3s). In-isolate memory — resets on cold start. Move to Workers KV if sustained abuse appears. |
+| Prompt injection     | Proxy is content-blind by design; safety enforced upstream by Anthropic. Schema gate: refuse calls without a `messages[]` array.     |
+| Replay / CSRF        | No cookies; same-origin only. Reject when `Origin` doesn't include `Host`.                                                           |
+| PII leak via logs    | Body never logged. Errors log status + size only.                                                                                    |
 
-## Why Netlify Edge (not Cloudflare Workers / Vercel Edge)
+## Why Cloudflare Pages (was Netlify Edge through M5)
 
-- Same origin → CSP `default-src 'self'` stays clean.
-- One deploy pipeline (already wired via `NETLIFY_AUTH_TOKEN`).
-- No new DNS / secret / monitoring surface.
-- Deno runtime; ~50 ms cold start is fine for streaming AI.
+- **Cost** — CF Pages free tier covers 500 builds/mo + unlimited
+  bandwidth + 100k function invocations/day. Netlify free tier ran out
+  of build minutes mid-M6 (forcing the migration). Pro plan would have
+  been $19/mo, which wasn't justified for a side project.
+- **Same architecture** — static + edge function at the same origin →
+  CSP `default-src 'self'` stays clean, no new DNS or secret surface.
+- **Workers runtime** — V8 isolate, fetch + Streams APIs identical to
+  Deno. The port from `Deno.env.get(...)` → `env.ANTHROPIC_API_KEY` and
+  `context.ip` → `request.headers.get('cf-connecting-ip')` was the only
+  meaningful API delta.
 
-Decision row in `CLAUDE.md` §9 parking lot.
+Migration commit: see `git log -- functions/api/ai.ts`.
 
 ## Bundle impact
 
