@@ -7,15 +7,12 @@
 
 ## In progress
 
-- [ ] **T1.7 — Shortcuts + cheatsheet overlay**
-  - **Bindings to add**: `Ctrl/Cmd+S` → trigger `.txt` export (T1.3) · `Alt+C` → copy whole body to clipboard · `Ctrl/Cmd+Del` → clear body (confirm modal, destructive) · `Ctrl/Cmd+?` (or `Shift+/`) → open shortcuts cheatsheet overlay
-  - **Files**: extend `src/app/KeyBindings.tsx` · new `src/ui/ShortcutsModal.tsx` + `src/ui/shortcutsModalStore.ts` · new `src/editor/ClearConfirm.tsx` (small confirm dialog) · `src/__tests__/shortcuts.test.tsx`
-  - **AC**: all shortcuts work on Win + Mac; help overlay lists every binding currently wired; clear is two-step (Ctrl+Del → confirm dialog → Yes); no conflicts with browser-native shortcuts (app's `Ctrl+S` wins via `e.preventDefault()`)
-  - **Don't**: trigger downloads from the global shortcut without the user having focused the editor first — preserve browser print/save behaviour on non-editor pages
+- [ ] **M1 close** — Tag `v0.1.0-m1`, write release notes, ask user to run Lighthouse PWA on `sveska.studio`
+  - All seven M1 tickets shipped (T1.1–T1.7). Editor + autosave + snapshots + export + stats + focus + prefs + shortcuts.
+  - 61 tests, 96.22 KB JS gzip / 180 budget. Push to main on every ticket → CI auto-deploys to sveska.studio.
+  - Tag `v0.1.0-m1` on main, write release notes pinning the M1 scope + Lighthouse score once you've run it.
 
 ## Next up (sequential, top-down)
-
-- [ ] **M1 close** — Lighthouse PWA pass on `sveska.studio`, tag `v0.1.0-m1`, write release notes
 
 ## Recently done (this branch only)
 
@@ -26,6 +23,7 @@
 - ✅ T1.4 — Statistics modal (pure `computeStats` + live UI + `Ctrl+Shift+I`)
 - ✅ T1.5 — Focus mode (`Alt+F`, persists in Dexie, exit chip in corner)
 - ✅ T1.6 — Editor prefs (size / line height / family / spellcheck / tab size / reset; round-trip persisted)
+- ✅ T1.7 — Shortcuts (`Ctrl+S`/`Alt+C`/`Ctrl+Del` w/ confirm/`Ctrl+?` cheatsheet) + editorCommands registry
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

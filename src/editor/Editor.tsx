@@ -8,6 +8,12 @@ import { ExportMenu } from './ExportMenu';
 import { StatsModalHost } from './StatsModal';
 import { openStats } from './statsModalStore';
 import { FONT_FAMILY_CSS, useEditorPrefs } from '@/notes/editorPrefs';
+import { useEditorCommands } from './editorCommands';
+import { astFromNote } from '@/markdown/ast';
+import { download, exportAs } from '@/markdown/export';
+import { ClearConfirmHost } from './ClearConfirm';
+import { confirmClear } from './clearConfirmStore';
+import { saveNoteBody } from '@/notes/noteRepo';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -48,6 +54,37 @@ export function Editor(): React.JSX.Element {
   const snapshots = useSnapshots({ noteId, body });
   const prefs = useEditorPrefs();
 
+  // Register T1.7 commands so KeyBindings can invoke them from the global handler.
+  useEffect(() => {
+    const reg = useEditorCommands.getState().register;
+    const unreg = useEditorCommands.getState().unregister;
+
+    reg('export.txt', () => {
+      if (!note) return;
+      const ast = astFromNote({ ...note, body });
+      download(exportAs(ast, 'txt'));
+    });
+    reg('copy.body', () => {
+      if (!navigator.clipboard) return;
+      void navigator.clipboard.writeText(body);
+    });
+    reg('clear.body.request', () => {
+      if (!note) return;
+      void confirmClear().then((ok) => {
+        if (!ok) return;
+        setBody('');
+        // Flush a save immediately so Dexie reflects the cleared body
+        // even if the user navigates away before the 400ms debounce.
+        void saveNoteBody(note.id, '');
+      });
+    });
+    return () => {
+      unreg('export.txt');
+      unreg('copy.body');
+      unreg('clear.body.request');
+    };
+  }, [note, body]);
+
   function onTextareaKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>): void {
     if (e.key === 'Tab' && !e.metaKey && !e.ctrlKey) {
       e.preventDefault();
@@ -80,6 +117,7 @@ export function Editor(): React.JSX.Element {
         </div>
       </div>
       <StatsModalHost body={body} />
+      <ClearConfirmHost />
       <textarea
         className="editor-input"
         value={body}

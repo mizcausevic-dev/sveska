@@ -5,6 +5,7 @@ import { Glossary } from '@/routes/Glossary';
 import { ShareTarget } from '@/routes/ShareTarget';
 import { NotFound } from '@/routes/NotFound';
 import { PrefsModalHost } from '@/ui/PrefsModal';
+import { ShortcutsModalHost } from '@/ui/ShortcutsModal';
 import { KeyBindings } from './KeyBindings';
 import { ConsentBar } from '@/platform/ConsentBar';
 
@@ -21,6 +22,7 @@ export function App(): React.JSX.Element {
       </Layout>
       <KeyBindings />
       <PrefsModalHost />
+      <ShortcutsModalHost />
       <ConsentBar />
     </BrowserRouter>
   );

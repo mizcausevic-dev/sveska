@@ -1,20 +1,33 @@
 import { useEffect } from 'react';
 import { openPrefs } from '@/ui/prefsModalStore';
 import { openStats } from '@/editor/statsModalStore';
+import { openShortcuts } from '@/ui/shortcutsModalStore';
+import { useEditorCommands } from '@/editor/editorCommands';
 import { useUIStore } from '@/notes/uiStore';
 
 /**
- * Global keyboard shortcuts.
- * - Ctrl/Cmd + ,         → preferences (M0.T0.2)
- * - Ctrl/Cmd + Shift + I → statistics modal (M1.T1.4)
- * - Alt + F              → toggle focus mode (M1.T1.5)
- * Full M1 shortcut set arrives at T1.7.
+ * Global keyboard shortcuts (full M1 set per CLAUDE.md §6 T1.7).
+ *
+ * Modal shortcuts:
+ *   Ctrl/Cmd + ,            preferences
+ *   Ctrl/Cmd + Shift + I    statistics
+ *   Ctrl/Cmd + ?            this cheatsheet (Shift+/ also)
+ *
+ * Editor commands (dispatched via useEditorCommands so KeyBindings doesn't
+ * touch the editor's local state):
+ *   Ctrl/Cmd + S            save / export as .txt
+ *   Alt + C                 copy whole body to clipboard
+ *   Ctrl/Cmd + Del          clear body (confirm modal first)
+ *
+ * View:
+ *   Alt + F                 toggle focus mode
  */
 export function KeyBindings(): null {
   useEffect(() => {
     function onKey(e: KeyboardEvent): void {
       const ctrlish = e.ctrlKey || e.metaKey;
-      if (ctrlish && e.key === ',') {
+
+      if (ctrlish && !e.shiftKey && !e.altKey && e.key === ',') {
         e.preventDefault();
         openPrefs();
         return;
@@ -24,8 +37,29 @@ export function KeyBindings(): null {
         openStats();
         return;
       }
+      if (ctrlish && (e.key === '?' || (e.shiftKey && e.key === '/'))) {
+        e.preventDefault();
+        openShortcuts();
+        return;
+      }
+      if (ctrlish && !e.shiftKey && (e.key === 'S' || e.key === 's')) {
+        e.preventDefault();
+        useEditorCommands.getState().run('export.txt');
+        return;
+      }
+      if (e.altKey && !ctrlish && (e.key === 'C' || e.key === 'c' || e.key === 'ç')) {
+        // macOS Alt+C → ç
+        e.preventDefault();
+        useEditorCommands.getState().run('copy.body');
+        return;
+      }
+      if (ctrlish && e.key === 'Delete') {
+        e.preventDefault();
+        useEditorCommands.getState().run('clear.body.request');
+        return;
+      }
       if (e.altKey && !ctrlish && (e.key === 'F' || e.key === 'f' || e.key === 'ƒ')) {
-        // Note: macOS turns Alt+F into 'ƒ'.
+        // macOS Alt+F → ƒ
         e.preventDefault();
         void useUIStore.getState().toggleFocus();
       }

@@ -114,7 +114,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 - ✅ T1.4 Statistics modal: words, chars, lines, paragraphs, reading time, unique words.
 - ☐ T1.5 Focus mode (`Alt+F`): hide chrome, widen margins.
 - ☐ T1.6 Preferences: font size slider, line height, font family (Satoshi/mono/serif/dyslexic), spellcheck, tab-indent, focus margin.
-- ☐ T1.7 Shortcuts: `Ctrl+S` save txt, `Alt+C` copy, `Ctrl+Del` clear, `Ctrl+,` prefs, `Alt+F` focus. **AC:** full parity with reference app, offline-capable.
+- ✅ T1.7 Shortcuts: `Ctrl+S` save txt, `Alt+C` copy, `Ctrl+Del` clear, `Ctrl+,` prefs, `Alt+F` focus. **AC:** full parity with reference app, offline-capable.
 
 ### M2 — Multi-note + persistence depth
 
