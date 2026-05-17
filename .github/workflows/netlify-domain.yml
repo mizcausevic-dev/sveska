@@ -1,0 +1,71 @@
+name: Netlify · manage custom domain
+
+# One-shot workflow for attaching/detaching a custom domain on the sveska Netlify
+# project via the public Netlify API. Triggered manually with `gh workflow run`.
+#
+# Uses the same NETLIFY_AUTH_TOKEN secret that powers the deploy workflow.
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action'
+        type: choice
+        options: [set, clear]
+        default: set
+      domain:
+        description: 'Apex domain (e.g. sveska.studio)'
+        required: true
+        default: sveska.studio
+      add_www:
+        description: 'Also add www.<domain> as alias?'
+        type: boolean
+        default: true
+      aliases:
+        description: 'Extra domain aliases (comma-separated, no spaces). Example: sveska.kineticgain.com,notepad.kineticgain.com'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  manage-domain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      NETLIFY_SITE_ID: 0f0d7b94-c208-4af6-a321-df2623367629
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    steps:
+      - name: PATCH site
+        run: |
+          set -e
+          if [ "${{ inputs.action }}" = "clear" ]; then
+            body='{"custom_domain":null,"domain_aliases":[]}'
+          else
+            apex='${{ inputs.domain }}'
+            extras='${{ inputs.aliases }}'
+            # Build aliases JSON array: optional www, plus comma-separated extras.
+            python3 - "$apex" '${{ inputs.add_www }}' "$extras" > /tmp/body.json <<'PY'
+          import json, sys
+          apex, www_flag, extras = sys.argv[1], sys.argv[2], sys.argv[3]
+          aliases = []
+          if www_flag.lower() == 'true':
+              aliases.append(f"www.{apex}")
+          for s in extras.split(','):
+              s = s.strip()
+              if s:
+                  aliases.append(s)
+          print(json.dumps({"custom_domain": apex, "domain_aliases": aliases}))
+          PY
+            body=$(cat /tmp/body.json)
+          fi
+          echo "Request body: $body"
+          curl -sS -X PATCH "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID" \
+            -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$body" \
+            -o /tmp/response.json \
+            -w 'HTTP %{http_code}\n'
+          echo '--- response ---'
+          jq '{custom_domain, domain_aliases, ssl, url, admin_url}' /tmp/response.json || cat /tmp/response.json
