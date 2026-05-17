@@ -16,6 +16,9 @@ import { ClearConfirmHost } from './ClearConfirm';
 import { confirmClear } from './clearConfirmStore';
 import { TabBar } from './TabBar';
 import { VersionsModalHost } from './VersionsModal';
+import { DraftRecoveryBanner } from './DraftRecoveryBanner';
+import { useDraftRecovery } from './draftRecoveryStore';
+import { readDraft } from '@/notes/draftRepo';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -56,6 +59,28 @@ export function Editor(): React.JSX.Element {
   // refetch (e.g. after rename/save), discarding live edits.
   useEffect(() => {
     if (activeNote) setBody(activeNote.body);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeNote?.id]);
+
+  // Crash-safe draft recovery (T2.3). When a note becomes active, look for a
+  // shadow whose savedAt is newer than the note's updatedAt — that means the
+  // last keystrokes never made it into the debounced save. Surface a banner;
+  // the user decides Keep or Discard. We don't auto-restore — the body change
+  // would also trigger autosave, defeating the choice.
+  useEffect(() => {
+    if (!activeNote) return;
+    void (async () => {
+      const shadow = await readDraft(activeNote.id);
+      if (!shadow) return;
+      if (shadow.body === activeNote.body) return; // no divergence to recover
+      if (shadow.savedAt <= activeNote.updatedAt) return; // shadow is stale
+      useDraftRecovery.getState().set({
+        noteId: activeNote.id,
+        draftBody: shadow.body,
+        noteBody: activeNote.body,
+        savedAt: shadow.savedAt,
+      });
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeNote?.id]);
 
@@ -149,6 +174,7 @@ export function Editor(): React.JSX.Element {
       <StatsModalHost body={body} />
       <ClearConfirmHost />
       <VersionsModalHost liveBody={body} onRestore={setBody} />
+      <DraftRecoveryBanner onKeep={setBody} />
       <textarea
         className="editor-input"
         value={body}

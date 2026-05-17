@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { debounce } from '@/lib/debounce';
 import { saveNoteBody } from '@/notes/noteRepo';
+import { clearDraft, writeDraft } from '@/notes/draftRepo';
 
 export type SaveState = 'idle' | 'pending' | 'saving' | 'saved' | 'error';
 
@@ -37,6 +38,8 @@ export function useAutosave({ noteId, body, debounceMs = 400 }: AutosaveOpts): A
         .then(() => {
           setLastSavedAt(Date.now());
           setState('saved');
+          // Note row is now canonical → drop the crash-safe shadow (T2.3).
+          void clearDraft(id);
         })
         .catch((err) => {
           console.error('[sveska] autosave failed:', err);
@@ -46,10 +49,13 @@ export function useAutosave({ noteId, body, debounceMs = 400 }: AutosaveOpts): A
     return debounce(persist, debounceMs);
   }, [noteId, debounceMs]);
 
-  // Schedule a save whenever the body changes.
+  // Schedule a save whenever the body changes. Also write the crash-safe
+  // shadow IMMEDIATELY (no debounce) so a refresh inside the 400ms window
+  // can recover the last keystrokes (T2.3).
   useEffect(() => {
     if (writer === null || noteId === null) return;
     setState('pending');
+    void writeDraft(noteId, body);
     writer(noteId, body);
   }, [body, noteId, writer]);
 

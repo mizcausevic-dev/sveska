@@ -1238,3 +1238,40 @@ input[type='range'] {
     grid-template-columns: 1fr;
   }
 }
+
+/* T2.3 — crash-safe draft recovery banner */
+.draft-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, var(--border-soft));
+  background: color-mix(in oklab, var(--accent) 8%, transparent);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.draft-banner-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.draft-banner-actions {
+  display: inline-flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 540px) {
+  .draft-banner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .draft-banner-actions {
+    justify-content: flex-end;
+  }
+}

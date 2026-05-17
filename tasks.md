@@ -7,14 +7,13 @@
 
 ## In progress
 
-- [ ] **T2.3 — Unsaved-draft recovery (crash/refresh safe)**
-  - **Why**: autosave is debounced 400ms so a crash / hard refresh during the window loses keystrokes. Recovery = a tiny crash-safe shadow in IndexedDB written synchronously on every input, replayed on next boot if newer than the saved note body.
-  - **AC**: typing → close tab → reopen → unsaved tail is restored to the textarea with a non-blocking "recovered draft" toast offering Keep / Discard.
-  - **Don't**: build a separate Dexie table — store the shadow in `prefs` (key = `draft.<noteId>`) so it shares the existing connection + cleanup path.
+- [ ] **T2.4 — Tags, pinned notes, saved filters, recent-notes rail, favorites bar**
+  - **Why**: organize past notes. Tags + pins both already exist as schema fields on the `notes` row (CLAUDE.md §4) — wire them through the UI. Recent-notes rail = a small left sidebar listing the last 8 notes by updatedAt; favorites bar = pinned notes pinned at the top of that rail.
+  - **AC**: per-note tag chips with add/remove · pin toggle in tab context menu · saved-filter dropdown (Untagged · Pinned · Tag = X) · sidebar shows pinned section + recent section · keyboard reachable.
+  - **Don't**: build a tag _picker UI_ yet — just chip add/remove inline. Templates ship at T3.4.
 
 ## Next up (sequential, top-down)
 
-- [ ] T2.4 — Tags, pinned notes, saved filters, recent-notes rail, favorites bar
 - [ ] T2.5 — Fuzzy search across notes (title + body) + quick-capture inbox · **AC**: 1k notes, search < 50ms
 - [ ] **M2 close** — tag `v0.2.0-m2`, release notes
 
@@ -32,6 +31,7 @@
 - ✅ Polish (4b3b84f) — missing T1.3–T1.7 CSS rules · SW update banner · loosened alias redirects
 - ✅ T2.1 — Multi-note tabs + session restore + "open previous session" pref + inline rename + dirty dot
 - ✅ T2.2 — Version history modal · pure LCS line diff · side-by-side panes · restore writes back to active note · empty-state · 16 unit tests
+- ✅ T2.3 — Crash-safe draft shadow per note (`prefs.draft.<noteId>`) · written on every keystroke · cleared on debounced save · recovery banner with Keep / Discard on stale shadow · 10 unit tests
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

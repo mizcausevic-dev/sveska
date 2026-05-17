@@ -12,6 +12,7 @@ import { useUIStore } from '@/notes/uiStore';
 import { DEFAULT_EDITOR_PREFS, useEditorPrefs } from '@/notes/editorPrefs';
 import { useTabs } from '@/notes/tabsStore';
 import { useVersionsModal } from '@/editor/versionsModalStore';
+import { useDraftRecovery } from '@/editor/draftRecoveryStore';
 
 // Pre-bootstrap the tabs store so every test starts with a hydrated note +
 // one open tab — matches first-boot behavior. Without this, tests would race
@@ -30,6 +31,7 @@ afterEach(async () => {
   useStatsModal.setState({ open: false });
   useShortcutsModal.setState({ open: false });
   useVersionsModal.setState({ open: false });
+  useDraftRecovery.setState({ pending: null });
   useUIStore.setState({ focus: false });
   useEditorPrefs.setState(DEFAULT_EDITOR_PREFS);
   useTabs.setState({ tabs: [], activeTabId: null, activeNote: null, ready: false });
