@@ -7,15 +7,11 @@
 
 ## In progress
 
-- [ ] **T4.3 — Notes → image (Concise / Detailed visualization render)**
-  - **Why**: visual export. The user picks Concise (one summary card) or Detailed (multi-section poster); the AI proxy returns a structured description; we render it on a `<canvas>` and offer download. Pairs with the T3.7 .pdf export for share-friendly outputs.
-  - **AC**: a palette command "Render as image (concise/detailed)" runs an AI call with a prompt that asks for a structured spec (title / sub / bullets / accent), renders it server-free on a `<canvas>` at 1200×630 (OG-card friendly), and triggers a .png download. Zero key in client bundle (existing CI gate enforces).
-  - **Don't**: call an image-generation model. The visual is rendered locally from a structured spec — keeps the cost flat and the output predictable.
+- [ ] **M4 close — tag `v0.4.0-m4` + release notes**
+  - **AC**: tag pushed, release notes summarize T4.1–T4.3, both CLAUDE.md copies ticked.
 
 ## Next up (sequential, top-down)
 
-- [ ] T4.3 — Notes → image (Concise / Detailed visualization render). **AC**: zero key in client bundle (grep gate in CI).
-- [ ] **M4 close** — tag `v0.4.0-m4`, release notes
 - [ ] **M5** — Canvas (Excalidraw vendored, lazy, behind CanvasProvider seam)
 - [ ] **M6** — Glossary engine · content surface · lead-gen · pricing
 - [ ] **M7** — Hardening (Playwright offline + perf budget CI + a11y audit + security review)
@@ -50,6 +46,7 @@
 - ✅ M4 edge-host decision — **Netlify Edge Functions** (over CF Workers / Vercel Edge). Same origin, single deploy pipeline.
 - ✅ T4.1 — `netlify/edge-functions/ai.ts` streaming Anthropic `/v1/messages` proxy (per-IP token bucket, same-origin guard, schema gate, key in `Deno.env`) · `netlify.toml` `[[edge_functions]]` route at `/api/ai` · `src/ai/aiClient.ts` SSE consumer (yields text deltas, maps to `AIError` kinds) · threat model + secret docs in `src/ai/README.md` · 6 unit tests
 - ✅ T4.2 — `src/ai/prompts.ts` 5-command catalog (improve / summarize / continue / rewrite / linkedin) · `aiRunStore` single-concurrent-run with abort + toast on error · `AIResultPane` split-view stream with Apply / Copy / Discard · `AIToast` 4s auto-dismiss · `ai`-group entries in command palette + slash popover · `copyOnComplete` writes the result to clipboard (used by LinkedIn) · 503 degrades to "AI offline — see README" toast (never leaks env-var name to the SPA, key-leak gate still passes) · 8 unit tests
+- ✅ T4.3 — `imageSpec.ts` AI-returns-JSON spec for Concise (title/subtitle/3 bullets/accent) and Detailed (title/subtitle/4 sections/accent), with clamping + code-fence stripping + best-effort fallback when proxy is offline · `renderImage.ts` paints the spec on a 1200×630 canvas (OG-card friendly), exports a PNG Blob, triggers a download via ephemeral anchor · 2 palette commands ("AI · Render as image (concise/detailed)") · unconfigured proxy gracefully renders a basic card from the note itself · 8 unit tests
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

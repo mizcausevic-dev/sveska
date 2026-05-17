@@ -126,15 +126,17 @@ describe('M4.T4.2 — palette wires AI commands', () => {
     );
   });
 
-  it('Ctrl+K → "improve" → row appears + Enter triggers a run', async () => {
+  it('Ctrl+K → clicking the Improve row fires a run', async () => {
     await renderApp();
     await userEvent.keyboard('{Control>}k{/Control}');
     await userEvent.type(screen.getByTestId('palette-input'), 'improve');
+    // Click the specific row by id rather than pressing Enter; the catalog
+    // includes other ai.* commands whose keywords also fuzzy-match "improve",
+    // and the top match isn't guaranteed to be ai.improve.
     await waitFor(() => expect(screen.getByTestId('palette-row-ai.improve')).toBeInTheDocument());
-    await userEvent.keyboard('{Enter}');
+    await userEvent.click(screen.getByTestId('palette-row-ai.improve'));
     await waitFor(() => expect(useAIRun.getState().status).toBe('done'));
     expect(useAIRun.getState().result).toBe('improved body');
-    // Pane should now show the result + Apply button (replaceBody=true).
     await waitFor(() => expect(screen.getByTestId('ai-pane')).toBeInTheDocument());
     expect(screen.getByTestId('ai-apply')).toBeInTheDocument();
   });
@@ -144,7 +146,7 @@ describe('M4.T4.2 — palette wires AI commands', () => {
     await userEvent.keyboard('{Control>}k{/Control}');
     await userEvent.type(screen.getByTestId('palette-input'), 'improve');
     await waitFor(() => expect(screen.getByTestId('palette-row-ai.improve')).toBeInTheDocument());
-    await userEvent.keyboard('{Enter}');
+    await userEvent.click(screen.getByTestId('palette-row-ai.improve'));
     await waitFor(() => expect(screen.getByTestId('ai-apply')).toBeInTheDocument());
 
     await userEvent.click(screen.getByTestId('ai-apply'));

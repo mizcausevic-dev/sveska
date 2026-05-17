@@ -79,6 +79,7 @@
 | T3.7 (2026-05-17)    | 195   | 167.31 KB | 6.48 KB  | +import / share / hash / lazy PDF (M3 close)   |
 | T4.1 (2026-05-17)    | 201   | 167.31 KB | 6.48 KB  | +edge AI proxy + SSE client (no client growth) |
 | T4.2 (2026-05-17)    | 209   | 169.52 KB | 6.68 KB  | +slash AI commands + result pane + toast       |
+| T4.3 (2026-05-17)    | 217   | 171.34 KB | 6.68 KB  | +Notes → image (canvas OG cards, M4 close)     |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 

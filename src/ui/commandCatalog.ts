@@ -13,6 +13,9 @@ import { setNotePinned } from '@/notes/noteRepo';
 import { packShareHash } from '@/lib/hashShare';
 import { AI_COMMANDS } from '@/ai/prompts';
 import { useAIRun } from '@/ai/aiRunStore';
+import { fallbackSpec, parseImageSpec, specPromptFor, type ImageVariant } from '@/ai/imageSpec';
+import { downloadImage } from '@/ai/renderImage';
+import { runAI, type AIError } from '@/ai/aiClient';
 
 /**
  * Static catalog of every user-facing action (M3.T3.1).
@@ -196,5 +199,59 @@ export function buildCommandCatalog(): PaletteCommand[] {
         },
       }),
     ),
+
+    // ─── ai (M4.T4.3) — Notes → image (concise + detailed) ────────────────
+    ...(['concise', 'detailed'] as ImageVariant[]).map(
+      (variant): PaletteCommand => ({
+        id: `ai.image.${variant}`,
+        label: `AI · Render as image (${variant})`,
+        keywords: `image png card og share visualization ${variant}`,
+        group: 'ai',
+        run: () => void renderNoteAsImage(variant),
+      }),
+    ),
   ];
+}
+
+/** Run the AI for a structured spec, then render to PNG and download.
+ *  Falls back to a best-effort spec when the proxy is unconfigured so
+ *  the user still gets a card (without AI-generated copy). */
+async function renderNoteAsImage(variant: ImageVariant): Promise<void> {
+  const n = useTabs.getState().activeNote;
+  if (!n) return;
+  let specText = '';
+  try {
+    for await (const chunk of runAI({
+      messages: [{ role: 'user', content: n.body || '(empty note)' }],
+      system: specPromptFor(variant),
+    })) {
+      specText += chunk;
+    }
+    const spec = parseImageSpec(specText, variant, n.title, n.body);
+    await downloadImage(spec, `${slugify(n.title || 'sveska')}-${variant}.png`);
+    useAIRun.getState().setToast({ kind: 'info', text: 'Image downloaded.' });
+  } catch (err) {
+    const e = err as AIError;
+    // Graceful degradation: render from a best-effort spec built from the
+    // note itself when the proxy can't reach Anthropic.
+    if (e.kind === 'unconfigured' || e.kind === 'upstream' || e.kind === 'network') {
+      const spec = fallbackSpec(variant, n.title, n.body);
+      await downloadImage(spec, `${slugify(n.title || 'sveska')}-${variant}.png`);
+      useAIRun.getState().setToast({
+        kind: 'warn',
+        text: 'AI offline — rendered a basic card from the note.',
+      });
+      return;
+    }
+    useAIRun.getState().setToast({ kind: 'error', text: 'Image render failed.' });
+  }
+}
+
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 64);
 }

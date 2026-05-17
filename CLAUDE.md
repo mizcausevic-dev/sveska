@@ -138,7 +138,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 
 - ✅ T4.1 Edge function `/api/ai`: key in env, rate-limited, streamed. Threat-model documented.
 - ✅ T4.2 Slash AI: `/improve`, `/summarize`, `/continue`, `/rewrite`, "Copy as LinkedIn post". Graceful no-key degradation.
-- ☐ T4.3 Notes → image (Concise / Detailed visualization render). **AC:** zero key in client bundle (grep gate in CI).
+- ✅ T4.3 Notes → image (Concise / Detailed visualization render). **AC:** zero key in client bundle (grep gate in CI).
 
 ### M5 — Canvas module
 
