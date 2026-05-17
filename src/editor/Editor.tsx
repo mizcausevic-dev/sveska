@@ -7,6 +7,7 @@ import { SnapshotToolbar } from './SnapshotToolbar';
 import { ExportMenu } from './ExportMenu';
 import { StatsModalHost } from './StatsModal';
 import { openStats } from './statsModalStore';
+import { FONT_FAMILY_CSS, useEditorPrefs } from '@/notes/editorPrefs';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -45,6 +46,21 @@ export function Editor(): React.JSX.Element {
 
   const { state, lastSavedAt } = useAutosave({ noteId, body });
   const snapshots = useSnapshots({ noteId, body });
+  const prefs = useEditorPrefs();
+
+  function onTextareaKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>): void {
+    if (e.key === 'Tab' && !e.metaKey && !e.ctrlKey) {
+      e.preventDefault();
+      const el = e.currentTarget;
+      const { selectionStart, selectionEnd, value } = el;
+      const next = value.slice(0, selectionStart) + '\t' + value.slice(selectionEnd);
+      setBody(next);
+      // Restore caret one char after the inserted tab.
+      requestAnimationFrame(() => {
+        el.selectionStart = el.selectionEnd = selectionStart + 1;
+      });
+    }
+  }
 
   return (
     <section className="editor" aria-busy={!hydrated}>
@@ -68,11 +84,18 @@ export function Editor(): React.JSX.Element {
         className="editor-input"
         value={body}
         onChange={(e) => setBody(e.target.value)}
+        onKeyDown={onTextareaKeyDown}
         placeholder={PLACEHOLDER}
-        spellCheck
+        spellCheck={prefs.spellcheck}
         autoFocus
         aria-label="Note body"
         data-testid="editor-textarea"
+        style={{
+          fontSize: `${prefs.fontSize}px`,
+          lineHeight: prefs.lineHeight,
+          fontFamily: FONT_FAMILY_CSS[prefs.fontFamily],
+          tabSize: prefs.tabSize,
+        }}
       />
       <SaveIndicator state={state} lastSavedAt={lastSavedAt} hydrated={hydrated} />
     </section>

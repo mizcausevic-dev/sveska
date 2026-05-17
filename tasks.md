@@ -7,14 +7,14 @@
 
 ## In progress
 
-- [ ] **T1.6 — Preferences full UI** (font size, line height, family, spellcheck, tab-indent, focus margin)
-  - **Files**: `src/notes/prefs.ts` extend with typed pref schema (editor.fontSize, editor.lineHeight, editor.fontFamily, editor.spellcheck, editor.tabSize) · `src/ui/PrefsModal.tsx` replace stubs with real controls · `src/editor/Editor.tsx` read prefs via hook and apply inline · `src/__tests__/prefs.test.tsx` (round-trip per pref)
-  - **AC**: all prefs persist across reload; defaults match BRAND.md (editor 17px/1.7 mono, spellcheck on, tabSize 2); font family includes OpenDyslexic option (flag as TODO, currently falls back to system); Tab key inserts `\t` and `tab-size` CSS sets visual width
-  - **Don't**: vendor OpenDyslexic font in this commit (separate follow-up). Don't add the focus-margin slider yet — wire it AFTER T1.5 lands the focus-mode column width as a pref.
+- [ ] **T1.7 — Shortcuts + cheatsheet overlay**
+  - **Bindings to add**: `Ctrl/Cmd+S` → trigger `.txt` export (T1.3) · `Alt+C` → copy whole body to clipboard · `Ctrl/Cmd+Del` → clear body (confirm modal, destructive) · `Ctrl/Cmd+?` (or `Shift+/`) → open shortcuts cheatsheet overlay
+  - **Files**: extend `src/app/KeyBindings.tsx` · new `src/ui/ShortcutsModal.tsx` + `src/ui/shortcutsModalStore.ts` · new `src/editor/ClearConfirm.tsx` (small confirm dialog) · `src/__tests__/shortcuts.test.tsx`
+  - **AC**: all shortcuts work on Win + Mac; help overlay lists every binding currently wired; clear is two-step (Ctrl+Del → confirm dialog → Yes); no conflicts with browser-native shortcuts (app's `Ctrl+S` wins via `e.preventDefault()`)
+  - **Don't**: trigger downloads from the global shortcut without the user having focused the editor first — preserve browser print/save behaviour on non-editor pages
 
 ## Next up (sequential, top-down)
 
-- [ ] T1.7 — Shortcuts (`Ctrl+S` save txt via T1.3 export, `Alt+C` copy whole body, `Ctrl+Del` clear with confirm, `Ctrl+,` prefs already wired, `Alt+F` focus already wired) + cheatsheet overlay (`Ctrl+?`)
 - [ ] **M1 close** — Lighthouse PWA pass on `sveska.studio`, tag `v0.1.0-m1`, write release notes
 
 ## Recently done (this branch only)
@@ -25,6 +25,7 @@
 - ✅ T1.3 — Export `.txt` / `.md` / `.html` from shared AST + ExportMenu
 - ✅ T1.4 — Statistics modal (pure `computeStats` + live UI + `Ctrl+Shift+I`)
 - ✅ T1.5 — Focus mode (`Alt+F`, persists in Dexie, exit chip in corner)
+- ✅ T1.6 — Editor prefs (size / line height / family / spellcheck / tab size / reset; round-trip persisted)
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

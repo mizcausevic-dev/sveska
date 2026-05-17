@@ -17,3 +17,11 @@ export const PREF_KEYS = {
 export const PREF_KEYS_UI = {
   focus: 'ui.focus',
 } as const;
+
+export const PREF_KEYS_EDITOR = {
+  fontSize: 'editor.fontSize',
+  lineHeight: 'editor.lineHeight',
+  fontFamily: 'editor.fontFamily',
+  spellcheck: 'editor.spellcheck',
+  tabSize: 'editor.tabSize',
+} as const;
