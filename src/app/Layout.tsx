@@ -5,6 +5,7 @@ import { openPrefs } from '@/ui/prefsModalStore';
 import { useUIStore } from '@/notes/uiStore';
 import { NotesRail } from '@/editor/NotesRail';
 import { useNotesRail } from '@/notes/notesRailStore';
+import { CTASlot } from '@/platform/CTASlot';
 
 interface LayoutProps {
   children: ReactNode;
@@ -69,6 +70,13 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         <span>
           Sveska · local-first · v0.0.0 · <a href="/glossary">glossary</a>
         </span>
+        <CTASlot
+          id="m6.changelog.intro"
+          slot="shell"
+          label="See what's new"
+          href="/changelog"
+          blurb="M5 just shipped."
+        />
         <span aria-live="polite">Prazna sveska. Najbolji početak.</span>
       </footer>
     </div>

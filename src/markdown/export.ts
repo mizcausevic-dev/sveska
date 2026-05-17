@@ -229,6 +229,7 @@ function htmlTemplate(ast: NoteAST, bodyHtml: string, opts: { prose: boolean }):
   ${opts.prose ? `<div class="prose">${bodyHtml}</div>` : `<pre class="note">${bodyHtml}</pre>`}
   <footer>
     <span>Sveska · local-first · studio-grade</span>
+    <span><a href="https://sveska.studio/blog?utm_source=html-export">subscribe</a> · <a href="https://sveska.studio?utm_source=html-export">made with sveska.studio</a></span>
     <span>Prazna sveska. Najbolji početak.</span>
   </footer>
 </main>

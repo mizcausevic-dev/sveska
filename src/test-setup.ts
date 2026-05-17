@@ -22,6 +22,7 @@ import { useFindReplace } from '@/editor/findReplaceStore';
 import { useWritingTimer } from '@/editor/writingTimerStore';
 import { useAIRun } from '@/ai/aiRunStore';
 import { useCanvasView } from '@/canvas/canvasViewStore';
+import { useCTA } from '@/platform/ctaStore';
 
 // Pre-bootstrap the tabs store so every test starts with a hydrated note +
 // one open tab — matches first-boot behavior. Without this, tests would race
@@ -51,6 +52,7 @@ afterEach(async () => {
   useAIRun.getState().reset();
   useAIRun.setState({ toast: null });
   useCanvasView.setState({ open: false });
+  useCTA.getState()._reset();
   useUIStore.setState({ focus: false });
   useEditorPrefs.setState(DEFAULT_EDITOR_PREFS);
   useTabs.setState({ tabs: [], activeTabId: null, activeNote: null, ready: false });

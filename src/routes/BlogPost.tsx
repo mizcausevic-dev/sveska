@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useSeo } from '@/platform/useSeo';
 import { loadBlogIndex, loadBlogPostHtml, type BlogPostMeta } from '@/platform/content';
+import { EmailCapture } from '@/platform/EmailCapture';
 
 /**
  * Individual blog post (M6.T6.2). Loads the matching Markdown file from
@@ -57,6 +58,11 @@ export function BlogPost(): React.JSX.Element {
         className="content-body prose"
         data-testid="blog-post-body"
         dangerouslySetInnerHTML={{ __html: html }}
+      />
+      <EmailCapture
+        source="blog-post"
+        className="leadgen-card--blog"
+        heading="Liked this? Get the next one."
       />
     </article>
   );

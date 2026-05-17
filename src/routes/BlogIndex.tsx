@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSeo } from '@/platform/useSeo';
 import { loadBlogIndex, type BlogPostMeta } from '@/platform/content';
+import { EmailCapture } from '@/platform/EmailCapture';
 
 /**
  * Blog index (M6.T6.2). Renders the curated list from
@@ -49,6 +50,7 @@ export function BlogIndex(): React.JSX.Element {
           </li>
         ))}
       </ul>
+      <EmailCapture source="blog-index" className="leadgen-card--blog" />
     </article>
   );
 }

@@ -2605,3 +2605,100 @@ input[type='range'] {
   font-size: 32px;
   line-height: 1.15;
 }
+
+/* T6.3 — lead-gen email capture card */
+.leadgen-card {
+  margin: 32px 0 0;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, var(--border-soft));
+  border-radius: var(--r-md);
+}
+.leadgen-card--blog {
+  margin-top: 40px;
+}
+.leadgen-h {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--text);
+}
+.leadgen-p {
+  margin: 0 0 12px;
+  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.leadgen-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.leadgen-input {
+  flex: 1 1 220px;
+  min-width: 200px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+.leadgen-input:focus {
+  outline: 0;
+  border-color: var(--accent);
+}
+.leadgen-input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+.leadgen-ok {
+  margin: 8px 0 0;
+  color: var(--ok);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.leadgen-err {
+  margin: 8px 0 0;
+  color: var(--danger);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* T6.3 — CTA slot in shell footer */
+.cta-slot {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, var(--border-soft));
+  background: color-mix(in oklab, var(--accent) 8%, transparent);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.cta-blurb {
+  color: var(--text-dim);
+}
+.cta-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.cta-link:hover {
+  text-decoration: underline;
+}
+.cta-dismiss {
+  background: transparent;
+  border: 0;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0 2px;
+}
+.cta-dismiss:hover {
+  color: var(--danger);
+}
