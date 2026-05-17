@@ -7,16 +7,11 @@
 
 ## In progress
 
-- [ ] **Hand off CF Pages setup (one-time, user-side)**
-  - Create CF account if needed → CF Pages → create project `sveska` (production branch `main`)
-  - Set `ANTHROPIC_API_KEY` in CF Pages → Settings → Environment variables → Production (Secret)
-  - Generate CF API token (My Profile → API Tokens → "Edit Cloudflare Workers" template; scope to Pages:Edit + Account)
-  - Add `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` GH secrets
-  - Attach custom domain `sveska.studio` to the Pages project; CF prints the DNS target
-  - Flip Hostinger DNS apex (A/CNAME) to that target
+_None._ Migration + post-M7 platform work are settled. Next moves are deferred items in "Next up".
 
 ## Next up
 
+- [ ] **CF custom domain attach** (deferred) — would require switching `sveska.studio` nameservers from Hostinger to Cloudflare. Currently shipping with `sveska.pages.dev` canonical + Hostinger URL forwarder (301). Revisit when traffic justifies the change.
 - [ ] Post-M7 — Lighthouse PWA report on prod, Pro-tier sync design (E2E-encrypted per §5.5), analytics vendor pick (parking lot row 4)
 
 ## Recently done (this branch only)
@@ -67,7 +62,8 @@
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 - ✅ Repo screenshots — `scripts/capture-mocks.mjs` (Playwright + static server + Babel-JSX wait) · 6 PNG screenshots in README table grid
 - ✅ **M7 ship** — tagged [v0.7.0-m7](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.7.0-m7), Netlify deploy hit credit cap (`JSONHTTPError: Forbidden`)
-- ✅ **Netlify → Cloudflare Pages migration** (2026-05-17) — ported `netlify/edge-functions/ai.ts` → `functions/api/ai.ts` (Deno → Workers runtime; `Deno.env` → `env.X` param; `context.ip` → `cf-connecting-ip` header), `netlify.toml` headers/redirects → `public/_headers` + `public/_redirects`, deploy.yml `netlify-cli` → `cloudflare/wrangler-action@v3`, added `tsconfig.functions.json` with `@cloudflare/workers-types`; deleted Netlify configs to prevent drift. Awaiting user-side CF project + DNS flip.
+- ✅ **Netlify → Cloudflare Pages migration** (2026-05-17) — ported `netlify/edge-functions/ai.ts` → `functions/api/ai.ts` (Deno → Workers runtime; `Deno.env` → `env.X` param; `context.ip` → `cf-connecting-ip` header), `netlify.toml` headers/redirects → `public/_headers` + `public/_redirects`. CI pivoted to CF Pages git integration (no `wrangler-action`, no CF API token in GH secrets — CF reads git pushes directly); `deploy.yml` renamed to CI and runs only typecheck/lint/test/build gates. `tsconfig.functions.json` added for `@cloudflare/workers-types`. Netlify configs deleted. Live at `sveska.pages.dev`.
+- ✅ **Post-migration polish** (2026-05-17) — canonical URL flipped to `sveska.pages.dev` across README/index.html/sitemap/robots/GH repo homepage. Hostinger 301 redirect set up `sveska.studio → sveska.pages.dev` (works on both IPv4 + IPv6 after deleting the leftover AAAA record via Kodee). Stale `sveska.kineticgain.com` + `notepad.kineticgain.com` aliases deleted. Mobile responsive sweep across 2 commits: snap-btn nowrap + header flex-wrap + MD-preview stacking + nav-secondary hidden on small viewports + tighter rail max-height. Pixel 6 pre-editor chrome reduced from 82% → 70% of viewport.
 
 ## After M1
 
