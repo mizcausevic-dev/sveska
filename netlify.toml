@@ -8,6 +8,34 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Canonical redirects — sveska.studio is the single public URL. All aliases
+# 301 to the canonical so SEO + share links collapse to one address.
+# Order matters: canonical-forcing redirects run BEFORE the SPA fallback.
+
+[[redirects]]
+  from = "https://sveska.netlify.app/*"
+  to = "https://sveska.studio/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.sveska.studio/*"
+  to = "https://sveska.studio/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://sveska.kineticgain.com/*"
+  to = "https://sveska.studio/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://notepad.kineticgain.com/*"
+  to = "https://sveska.studio/:splat"
+  status = 301
+  force = true
+
 # SPA fallback — every unmatched path returns index.html.
 [[redirects]]
   from = "/*"

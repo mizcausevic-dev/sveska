@@ -6,7 +6,7 @@ export function Home(): React.JSX.Element {
     title: 'Sveska — local-first notepad',
     description:
       'A studio-grade, offline-first notepad. Notes, Markdown, canvas — all local. No account required.',
-    canonical: 'https://sveska.kineticgain.com/',
+    canonical: 'https://sveska.studio/',
   });
   return <Editor />;
 }
