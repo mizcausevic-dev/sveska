@@ -2,14 +2,28 @@ import { type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ThemeSwitch } from '@/ui/ThemeSwitch';
 import { openPrefs } from '@/ui/prefsModalStore';
+import { useUIStore } from '@/notes/uiStore';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export function Layout({ children }: LayoutProps): React.JSX.Element {
+  const focus = useUIStore((s) => s.focus);
+  const toggleFocus = useUIStore((s) => s.toggleFocus);
   return (
-    <div className="app-shell">
+    <div className={`app-shell${focus ? ' app-shell--focus' : ''}`} data-testid="app-shell">
+      {focus && (
+        <button
+          type="button"
+          className="focus-exit"
+          onClick={() => void toggleFocus()}
+          title="Exit focus mode (Alt + F)"
+          data-testid="focus-exit"
+        >
+          <span className="kbd">Alt + F</span> exit
+        </button>
+      )}
       <header className="app-header">
         <NavLink to="/" className="brand" aria-label="Sveska home">
           <img src="/brand/favicon.svg" alt="" width={28} height={28} />

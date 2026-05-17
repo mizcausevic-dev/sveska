@@ -13,3 +13,7 @@ export const PREF_KEYS = {
   theme: 'theme',
   consent: 'consent',
 } as const;
+
+export const PREF_KEYS_UI = {
+  focus: 'ui.focus',
+} as const;

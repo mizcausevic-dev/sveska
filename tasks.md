@@ -7,15 +7,14 @@
 
 ## In progress
 
-- [ ] **T1.5 — Focus mode** (`Alt+F`, hide chrome, widen margins to 880px column)
-  - **Files**: new `src/notes/uiStore.ts` (focus boolean, persists via Dexie prefs) · `src/app/Layout.tsx` (add `app-shell--focus` class) · `src/app/KeyBindings.tsx` (bind Alt+F) · `src/editor/Editor.tsx` (conditional toolbar visibility) · CSS `.app-shell--focus` · `src/__tests__/focus.test.tsx`
-  - **AC**: Alt+F toggles, persists across reload; focus hides nav + theme switch + snapshot/export/stats row + status bar + footer/consent; editor centered, max-width 880px, top padding 64px; Alt+F again to exit (also documented in cheatsheet at T1.7)
-  - **Don't**: animate the chrome (jumpy); just toggle classes. Don't persist focus per-note — it's a global mode.
+- [ ] **T1.6 — Preferences full UI** (font size, line height, family, spellcheck, tab-indent, focus margin)
+  - **Files**: `src/notes/prefs.ts` extend with typed pref schema (editor.fontSize, editor.lineHeight, editor.fontFamily, editor.spellcheck, editor.tabSize) · `src/ui/PrefsModal.tsx` replace stubs with real controls · `src/editor/Editor.tsx` read prefs via hook and apply inline · `src/__tests__/prefs.test.tsx` (round-trip per pref)
+  - **AC**: all prefs persist across reload; defaults match BRAND.md (editor 17px/1.7 mono, spellcheck on, tabSize 2); font family includes OpenDyslexic option (flag as TODO, currently falls back to system); Tab key inserts `\t` and `tab-size` CSS sets visual width
+  - **Don't**: vendor OpenDyslexic font in this commit (separate follow-up). Don't add the focus-margin slider yet — wire it AFTER T1.5 lands the focus-mode column width as a pref.
 
 ## Next up (sequential, top-down)
 
-- [ ] T1.6 — Preferences (font size slider, line height, family, spellcheck, tab-indent, focus margin)
-- [ ] T1.7 — Shortcuts (`Ctrl+S` save txt, `Alt+C` copy, `Ctrl+Del` clear, `Ctrl+,` prefs already, `Alt+F` focus)
+- [ ] T1.7 — Shortcuts (`Ctrl+S` save txt via T1.3 export, `Alt+C` copy whole body, `Ctrl+Del` clear with confirm, `Ctrl+,` prefs already wired, `Alt+F` focus already wired) + cheatsheet overlay (`Ctrl+?`)
 - [ ] **M1 close** — Lighthouse PWA pass on `sveska.studio`, tag `v0.1.0-m1`, write release notes
 
 ## Recently done (this branch only)
@@ -25,6 +24,7 @@
 - ✅ T1.2 — Snapshots save/restore/clear + pending dot indicator
 - ✅ T1.3 — Export `.txt` / `.md` / `.html` from shared AST + ExportMenu
 - ✅ T1.4 — Statistics modal (pure `computeStats` + live UI + `Ctrl+Shift+I`)
+- ✅ T1.5 — Focus mode (`Alt+F`, persists in Dexie, exit chip in corner)
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

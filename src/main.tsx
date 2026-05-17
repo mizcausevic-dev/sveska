@@ -7,15 +7,16 @@ import './styles/global.css';
 
 import { App } from '@/app/App';
 import { bootstrapTheme } from '@/notes/themeStore';
+import { bootstrapUI } from '@/notes/uiStore';
 
 async function bootstrap(): Promise<void> {
   // Hydrate theme from Dexie before first paint to avoid a flash when the user
   // has explicitly chosen a non-default theme. Default render is dark — if IDB
   // is unavailable or empty, we stay on dark, which is the default anyway.
   try {
-    await bootstrapTheme();
+    await Promise.all([bootstrapTheme(), bootstrapUI()]);
   } catch (err) {
-    console.warn('[sveska] theme bootstrap failed, falling back to dark default:', err);
+    console.warn('[sveska] bootstrap failed, falling back to defaults:', err);
   }
 
   const rootEl = document.getElementById('root');

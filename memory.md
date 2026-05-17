@@ -55,6 +55,8 @@
 | T1.1 (2026-05-16)    | 8     | 90.67 KB | 2.81 KB  | +editor       |
 | T1.2 (2026-05-16)    | 17    | 91.29 KB | 3.15 KB  | +snapshots    |
 | T1.3 (2026-05-17)    | 28    | 93.21 KB | 3.15 KB  | +export       |
+| T1.4 (2026-05-17)    | 40    | 93.84 KB | 3.15 KB  | +stats modal  |
+| T1.5 (2026-05-17)    | 45    | 94.10 KB | 3.15 KB  | +focus mode   |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 
