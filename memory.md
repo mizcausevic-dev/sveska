@@ -55,20 +55,21 @@
 
 ## Performance snapshot (rolling)
 
-| Date                 | Tests | JS gzip   | CSS gzip | Notes                                      |
-| -------------------- | ----- | --------- | -------- | ------------------------------------------ |
-| M0 ship (2026-05-16) | 3     | 89.81 KB  | 2.53 KB  | scaffold only                              |
-| T1.1 (2026-05-16)    | 8     | 90.67 KB  | 2.81 KB  | +editor                                    |
-| T1.2 (2026-05-16)    | 17    | 91.29 KB  | 3.15 KB  | +snapshots                                 |
-| T1.3 (2026-05-17)    | 28    | 93.21 KB  | 3.15 KB  | +export                                    |
-| T1.4 (2026-05-17)    | 40    | 93.84 KB  | 3.15 KB  | +stats modal                               |
-| T1.5 (2026-05-17)    | 45    | 94.10 KB  | 3.15 KB  | +focus mode                                |
-| T2.2 (2026-05-17)    | 85    | 99.83 KB  | 4.28 KB  | +diff + versions modal                     |
-| T2.3 (2026-05-17)    | 95    | 100.23 KB | 4.37 KB  | +draft shadow + recovery banner            |
-| T2.4 (2026-05-17)    | 107   | 101.66 KB | 4.94 KB  | +tags + pins + notes rail                  |
-| T2.5 (2026-05-17)    | 126   | 103.46 KB | 5.21 KB  | +fuzzy search + inbox modal                |
-| T3.1 (2026-05-17)    | 138   | 104.89 KB | 5.42 KB  | +command palette + slash commands          |
-| T3.2 (2026-05-17)    | 150   | 160.39 KB | 5.70 KB  | +markdown-it + dompurify + md mode preview |
+| Date                 | Tests | JS gzip   | CSS gzip | Notes                                          |
+| -------------------- | ----- | --------- | -------- | ---------------------------------------------- |
+| M0 ship (2026-05-16) | 3     | 89.81 KB  | 2.53 KB  | scaffold only                                  |
+| T1.1 (2026-05-16)    | 8     | 90.67 KB  | 2.81 KB  | +editor                                        |
+| T1.2 (2026-05-16)    | 17    | 91.29 KB  | 3.15 KB  | +snapshots                                     |
+| T1.3 (2026-05-17)    | 28    | 93.21 KB  | 3.15 KB  | +export                                        |
+| T1.4 (2026-05-17)    | 40    | 93.84 KB  | 3.15 KB  | +stats modal                                   |
+| T1.5 (2026-05-17)    | 45    | 94.10 KB  | 3.15 KB  | +focus mode                                    |
+| T2.2 (2026-05-17)    | 85    | 99.83 KB  | 4.28 KB  | +diff + versions modal                         |
+| T2.3 (2026-05-17)    | 95    | 100.23 KB | 4.37 KB  | +draft shadow + recovery banner                |
+| T2.4 (2026-05-17)    | 107   | 101.66 KB | 4.94 KB  | +tags + pins + notes rail                      |
+| T2.5 (2026-05-17)    | 126   | 103.46 KB | 5.21 KB  | +fuzzy search + inbox modal                    |
+| T3.1 (2026-05-17)    | 138   | 104.89 KB | 5.42 KB  | +command palette + slash commands              |
+| T3.2 (2026-05-17)    | 150   | 160.39 KB | 5.70 KB  | +markdown-it + dompurify + md mode preview     |
+| T3.3 (2026-05-17)    | 161   | 161.32 KB | 5.92 KB  | +checklist mode (parser + pane + drag-reorder) |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 

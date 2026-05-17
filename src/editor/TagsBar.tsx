@@ -36,7 +36,9 @@ export function TagsBar({ note }: Props): React.JSX.Element {
   }
 
   async function toggleMode(): Promise<void> {
-    const next = note.mode === 'md' ? 'text' : 'md';
+    // Cycle TXT → MD → CHK → TXT.
+    const next: typeof note.mode =
+      note.mode === 'text' ? 'md' : note.mode === 'md' ? 'checklist' : 'text';
     await setNoteMode(note.id, next);
     await refreshActiveNote();
   }
@@ -56,13 +58,19 @@ export function TagsBar({ note }: Props): React.JSX.Element {
       </button>
       <button
         type="button"
-        className={`mode-toggle${note.mode === 'md' ? ' mode-toggle--md' : ''}`}
+        className={`mode-toggle mode-toggle--${note.mode === 'md' ? 'md' : note.mode === 'checklist' ? 'chk' : 'txt'}`}
         onClick={() => void toggleMode()}
-        aria-pressed={note.mode === 'md'}
-        title={note.mode === 'md' ? 'Switch to plain text' : 'Switch to Markdown'}
+        aria-pressed={note.mode !== 'text'}
+        title={
+          note.mode === 'text'
+            ? 'Switch to Markdown mode'
+            : note.mode === 'md'
+              ? 'Switch to Checklist mode'
+              : 'Switch to plain text mode'
+        }
         data-testid="mode-toggle"
       >
-        {note.mode === 'md' ? 'MD' : 'TXT'}
+        {note.mode === 'md' ? 'MD' : note.mode === 'checklist' ? 'CHK' : 'TXT'}
       </button>
       <ul className="tag-list" data-testid="tag-list">
         {note.tags.map((tag) => (

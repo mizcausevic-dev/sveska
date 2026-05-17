@@ -7,10 +7,10 @@
 
 ## In progress
 
-- [ ] **T3.3 — Checklist mode: nested checklists, drag-reorder, filter unchecked**
-  - **Why**: a third per-note `mode` ('checklist') after text + md. Parses a body where each line is `- [ ]` / `- [x]` plus indentation for nesting. UI renders interactive checkboxes that toggle the leading `[ ]`/`[x]` on click; supports drag-reorder via HTML5 drag-and-drop; a Filter Unchecked toggle hides completed items.
-  - **AC**: mode toggle cycles text → md → checklist → text; checklist render in place of textarea when active; click toggles done state in the source; nested via indentation (2-space units); reorder persists in the body text; filter hides `[x]` rows.
-  - **Don't**: bring in a TODO/Kanban library — this is a textarea on top of a simple checkbox parser; keep the source human-readable.
+- [ ] **T3.4 — Templates + snippet manager + prompt library**
+  - **Why**: turn the editor into a launchpad — pre-canned starts (meeting notes, daily log, retro, etc.) plus user-defined snippets expanded by trigger text and a small prompt library for the M4 AI flows that come next.
+  - **AC**: Templates modal (Ctrl+T?) lists built-in + user templates · "New from template" creates a new note prefilled with the template body + tags · snippets table backs a typeahead in the editor (typing the trigger expands the body in place) · prompt library entries surface in the command palette under an `ai` group (no actual AI calls yet — that's M4).
+  - **Don't**: build the AI prompt **runners** in this ticket — only the library data + UI; runners belong to M4. Use Dexie `templates` + `snippets` tables already in the schema.
 
 ## Next up (sequential, top-down)
 
@@ -41,6 +41,7 @@
 - ✅ Layout fix — `.editor` switched from grid to flex (TagsBar broke the 4-track grid; textarea now always `flex: 1`)
 - ✅ T3.1 — Command catalog (12 entries across editor/view/navigate/note/app groups) · Ctrl+K CommandPalette modal (fuzzy filter, ↑↓ Enter) · inline slash-command popover in the editor (cursor on `/`-line triggers, Enter runs + strips `/query`) · 12 unit tests + browser preview verified
 - ✅ T3.2 — `markdown-it` + DOMPurify renderer · `setNoteMode()` · TagsBar TXT/MD toggle · split editor + PreviewPane when MD + preview-toggle · HTML export uses `.prose` div for md notes · XSS gates (no `<script>`, no `javascript:` hrefs) · 12 unit tests + browser preview verified
+- ✅ T3.3 — Pure parser for `- [ ]`/`- [x]` lines + passthrough preservation · ChecklistPane split-view with click-to-toggle, indent levels, drag-reorder, filter unchecked, summary · TagsBar mode cycle TXT → MD → CHK → TXT · 11 unit tests + browser preview verified
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

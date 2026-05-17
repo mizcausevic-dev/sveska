@@ -22,6 +22,7 @@ import { useDraftRecovery } from './draftRecoveryStore';
 import { readDraft } from '@/notes/draftRepo';
 import { SlashCommands } from './SlashCommands';
 import { PreviewPane } from './PreviewPane';
+import { ChecklistPane } from './ChecklistPane';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -196,7 +197,9 @@ export function Editor(): React.JSX.Element {
       <DraftRecoveryBanner onKeep={setBody} />
       <div
         className={`editor-input-wrap${
-          activeNote?.mode === 'md' && previewOn ? ' editor-input-wrap--split' : ''
+          (activeNote?.mode === 'md' && previewOn) || activeNote?.mode === 'checklist'
+            ? ' editor-input-wrap--split'
+            : ''
         }`}
       >
         <textarea
@@ -238,6 +241,7 @@ export function Editor(): React.JSX.Element {
           }}
         />
         {activeNote?.mode === 'md' && previewOn && <PreviewPane body={body} />}
+        {activeNote?.mode === 'checklist' && <ChecklistPane body={body} onBodyChange={setBody} />}
       </div>
       <SaveIndicator state={state} lastSavedAt={lastSavedAt} hydrated={hydrated} />
     </section>
