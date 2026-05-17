@@ -51,7 +51,7 @@
 
       <rect class="surf" x="426" y="0" width="130" height="78" rx="10"/>
       <rect class="border" x="426" y="0" width="130" height="78" rx="10"/>
-      <text class="h" x="440" y="38" font-size="22">5 ✓</text>
+      <text class="h" x="440" y="38" font-size="22">6 ✓</text>
       <text class="mono" x="440" y="58" font-size="10">milestones shipped</text>
     </g>
 

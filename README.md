@@ -10,8 +10,8 @@
 </p>
 
 [![PWA](https://img.shields.io/badge/PWA-installable-F2B544?style=flat-square)](https://sveska.studio)
-[![M4](https://img.shields.io/badge/milestone-M4_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4)
-[![Tests](https://img.shields.io/badge/tests-217_passing-7AD29C?style=flat-square)](#milestone-status)
+[![M5](https://img.shields.io/badge/milestone-M5_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.5.0-m5)
+[![Tests](https://img.shields.io/badge/tests-224_passing-7AD29C?style=flat-square)](#milestone-status)
 [![License](https://img.shields.io/badge/license-MIT-0C0C0E?style=flat-square)](LICENSE)
 
 Multi-note tabs, Markdown + checklist modes, command palette, fuzzy search across notes,
@@ -35,6 +35,7 @@ from day one.
 | Export      | `.txt` / `.md` / `.html` (prose for md) · share-via-URL hash · `.pdf` (lazy jsPDF)                              |
 | AI          | Streaming Anthropic proxy on Netlify Edge · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy |
 | AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                |
+| Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                  |
 | A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored                                                   |
 | Persistence | Dexie (IndexedDB) — 8 tables, soft-delete, legacy-localStorage import on first run                              |
 
@@ -100,12 +101,13 @@ CLAUDE.md §5. Hard, enforced now (not deferred):
 `scripts/check-bundle.mjs` parses `dist/index.html` and only counts assets it directly
 references, so `import()` chunks (jsPDF, html2canvas) don't count against the budget.
 
-| Surface           | Gzip      | Loaded                         |
-| ----------------- | --------- | ------------------------------ |
-| Initial JS        | 171.34 KB | every page load                |
-| Initial CSS       | 6.68 KB   | every page load                |
-| Lazy `.pdf` chunk | ~223 KB   | first `.pdf` export click only |
-| **Budget**        | 180 KB    | initial JS — under by 8.66 KB  |
+| Surface           | Gzip      | Loaded                                |
+| ----------------- | --------- | ------------------------------------- |
+| Initial JS        | 172.49 KB | every page load                       |
+| Initial CSS       | 6.75 KB   | every page load                       |
+| Lazy `.pdf` chunk | ~223 KB   | first `.pdf` export click only        |
+| Lazy canvas chunk | ~2.6 MB   | first canvas open (Excalidraw + deps) |
+| **Budget**        | 180 KB    | initial JS — under by 7.5 KB          |
 
 ## Milestone status
 
@@ -116,7 +118,7 @@ references, so `import()` chunks (jsPDF, html2canvas) don't count against the bu
 | **M2** | Multi-note tabs · version history · tags/pins · fuzzy search · inbox                                    | ✅ [v0.2.0-m2](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.2.0-m2) |
 | **M3** | Command palette · MD/checklist modes · templates · typewriter · paper · find/replace · import/share/PDF | ✅ [v0.3.0-m3](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.3.0-m3) |
 | **M4** | AI proxy (Netlify Edge) · slash AI commands · Notes → image                                             | ✅ [v0.4.0-m4](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4) |
-| M5     | Canvas (Excalidraw only — tldraw dropped)                                                               | ☐ next                                                                           |
+| **M5** | Canvas (Excalidraw, vendored + lazy + behind seam)                                                      | ✅ [v0.5.0-m5](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.5.0-m5) |
 | M6     | Platform & monetisation (glossary engine, lead-gen, pricing)                                            | ☐                                                                                |
 | M7     | Hardening (Playwright offline, perf CI, a11y, security)                                                 | ☐                                                                                |
 
