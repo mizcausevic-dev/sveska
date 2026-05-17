@@ -680,6 +680,23 @@ button:disabled {
     font-size: 11px;
     letter-spacing: 0.06em;
   }
+  /* Platform pages are hidden in the header on small screens; they
+   * remain reachable via footer + direct URL + glossary autolinker. */
+  .app-header nav .nav-secondary {
+    display: none;
+  }
+  /* Theme switch compacted — labels stay (3-letter words) but padding
+   * shrinks so the whole control fits inline with Prefs + brand. */
+  .theme-switch button {
+    padding: 4px 8px;
+  }
+
+  /* NotesRail eats real estate on a 915px Pixel-class viewport. Halve
+   * its max-height; the user can still tap into Search/Inbox or scroll
+   * within the rail itself. */
+  .app-shell--rail-open .notes-rail {
+    max-height: 140px;
+  }
 
   /* Snap toolbar wraps onto multiple lines if needed; buttons no longer
    * clip individually (white-space: nowrap on .snap-btn handles that). */

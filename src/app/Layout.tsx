@@ -45,10 +45,20 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
           <NavLink to="/" end>
             Home
           </NavLink>
-          <NavLink to="/blog">Blog</NavLink>
-          <NavLink to="/changelog">Changelog</NavLink>
-          <NavLink to="/glossary">Glossary</NavLink>
-          <NavLink to="/pricing">Pricing</NavLink>
+          {/* Platform pages: secondary on narrow viewports — they're
+              reachable via footer + direct URL + the glossary autolinker. */}
+          <NavLink to="/blog" className="nav-secondary">
+            Blog
+          </NavLink>
+          <NavLink to="/changelog" className="nav-secondary">
+            Changelog
+          </NavLink>
+          <NavLink to="/glossary" className="nav-secondary">
+            Glossary
+          </NavLink>
+          <NavLink to="/pricing" className="nav-secondary">
+            Pricing
+          </NavLink>
           <button
             type="button"
             onClick={openPrefs}
