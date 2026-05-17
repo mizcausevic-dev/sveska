@@ -1,12 +1,37 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, type Plugin } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+/**
+ * vite-plugin-pwa's `virtual:pwa-register/react` is resolved by the PWA
+ * plugin's `resolveId` hook in dev/build. Vitest doesn't load that plugin,
+ * so we replace the virtual import with an inline stub: never-needs-refresh,
+ * never-offline-ready, no-op updateServiceWorker.
+ */
+const pwaRegisterStub = (): Plugin => ({
+  name: 'sveska-pwa-register-stub',
+  resolveId(id) {
+    return id === 'virtual:pwa-register/react' ? id : null;
+  },
+  load(id) {
+    if (id !== 'virtual:pwa-register/react') return null;
+    return `
+      export function useRegisterSW() {
+        return {
+          needRefresh: [false, () => {}],
+          offlineReady: [false, () => {}],
+          updateServiceWorker: () => Promise.resolve(),
+        };
+      }
+    `;
+  },
+});
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [pwaRegisterStub(), react()],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),

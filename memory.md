@@ -37,6 +37,9 @@
 - **Vitest fake timers**: don't combine with Dexie. Fake `setTimeout` blocks the IDB request callbacks. Use real timers + generous `waitFor` timeouts.
 - **`fake-indexeddb/auto`**: doesn't reset between tests on its own. Need to `db.close()` + `Dexie.delete('sveska')` + null the singleton each `afterEach`.
 - **Windows case-insensitive paths**: `Sveska/` (reference bundle) and `sveska/` (app) collide. App lives at `C:\Users\chaus\Downloads\sveska-app\` to avoid this.
+- **NS delegation drift (2026-05-17)**: `sveska.studio` started delegating to `dns1.p07.nsone.net` / `dns2.p07.nsone.net` (NS1 / Netlify-DNS nameservers) — but **no zone existed there**, so public resolvers got `SERVFAIL` and browsers showed `DNS_PROBE_FINISHED_NXDOMAIN`. The Hostinger zone records were intact. Fix: `PUT /api/domains/v1/portfolio/{domain}/nameservers` setting `ns1=athena.dns-parking.com, ns2=apollo.dns-parking.com`. Likely cause: Netlify dashboard's "Use Netlify DNS" or a similar one-click that flips the registered NS at the registrar level. **If you ever see SERVFAIL on a Hostinger-registered domain, check `gh api … /portfolio/{domain}` for the `name_servers` field first.**
+- **Workbox `autoUpdate` doesn't always pick up new SW within a session**: after shipping multiple builds, some users get stuck on a stale precache. M1.7 polish added an `<UpdateBanner />` that polls `registration.update()` every 60s and surfaces a "Reload" pill when `needRefresh` flips.
+- **Don't force-redirect the alias hostnames**: keeping `sveska.netlify.app` (and `*.kineticgain.com`) reachable means we have a live backup when the canonical breaks (e.g. NS drift above). Canonical is enforced via `<link rel="canonical">` in `index.html`, not via 301. Only `www.sveska.studio` is force-redirected (apex preference).
 
 ## File map (where things live)
 

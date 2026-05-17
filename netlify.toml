@@ -8,30 +8,20 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Canonical redirects — sveska.studio is the single public URL. All aliases
-# 301 to the canonical so SEO + share links collapse to one address.
+# Canonical redirects — sveska.studio is the single public URL.
 # Order matters: canonical-forcing redirects run BEFORE the SPA fallback.
-
-[[redirects]]
-  from = "https://sveska.netlify.app/*"
-  to = "https://sveska.studio/:splat"
-  status = 301
-  force = true
+#
+# Why .netlify.app is deliberately NOT force-redirected: that's our
+# always-available fallback. If sveska.studio's DNS breaks (it has — TLD
+# delegation flipped to a parking NS once already), we lose access to the
+# app entirely behind a forced redirect. .netlify.app stays a live backup
+# that mirrors the latest deploy. SEO is handled via <link rel="canonical">
+# in the app shell — we don't need a server-side 301 for that to work.
+# (Same reasoning applies to the .kineticgain.com aliases: keep them
+# reachable as warm spares.)
 
 [[redirects]]
   from = "https://www.sveska.studio/*"
-  to = "https://sveska.studio/:splat"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "https://sveska.kineticgain.com/*"
-  to = "https://sveska.studio/:splat"
-  status = 301
-  force = true
-
-[[redirects]]
-  from = "https://notepad.kineticgain.com/*"
   to = "https://sveska.studio/:splat"
   status = 301
   force = true

@@ -511,3 +511,363 @@ button:disabled {
 .snap-btn--danger:hover:not(:disabled) {
   background: color-mix(in oklab, var(--danger) 12%, transparent);
 }
+
+/* ──────────────────────────────────────────────────────────
+ * M1.T1.3 + T1.4 — action row (snapshot · stats · export)
+ * Two clusters on one line at desktop; collapse to two rows under 720px.
+ * ────────────────────────────────────────────────────────── */
+.editor-actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.editor-actions .snap-toolbar {
+  margin: 0;
+}
+
+.editor-actions-secondary {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Stats + export-pill share the snap-toolbar's pill aesthetic
+ * (background + border) so the row reads as one toolbar visually. */
+.stats-btn {
+  height: auto;
+  padding: 0 16px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--border-soft);
+  align-self: stretch;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.export-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+
+.export-group .export-label {
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding-right: 6px;
+  border-right: 1px solid var(--border-soft);
+  margin-right: 4px;
+}
+
+.export-btn {
+  height: 28px;
+  padding: 0 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+@media (max-width: 720px) {
+  .editor-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+ * M1.T1.4 — Statistics modal grid
+ * ────────────────────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stat-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+}
+
+.stat-cell .stat-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.stat-cell .stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.stat-cell .stat-suffix {
+  font-size: 14px;
+  color: var(--text-dim);
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+ * M1.T1.5 — Focus mode
+ * ────────────────────────────────────────────────────────── */
+.app-shell--focus .app-header,
+.app-shell--focus .app-footer,
+.app-shell--focus .editor-actions,
+.app-shell--focus .save-indicator,
+.app-shell--focus [role='region'][aria-label='Analytics consent'] {
+  display: none;
+}
+
+.app-shell--focus .app-main {
+  padding: 24px 32px 64px;
+  max-width: 920px;
+}
+
+.app-shell--focus .editor {
+  height: calc(100vh - 64px);
+  margin: 0;
+}
+
+.focus-exit {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 60;
+  padding: 8px 14px 8px 12px;
+  background: var(--surface);
+  color: var(--text-dim);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+.focus-exit:hover {
+  background: var(--raised);
+  color: var(--text);
+}
+.focus-exit .kbd {
+  background: var(--raised);
+}
+
+/* ──────────────────────────────────────────────────────────
+ * M1.T1.6 — Prefs controls (segmented · range · switch)
+ * ────────────────────────────────────────────────────────── */
+.seg {
+  display: inline-flex;
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  padding: 3px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.seg button {
+  background: transparent;
+  color: var(--text-dim);
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.seg button[aria-pressed='true'] {
+  background: var(--raised);
+  color: var(--accent);
+}
+
+input[type='range'] {
+  width: 180px;
+  accent-color: var(--accent);
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.switch input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.switch-track {
+  position: relative;
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--raised);
+  border: 1px solid var(--border-soft);
+  transition: background-color 120ms ease;
+}
+.switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--text-dim);
+  transition:
+    transform 120ms ease,
+    background-color 120ms ease;
+}
+.switch input:checked + .switch-track {
+  background: color-mix(in oklab, var(--accent) 35%, var(--raised));
+}
+.switch input:checked + .switch-track .switch-thumb {
+  transform: translateX(16px);
+  background: var(--accent);
+}
+.switch input:focus-visible + .switch-track {
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--accent) 50%, transparent);
+}
+.switch-label {
+  min-width: 28px;
+  color: var(--text);
+}
+
+/* ──────────────────────────────────────────────────────────
+ * M1.T1.7 — Shortcuts cheatsheet
+ * ────────────────────────────────────────────────────────── */
+.shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.shortcuts-group-label {
+  margin: 0 0 8px;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.shortcuts ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border-soft);
+}
+
+.shortcuts-group ul .shortcut-row:first-child {
+  border-top: 0;
+}
+
+.shortcut-keys {
+  display: inline-flex;
+  gap: 4px;
+  min-width: 168px;
+}
+
+.shortcut-label {
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* ──────────────────────────────────────────────────────────
+ * Post-M1 polish — SW "update available" banner
+ * ────────────────────────────────────────────────────────── */
+.update-banner {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 70;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  box-shadow: var(--shadow);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.update-banner .update-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ai);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ai) 22%, transparent);
+}
+
+.update-banner .update-label {
+  color: var(--text);
+}
+
+.update-banner button {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--ink-900);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.update-banner button.ghost {
+  background: transparent;
+  color: var(--text-dim);
+  box-shadow: inset 0 0 0 1px var(--border-soft);
+}

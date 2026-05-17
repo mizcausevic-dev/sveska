@@ -7,6 +7,7 @@ import { NotFound } from '@/routes/NotFound';
 import { PrefsModalHost } from '@/ui/PrefsModal';
 import { ShortcutsModalHost } from '@/ui/ShortcutsModal';
 import { KeyBindings } from './KeyBindings';
+import { UpdateBanner } from './UpdateBanner';
 import { ConsentBar } from '@/platform/ConsentBar';
 
 export function App(): React.JSX.Element {
@@ -23,6 +24,7 @@ export function App(): React.JSX.Element {
       <KeyBindings />
       <PrefsModalHost />
       <ShortcutsModalHost />
+      <UpdateBanner />
       <ConsentBar />
     </BrowserRouter>
   );

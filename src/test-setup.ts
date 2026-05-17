@@ -1,6 +1,8 @@
 import '@testing-library/jest-dom/vitest';
 import 'fake-indexeddb/auto';
 import { afterEach } from 'vitest';
+// virtual:pwa-register/react is aliased to src/__mocks__/pwaRegister.ts
+// via vitest.config.ts — no per-test mock needed.
 import { cleanup } from '@testing-library/react';
 import { _resetDbForTests } from '@/notes/db';
 import { usePrefsModal } from '@/ui/prefsModalStore';
