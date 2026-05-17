@@ -9,11 +9,21 @@ import { ShortcutsModalHost } from '@/ui/ShortcutsModal';
 import { SearchModalHost } from '@/ui/SearchModal';
 import { InboxModalHost } from '@/ui/InboxModal';
 import { CommandPaletteHost } from '@/ui/CommandPalette';
+import { TemplatesModalHost } from '@/ui/TemplatesModal';
+import { useEffect } from 'react';
+import { seedBuiltinTemplates } from '@/notes/templatesRepo';
+import { seedBuiltinSnippets } from '@/notes/snippetsRepo';
 import { KeyBindings } from './KeyBindings';
 import { UpdateBanner } from './UpdateBanner';
 import { ConsentBar } from '@/platform/ConsentBar';
 
 export function App(): React.JSX.Element {
+  // T3.4 — seed built-in templates + snippets once on mount. Both seeders are
+  // idempotent (stable IDs / dedupe by trigger), so re-runs are no-ops.
+  useEffect(() => {
+    void seedBuiltinTemplates();
+    void seedBuiltinSnippets();
+  }, []);
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout>
@@ -30,6 +40,7 @@ export function App(): React.JSX.Element {
       <SearchModalHost />
       <InboxModalHost />
       <CommandPaletteHost />
+      <TemplatesModalHost />
       <UpdateBanner />
       <ConsentBar />
     </BrowserRouter>

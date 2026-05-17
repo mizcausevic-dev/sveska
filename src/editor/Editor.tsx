@@ -23,6 +23,7 @@ import { readDraft } from '@/notes/draftRepo';
 import { SlashCommands } from './SlashCommands';
 import { PreviewPane } from './PreviewPane';
 import { ChecklistPane } from './ChecklistPane';
+import { useSnippetExpand } from './useSnippetExpand';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -146,6 +147,22 @@ export function Editor(): React.JSX.Element {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, activeNote?.id]);
+
+  // T3.4 — snippet expansion: when the text immediately before the caret
+  // matches a saved trigger, replace it with the snippet body in place.
+  useSnippetExpand({
+    body,
+    selectionStart,
+    onExpand: (nextBody, nextCursor) => {
+      setBody(nextBody);
+      setSelectionStart(nextCursor);
+      requestAnimationFrame(() => {
+        const el = textareaRef.current;
+        if (!el) return;
+        el.selectionStart = el.selectionEnd = nextCursor;
+      });
+    },
+  });
 
   function onTextareaKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>): void {
     if (e.key === 'Tab' && !e.metaKey && !e.ctrlKey) {

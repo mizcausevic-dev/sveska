@@ -17,6 +17,7 @@ import { useNotesRail } from '@/notes/notesRailStore';
 import { useSearchModal } from '@/ui/searchModalStore';
 import { useInboxModal } from '@/ui/inboxModalStore';
 import { useCommandPalette } from '@/ui/commandPaletteStore';
+import { useTemplatesModal } from '@/ui/templatesModalStore';
 
 // Pre-bootstrap the tabs store so every test starts with a hydrated note +
 // one open tab — matches first-boot behavior. Without this, tests would race
@@ -40,6 +41,7 @@ afterEach(async () => {
   useSearchModal.setState({ open: false });
   useInboxModal.setState({ open: false });
   useCommandPalette.setState({ open: false });
+  useTemplatesModal.setState({ open: false, tab: 'templates' });
   useUIStore.setState({ focus: false });
   useEditorPrefs.setState(DEFAULT_EDITOR_PREFS);
   useTabs.setState({ tabs: [], activeTabId: null, activeNote: null, ready: false });

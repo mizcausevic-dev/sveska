@@ -2006,3 +2006,102 @@ input[type='range'] {
   border-color: color-mix(in oklab, var(--ok) 50%, var(--border-soft));
   background: color-mix(in oklab, var(--ok) 10%, transparent);
 }
+
+/* T3.4 — Templates / Snippets modal */
+.templates-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 520px;
+  max-width: 760px;
+}
+.templates-tabs {
+  display: inline-flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.templates-tab {
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+.templates-tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.templates-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.templates-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.templates-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  background: var(--surface);
+}
+.templates-row-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.templates-row-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text);
+}
+.templates-row-kind {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  padding: 1px 5px;
+  border: 1px solid var(--border-soft);
+  border-radius: 3px;
+}
+.templates-row-actions {
+  display: inline-flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.templates-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-soft);
+}
+.templates-body-input {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  resize: vertical;
+}

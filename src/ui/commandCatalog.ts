@@ -4,6 +4,7 @@ import { openShortcuts } from './shortcutsModalStore';
 import { openSearch } from './searchModalStore';
 import { openInbox } from './inboxModalStore';
 import { openVersions } from '@/editor/versionsModalStore';
+import { openTemplates } from './templatesModalStore';
 import { useEditorCommands } from '@/editor/editorCommands';
 import { useUIStore } from '@/notes/uiStore';
 import { useNotesRail } from '@/notes/notesRailStore';
@@ -84,6 +85,21 @@ export function buildCommandCatalog(): PaletteCommand[] {
       keywords: 'versions snapshots diff',
       group: 'note',
       run: openVersions,
+    },
+    {
+      id: 'note.from.template',
+      label: 'New note from template…',
+      keywords: 'templates meeting daily retro standup brief',
+      shortcut: 'Ctrl + T',
+      group: 'note',
+      run: () => openTemplates('templates'),
+    },
+    {
+      id: 'snippets.manage',
+      label: 'Manage snippets…',
+      keywords: 'expand trigger abbreviation',
+      group: 'note',
+      run: () => openTemplates('snippets'),
     },
 
     // ─── editor ────────────────────────────────────────────────────────────
