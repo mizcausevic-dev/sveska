@@ -4,11 +4,33 @@
 > A studio-grade, **local-first, offline-first** notepad PWA at [sveska.studio](https://sveska.studio).
 
 [![PWA](https://img.shields.io/badge/PWA-installable-F2B544?style=flat-square)](https://sveska.studio)
+[![M4](https://img.shields.io/badge/milestone-M4_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4)
+[![Tests](https://img.shields.io/badge/tests-217_passing-7AD29C?style=flat-square)](#milestone-status)
 [![License](https://img.shields.io/badge/license-MIT-0C0C0E?style=flat-square)](LICENSE)
 
-Notes, Markdown, canvas, AI — all local. No account, no telemetry until you opt in, no
-cloud dependency. The reference behaviour is `notepad.js.org` (Amit Merchant, MIT).
-Sveska re-implements it as a typed, modular PWA with a platform surface from day one.
+Multi-note tabs, Markdown + checklist modes, command palette, fuzzy search across notes,
+streaming AI assistance, OG-card image export — all local. No account, no telemetry until
+you opt in, no cloud dependency. The reference behaviour is `notepad.js.org` (Amit
+Merchant, MIT). Sveska re-implements it as a typed, modular PWA with a platform surface
+from day one.
+
+## Features (live as of M4)
+
+| Layer       | What's shipped                                                                                                  |
+| ----------- | --------------------------------------------------------------------------------------------------------------- |
+| Editor      | Native textarea · autosave (400 ms debounce + flush on blur/visibility) · crash-safe draft shadow               |
+| Modes       | TXT · MD (split preview, DOMPurify XSS gate) · CHK (click-toggle, drag-reorder, indent levels, hide done)       |
+| Navigation  | Multi-note tabs · session restore · NotesRail (pinned / recent / saved filters / tags)                          |
+| Discovery   | `Ctrl+K` command palette (fuzzy) · inline slash commands · `Ctrl+P` fuzzy search across all notes (<50 ms / 1k) |
+| Capture     | Inbox (`Ctrl+Shift+K`) · Web Share Target → inbox · import .txt / .md (file picker + drag-drop)                 |
+| Snapshots   | Per-note version history with side-by-side LCS diff + Restore                                                   |
+| Writing     | Typewriter mode · WebAudio typing clicks · paper textures · writing-session timer · word goal · `Ctrl+F` find   |
+| Templates   | 5 built-in note templates · user templates · snippet typeahead (`;date`, `;todo`, `;hr`)                        |
+| Export      | `.txt` / `.md` / `.html` (prose for md) · share-via-URL hash · `.pdf` (lazy jsPDF)                              |
+| AI          | Streaming Anthropic proxy on Netlify Edge · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy |
+| AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                |
+| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored                                                   |
+| Persistence | Dexie (IndexedDB) — 8 tables, soft-delete, legacy-localStorage import on first run                              |
 
 ## Stack (locked at M0)
 
@@ -17,12 +39,13 @@ Sveska re-implements it as a typed, modular PWA with a platform surface from day
 | Build       | Vite + React 18 + TypeScript (strict, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`) |
 | State       | Zustand                                                                                         |
 | Storage     | Dexie (IndexedDB)                                                                               |
+| Markdown    | `markdown-it` + DOMPurify                                                                       |
 | PWA         | `vite-plugin-pwa` (Workbox, `registerType: 'autoUpdate'`)                                       |
 | Router      | `react-router-dom` v6                                                                           |
-| Tests       | Vitest + Testing Library + `fake-indexeddb`                                                     |
+| Tests       | Vitest + Testing Library + `fake-indexeddb` (217 tests, 100% pass)                              |
 | Lint/format | ESLint 9 (flat config, typed) + Prettier 3                                                      |
 | Pre-commit  | Husky 9 + lint-staged                                                                           |
-| Edge (M4)   | TBD: Cloudflare Workers or Vercel Edge                                                          |
+| Edge        | **Netlify Edge Functions** (Deno) — same-origin AI proxy at `/api/ai`                           |
 | Canvas (M5) | Excalidraw (MIT), vendored, lazy-loaded behind `CanvasProvider`                                 |
 
 ## Getting started
@@ -32,13 +55,24 @@ pnpm install
 pnpm dev            # http://localhost:5173
 pnpm build          # builds, generates sitemap, runs key-leak + bundle-budget gates
 pnpm preview        # serves the built bundle
-pnpm test           # Vitest + Testing Library
+pnpm test           # Vitest + Testing Library (217 tests)
 pnpm typecheck
 pnpm lint
 ```
 
 Requires Node ≥ 20 and pnpm 10. Husky installs a pre-commit hook on `pnpm install` that
-runs `lint-staged` (ESLint + Prettier on touched files) plus `pnpm typecheck`.
+runs `lint-staged` (Prettier on touched files) plus `pnpm typecheck`.
+
+### Optional: enable AI
+
+The AI proxy ships disabled. Set the secret once on Netlify to turn it on:
+
+```bash
+netlify env:set ANTHROPIC_API_KEY <your-key> --context production
+```
+
+Without the secret, `/api/ai` returns 503 and the in-app AI flows degrade to a friendly
+"AI offline" toast instead of crashing. Everything else works unchanged.
 
 ## Security gate
 
@@ -47,48 +81,79 @@ CLAUDE.md §5. Hard, enforced now (not deferred):
 1. **No API keys in the client.** `scripts/check-no-keys.mjs` runs at the end of every build
    and fails on any `VITE_*_API_KEY` / `ANTHROPIC_API_KEY` / `sk-…` / bearer-shaped string.
 2. **CSP `default-src 'self'`.** Declared as both an HTML meta tag (runtime) and a Netlify
-   header (defence-in-depth). The AI proxy origin is appended to `connect-src` at M4.
+   header (defence-in-depth). The AI proxy lives at `/api/ai` (same origin), so no
+   `connect-src` expansion is needed.
 3. **No third-party trackers** in the app shell. Analytics is a seam with a no-op default and
    a consent gate (`ConsentBar`). Real vendor is decided at M6 and must be cookieless.
 4. **Self-hosted fonts.** Bricolage Grotesque 700 + JetBrains Mono 600 ship as TTFs in
    `public/brand/fonts/`; Satoshi and Newsreader fall back to `system-ui` / Georgia until
    vendored.
 
+## Bundle budget
+
+`scripts/check-bundle.mjs` parses `dist/index.html` and only counts assets it directly
+references, so `import()` chunks (jsPDF, html2canvas) don't count against the budget.
+
+| Surface           | Gzip      | Loaded                         |
+| ----------------- | --------- | ------------------------------ |
+| Initial JS        | 171.34 KB | every page load                |
+| Initial CSS       | 6.68 KB   | every page load                |
+| Lazy `.pdf` chunk | ~223 KB   | first `.pdf` export click only |
+| **Budget**        | 180 KB    | initial JS — under by 8.66 KB  |
+
 ## Milestone status
 
-|        | Ticket                                    | Done | Notes                        |
-| ------ | ----------------------------------------- | ---- | ---------------------------- |
-| **M0** | Scaffold & platform skeleton              | ✅   | see `CLAUDE.md` ticket boxes |
-| M1     | Core editor (notepad.js.org parity)       | ☐    | next                         |
-| M2     | Multi-note + persistence depth            | ☐    |                              |
-| M3     | Power UX                                  | ☐    |                              |
-| M4     | AI layer (secure)                         | ☐    |                              |
-| M5     | Canvas (Excalidraw only — tldraw dropped) | ☐    |                              |
-| M6     | Platform & monetisation                   | ☐    |                              |
-| M7     | Hardening                                 | ☐    |                              |
+|        | Ticket set                                                                                              | Status                                                                           |
+| ------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **M0** | Scaffold + platform skeleton                                                                            | ✅ [v0.0.1-m0](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.0.1-m0) |
+| **M1** | Core editor (notepad.js.org parity)                                                                     | ✅ [v0.1.0-m1](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.1.0-m1) |
+| **M2** | Multi-note tabs · version history · tags/pins · fuzzy search · inbox                                    | ✅ [v0.2.0-m2](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.2.0-m2) |
+| **M3** | Command palette · MD/checklist modes · templates · typewriter · paper · find/replace · import/share/PDF | ✅ [v0.3.0-m3](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.3.0-m3) |
+| **M4** | AI proxy (Netlify Edge) · slash AI commands · Notes → image                                             | ✅ [v0.4.0-m4](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4) |
+| M5     | Canvas (Excalidraw only — tldraw dropped)                                                               | ☐ next                                                                           |
+| M6     | Platform & monetisation (glossary engine, lead-gen, pricing)                                            | ☐                                                                                |
+| M7     | Hardening (Playwright offline, perf CI, a11y, security)                                                 | ☐                                                                                |
 
 ## Repo map
 
 ```
 sveska/
   index.html
-  /public        manifest (generated), /brand (icons, fonts, logos), robots, sitemap
-  /scripts       check-no-keys · check-bundle · generate-sitemap
+  /public                  manifest, /brand (icons, fonts, logos), robots, sitemap
+  /scripts                 check-no-keys · check-bundle · generate-sitemap
+  /netlify/edge-functions  /api/ai — Anthropic streaming proxy (Deno)
   /src
-    /app         router, providers, theme, layout, key bindings
-    /editor      M1 — textarea/CM, autosave, focus/typewriter
-    /notes       Dexie schema (8 tables), prefs CRUD, theme store
-    /markdown    M1/M3 — markdown-it + DOMPurify
+    /app         router, layout, KeyBindings, UpdateBanner
+    /editor      Editor + TabBar + TagsBar + SnapshotToolbar + VersionsModal +
+                 ChecklistPane + PreviewPane + SlashCommands + FindReplace +
+                 NotesRail + DraftRecoveryBanner + writingTimerStore +
+                 ExportMenu + StatsModal + ClearConfirm
+    /notes       Dexie schema (8 tables) · noteRepo · tabsStore · snapshotRepo ·
+                 draftRepo · prefs · editorPrefs · themeStore · inboxRepo ·
+                 templatesRepo · snippetsRepo · uiStore · notesRailStore
+    /markdown    markdown-it + DOMPurify renderer · ast · export
     /canvas      CanvasProvider seam (Excalidraw vendored at M5)
-    /ai          M4 — client → /api/ai proxy
-    /platform    glossary · content · lead-gen · analytics + consent
-    /ui          Modal · PrefsModal · ThemeSwitch (more to come)
-    /lib         debounce (more to come)
+    /ai          aiClient (SSE consumer) · aiRunStore · AIResultPane · AIToast ·
+                 prompts · imageSpec · renderImage
+    /platform    glossary · ConsentBar · useSeo
+    /ui          Modal · PrefsModal · ShortcutsModal · SearchModal · InboxModal ·
+                 CommandPalette · TemplatesModal · ThemeSwitch · commandCatalog
+    /lib         debounce · fuzzy (1k-notes <50ms) · diff (LCS) · checklist ·
+                 hashShare · importFiles · exportPdf (lazy)
     /routes      Home · Glossary · ShareTarget · NotFound
     /styles      tokens.css · fonts.css · global.css
-  /server        M4 — edge function /api/ai (key vault)
-  /docs          architecture.svg · threat-model.md
+  /docs                    architecture.svg · design-mocks/ · landing/
+  /server                  reserved for any future non-edge backend (not currently used)
 ```
+
+## Doc map
+
+| Doc                                  | Purpose                                             |
+| ------------------------------------ | --------------------------------------------------- |
+| [CLAUDE.md](CLAUDE.md)               | Full spec, milestones, ticket-level acceptance      |
+| [tasks.md](tasks.md)                 | Live TODO + completed work log                      |
+| [memory.md](memory.md)               | Locked decisions, gotchas, perf snapshot per ticket |
+| [src/ai/README.md](src/ai/README.md) | AI threat model + secret-setup command              |
 
 ## License
 
