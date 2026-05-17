@@ -15,6 +15,10 @@ describe('M1.T1.6 — editor prefs (store + persistence)', () => {
       fontFamily: 'mono',
       spellcheck: true,
       tabSize: 2,
+      // T3.5 additions — typewriter + sounds default OFF.
+      typewriter: false,
+      sounds: false,
+      soundVolume: 0.4,
     });
   });
 

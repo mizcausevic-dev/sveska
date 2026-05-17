@@ -25,4 +25,7 @@ export const PREF_KEYS_EDITOR = {
   fontFamily: 'editor.fontFamily',
   spellcheck: 'editor.spellcheck',
   tabSize: 'editor.tabSize',
+  typewriter: 'editor.typewriter',
+  sounds: 'editor.sounds',
+  soundVolume: 'editor.soundVolume',
 } as const;

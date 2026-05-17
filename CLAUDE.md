@@ -130,7 +130,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 - ✅ T3.2 Per-note Markdown mode + split/overlay live preview.
 - ✅ T3.3 Checklist mode: nested checklists, drag-reorder, filter unchecked.
 - ✅ T3.4 Templates (incl. meeting-notes) + snippet manager + prompt library.
-- ☐ T3.5 Typewriter mode + typing sounds (from reference repo: key/space/enter, volume).
+- ✅ T3.5 Typewriter mode + typing sounds (from reference repo: key/space/enter, volume).
 - ☐ T3.6 Paper textures (dotted/graph/linen/grain, CSS-only), writing timer (Pomodoro + idle auto-pause), word-count goal w/ progress, find & replace.
 - ☐ T3.7 Import `.txt`/`.md`; Web Share target; share-via-URL hash; PDF export (jsPDF). **AC:** all features keyboard-reachable, a11y AA.
 

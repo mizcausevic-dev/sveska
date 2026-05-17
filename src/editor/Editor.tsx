@@ -24,6 +24,8 @@ import { SlashCommands } from './SlashCommands';
 import { PreviewPane } from './PreviewPane';
 import { ChecklistPane } from './ChecklistPane';
 import { useSnippetExpand } from './useSnippetExpand';
+import { useTypewriterScroll } from './useTypewriterScroll';
+import { useTypingSounds } from './useTypingSounds';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -147,6 +149,21 @@ export function Editor(): React.JSX.Element {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, activeNote?.id]);
+
+  // T3.5 — typewriter mode: keep caret line centered in the textarea.
+  useTypewriterScroll({
+    textareaRef,
+    body,
+    selectionStart,
+    enabled: prefs.typewriter,
+  });
+
+  // T3.5 — typing sounds: short WebAudio synth click per keystroke.
+  useTypingSounds({
+    textareaRef,
+    enabled: prefs.sounds,
+    volume: prefs.soundVolume,
+  });
 
   // T3.4 — snippet expansion: when the text immediately before the caret
   // matches a saved trigger, replace it with the snippet body in place.

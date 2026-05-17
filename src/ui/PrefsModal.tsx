@@ -134,6 +134,65 @@ export function PrefsModalHost(): React.JSX.Element {
 
       <div className="row">
         <div>
+          <div className="label">Typewriter mode</div>
+          <span className="hint">Auto-scroll so the active line stays near vertical center.</span>
+        </div>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={prefs.typewriter}
+            onChange={(e) => void prefs.setTypewriter(e.target.checked)}
+            data-testid="pref-typewriter"
+          />
+          <span className="switch-track" aria-hidden="true">
+            <span className="switch-thumb" />
+          </span>
+          <span className="switch-label">{prefs.typewriter ? 'On' : 'Off'}</span>
+        </label>
+      </div>
+
+      <div className="row">
+        <div>
+          <div className="label">Typing sounds</div>
+          <span className="hint">
+            Short synth click per keystroke. Enter / Space / others get different pitches.
+          </span>
+        </div>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={prefs.sounds}
+            onChange={(e) => void prefs.setSounds(e.target.checked)}
+            data-testid="pref-sounds"
+          />
+          <span className="switch-track" aria-hidden="true">
+            <span className="switch-thumb" />
+          </span>
+          <span className="switch-label">{prefs.sounds ? 'On' : 'Off'}</span>
+        </label>
+      </div>
+
+      {prefs.sounds && (
+        <div className="row">
+          <div>
+            <div className="label">Sound volume</div>
+            <span className="hint">{Math.round(prefs.soundVolume * 100)} %</span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            value={prefs.soundVolume}
+            onChange={(e) => void prefs.setSoundVolume(Number(e.target.value))}
+            aria-label="Typing sound volume"
+            data-testid="pref-sound-volume"
+          />
+        </div>
+      )}
+
+      <div className="row">
+        <div>
           <div className="label">Focus mode</div>
           <span className="hint">
             Hide chrome, widen margins. Toggle anywhere with <span className="kbd">Alt + F</span>.

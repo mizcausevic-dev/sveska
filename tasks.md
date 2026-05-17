@@ -7,10 +7,10 @@
 
 ## In progress
 
-- [ ] **T3.5 — Typewriter mode + typing sounds (key / space / enter, volume)**
-  - **Why**: writing ritual — typewriter mode keeps the active line centered vertically (auto-scroll the textarea so the caret stays in the middle 1/3 of the visible area) and an optional sound layer (3 short clicks: key, space, enter) gives haptic feedback. Both are toggles in Preferences; sound defaults OFF.
-  - **AC**: typewriter toggle in Prefs persists in Dexie; when on, line-scrolling keeps the caret near vertical center; typing-sounds toggle + volume slider in Prefs; sounds are short, vendored MP3/OGG, played via WebAudio with a per-event throttle so a held key doesn't machine-gun.
-  - **Don't**: vendor large samples — keep each clip < 8KB and stash them in `/public/brand/sounds/`. Defer key/space/enter discrimination if a single click+volume hits the spec.
+- [ ] **T3.6 — Paper textures · writing timer · word-count goal · find & replace**
+  - **Why**: writing-ritual polish. Pick a paper texture (dotted / graph / linen / grain) for the editor background; set a per-session word-count goal with progress; run a Pomodoro / idle-aware writing timer; find & replace inside the active note.
+  - **AC**: paper texture choice in Prefs persists + applies via CSS class on `.editor`; word-count goal modal sets a target N + shows a progress bar in the SaveIndicator footer; writing timer pill shows mm:ss running, pauses on idle > 60s; Ctrl+F opens find & replace within the textarea (case-sensitive opt-in, all/next/replace).
+  - **Don't**: persist the timer across reloads in v1 — keep it session-scoped.
 
 ## Next up (sequential, top-down)
 
@@ -43,6 +43,7 @@
 - ✅ T3.2 — `markdown-it` + DOMPurify renderer · `setNoteMode()` · TagsBar TXT/MD toggle · split editor + PreviewPane when MD + preview-toggle · HTML export uses `.prose` div for md notes · XSS gates (no `<script>`, no `javascript:` hrefs) · 12 unit tests + browser preview verified
 - ✅ T3.3 — Pure parser for `- [ ]`/`- [x]` lines + passthrough preservation · ChecklistPane split-view with click-to-toggle, indent levels, drag-reorder, filter unchecked, summary · TagsBar mode cycle TXT → MD → CHK → TXT · 11 unit tests + browser preview verified
 - ✅ T3.4 — `templates` + `snippets` Dexie repos with 5 built-in templates (meeting / daily / retro / standup / brief) + 3 built-in snippets · TemplatesModal (Ctrl+T) with Templates / Snippets tabs · "New note from template" creates + opens · in-editor snippet typeahead (`findTriggerAt` matches longest trigger to caret) · palette commands wired · 8 unit tests + browser preview verified
+- ✅ T3.5 — Typewriter scroll hook (active line centered ~40% from top) + typing sounds hook (WebAudio synth click, 25ms throttle, pitch per key: 520Hz Enter / 360Hz Space / 440Hz default) · Prefs rows with conditional volume slider · 3 new persisted editor prefs (typewriter / sounds / soundVolume, both toggles default OFF) · 6 unit tests + browser preview verified
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 
