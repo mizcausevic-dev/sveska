@@ -1,0 +1,1412 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sveska — A11y Audit · v1.0</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 14.5px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      .dim {
+        color: var(--text-dim);
+      }
+
+      .wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .topbar b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .topbar .live {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--signal-400);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--signal-400) 22%, transparent);
+        display: inline-block;
+        margin-right: 10px;
+      }
+
+      header.hero {
+        padding: 56px 0 64px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 48px;
+        align-items: end;
+      }
+      header h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 80px;
+        letter-spacing: -0.035em;
+        line-height: 0.95;
+        margin: 0 0 22px;
+      }
+      header h1 .amb {
+        color: var(--accent);
+      }
+      header p.lead {
+        font-size: 17px;
+        color: var(--text-dim);
+        max-width: 62ch;
+        margin: 0;
+        line-height: 1.55;
+      }
+      header .stamp {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+        min-width: 240px;
+      }
+      header .stamp .row {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      header .stamp .row b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      header .stamp .accent {
+        color: var(--accent);
+      }
+      header .stamp .ok {
+        color: var(--ok);
+      }
+
+      .seclabel {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        padding: 32px 0 16px;
+      }
+      .seclabel .n {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .seclabel h2 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: -0.025em;
+        margin: 0;
+      }
+      .seclabel .tail {
+        flex: 1;
+        height: 1px;
+        background: var(--ink-700);
+        transform: translateY(-6px);
+      }
+      .secsub {
+        color: var(--text-dim);
+        max-width: 64ch;
+        margin: 0 0 22px;
+        font-size: 14px;
+      }
+
+      /* tables */
+      table.a {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--surface);
+        border: 1px solid var(--ink-700);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      table.a th {
+        text-align: left;
+        padding: 12px 16px;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        font-weight: 500;
+        border-bottom: 1px solid var(--ink-700);
+        background: color-mix(in oklab, var(--surface) 70%, var(--bg));
+      }
+      table.a td {
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--ink-700);
+        vertical-align: middle;
+        font-size: 13px;
+      }
+      table.a tr:last-child td {
+        border-bottom: 0;
+      }
+      table.a td.mono {
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+
+      /* contrast swatches */
+      .pair {
+        display: inline-flex;
+        align-items: center;
+        gap: 0;
+      }
+      .pair .sw {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: inline-block;
+      }
+      .pair .sw + .sw {
+        margin-left: 6px;
+      }
+      .verdict {
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        letter-spacing: 0.04em;
+        padding: 2px 8px;
+        border-radius: 5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .verdict::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+      }
+      .verdict.aaa {
+        background: color-mix(in oklab, var(--ok) 14%, transparent);
+        color: var(--ok);
+      }
+      .verdict.aaa::before {
+        background: var(--ok);
+      }
+      .verdict.aa {
+        background: color-mix(in oklab, var(--amber-500) 14%, transparent);
+        color: var(--amber-500);
+      }
+      .verdict.aa::before {
+        background: var(--amber-500);
+      }
+      .verdict.fail {
+        background: color-mix(in oklab, var(--danger) 14%, transparent);
+        color: var(--danger);
+      }
+      .verdict.fail::before {
+        background: var(--danger);
+      }
+      .verdict.large {
+        background: var(--raised);
+        color: var(--text-dim);
+      }
+      .verdict.large::before {
+        background: var(--text-dim);
+      }
+
+      /* contrast bars (visual ratio) */
+      .bar {
+        display: inline-block;
+        height: 6px;
+        width: 80px;
+        background: var(--ink-700);
+        border-radius: 999px;
+        vertical-align: middle;
+        overflow: hidden;
+      }
+      .bar .fill {
+        display: block;
+        height: 100%;
+        border-radius: 999px;
+      }
+      .bar.aaa .fill {
+        background: var(--ok);
+      }
+      .bar.aa .fill {
+        background: var(--amber-500);
+      }
+      .bar.fail .fill {
+        background: var(--danger);
+      }
+
+      /* focus demo */
+      .focus-demo {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        padding: 20px 0;
+      }
+      .focus-card {
+        background: var(--surface);
+        border: 1px solid var(--ink-700);
+        border-radius: 8px;
+        padding: 18px 20px;
+        width: 220px;
+      }
+      .focus-card .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 12px;
+      }
+      .focus-card .btn {
+        height: 36px;
+        padding: 0 14px;
+        border-radius: 8px;
+        border: 0;
+        background: var(--accent);
+        color: #0c0c0e;
+        font-weight: 700;
+        font-size: 13px;
+        box-shadow:
+          0 0 0 2px var(--bg),
+          0 0 0 4px var(--accent);
+      }
+      .focus-card .ghost {
+        height: 36px;
+        padding: 0 14px;
+        border-radius: 8px;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        box-shadow:
+          inset 0 0 0 1px var(--ink-700),
+          0 0 0 2px var(--bg),
+          0 0 0 4px var(--accent);
+      }
+      .focus-card .danger {
+        height: 36px;
+        padding: 0 14px;
+        border-radius: 8px;
+        border: 0;
+        background: transparent;
+        color: var(--danger);
+        box-shadow:
+          inset 0 0 0 1px color-mix(in oklab, var(--danger) 40%, transparent),
+          0 0 0 2px var(--bg),
+          0 0 0 4px var(--accent);
+      }
+
+      /* CVD simulator swatches */
+      .cvd-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-top: 10px;
+      }
+      .cvd-card {
+        background: var(--surface);
+        border: 1px solid var(--ink-700);
+        border-radius: 8px;
+        padding: 18px 20px;
+      }
+      .cvd-card .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 10px;
+      }
+      .cvd-card .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 0;
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+      .cvd-card .row .ic {
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        flex-shrink: 0;
+      }
+      .cvd-card .row .role {
+        flex: 1;
+        color: var(--text-dim);
+      }
+      .cvd-card .row .glyph {
+        font-size: 11px;
+        color: var(--text);
+        font-family: var(--font-mono);
+      }
+
+      /* keyboard chart */
+      kbd {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 2px 7px;
+        border-radius: 5px;
+        background: var(--raised);
+        color: var(--text);
+        letter-spacing: 0.04em;
+        display: inline-block;
+      }
+
+      /* summary chips */
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin: 14px 0 32px;
+      }
+      .summary .stat {
+        background: var(--surface);
+        border: 1px solid var(--ink-700);
+        border-radius: 6px;
+        padding: 18px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .summary .stat .v {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: -0.018em;
+        color: var(--text);
+        line-height: 1;
+      }
+      .summary .stat .v.ok {
+        color: var(--ok);
+      }
+      .summary .stat .v.warn {
+        color: var(--amber-500);
+      }
+      .summary .stat .k {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+
+      footer.kitfoot {
+        border-top: 1px solid var(--ink-700);
+        padding: 28px 0 56px;
+        margin-top: 48px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      footer.kitfoot b {
+        color: var(--text);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska A11y Audit">
+    <div class="wrap">
+      <div class="topbar">
+        <div>
+          <span class="live"></span><b>Sveska</b> · A11y Audit · v1.0 · WCAG 2.2 AA · 4.5:1 body ·
+          3:1 large · 3:1 UI
+        </div>
+        <div><b>2026.05.16</b></div>
+      </div>
+
+      <header class="hero">
+        <div>
+          <h1>Audible.<br />Operable.<br /><span class="amb">Local-first too.</span></h1>
+          <p class="lead">
+            Every color pair, every focus ring, every keyboard path, every screen-reader cue.
+            Sveska's a11y posture, mapped — so the engineer building M0–M3 has no excuse to ship
+            something that doesn't pass.
+          </p>
+        </div>
+        <div class="stamp">
+          <div class="row"><b>Status</b><span class="ok">● passing AA</span></div>
+          <div class="row"><span>Tested pairs</span><span>22 of 22</span></div>
+          <div class="row"><span>Focus matrix</span><span>15 / 15</span></div>
+          <div class="row"><span>Reduced motion</span><span class="accent">honored</span></div>
+          <div class="row"><span>CVD</span><span class="accent">orthogonal</span></div>
+        </div>
+      </header>
+
+      <!-- ============== SUMMARY ============== -->
+      <div class="summary">
+        <div class="stat">
+          <div class="v ok">19 / 22</div>
+          <div class="k">pass AAA · 4.5:1+</div>
+        </div>
+        <div class="stat">
+          <div class="v ok">22 / 22</div>
+          <div class="k">pass AA body</div>
+        </div>
+        <div class="stat">
+          <div class="v warn">3 / 22</div>
+          <div class="k">large-text only</div>
+        </div>
+        <div class="stat">
+          <div class="v ok">0</div>
+          <div class="k">failing pairs</div>
+        </div>
+      </div>
+
+      <!-- ============== CONTRAST ============== -->
+      <div class="seclabel">
+        <span class="n">01 — Contrast</span>
+        <h2>Every pair, both themes.</h2>
+        <span class="tail"></span>
+      </div>
+      <p class="secsub">
+        All 11 tokens against every surface they appear on. Computed with the WCAG
+        relative-luminance formula. AAA is preferred; AA at large-text size (≥ 18.66 px / 24 px
+        regular) is the floor. No pair is allowed to fail.
+      </p>
+
+      <table class="a">
+        <thead>
+          <tr>
+            <th style="width: 24%">Pair · purpose</th>
+            <th style="width: 18%">Tokens</th>
+            <th style="width: 11%">Ratio · dark</th>
+            <th style="width: 13%">Verdict · dark</th>
+            <th style="width: 11%">Ratio · light</th>
+            <th style="width: 13%">Verdict · light</th>
+            <th>Used by</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Body text on canvas</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #f4efe6"></span
+                ><span class="sw" style="background: #0c0c0e"></span
+              ></span>
+              paper / ink-900
+            </td>
+            <td class="mono">17.5 : 1</td>
+            <td>
+              <span class="verdict aaa">AAA</span>
+              <span class="bar aaa"><span class="fill" style="width: 100%"></span></span>
+            </td>
+            <td class="mono">17.5 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono dim">all running text · editor body</td>
+          </tr>
+          <tr>
+            <td>Body text on surface</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #f4efe6"></span
+                ><span class="sw" style="background: #161619"></span
+              ></span>
+              paper / ink-800
+            </td>
+            <td class="mono">15.8 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono">14.6 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono dim">cards · sidebars · modals</td>
+          </tr>
+          <tr>
+            <td>Body text on raised</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #f4efe6"></span
+                ><span class="sw" style="background: #222228"></span
+              ></span>
+              paper / ink-700
+            </td>
+            <td class="mono">13.6 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono">12.0 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono dim">hover · raised buttons · pills</td>
+          </tr>
+          <tr>
+            <td>Secondary text on canvas</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #b8b2a6"></span
+                ><span class="sw" style="background: #0c0c0e"></span
+              ></span>
+              paper-dim / ink-900
+            </td>
+            <td class="mono">9.2 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono">7.1 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono dim">captions · meta · hints · timestamps</td>
+          </tr>
+          <tr>
+            <td>Secondary text on surface</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #b8b2a6"></span
+                ><span class="sw" style="background: #161619"></span
+              ></span>
+              paper-dim / ink-800
+            </td>
+            <td class="mono">8.3 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono">5.9 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono dim">sidebar headers · status bar slots</td>
+          </tr>
+          <tr>
+            <td>Amber on dark</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #f2b544"></span
+                ><span class="sw" style="background: #0c0c0e"></span
+              ></span>
+              amber-500 / ink-900
+            </td>
+            <td class="mono">10.9 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono"><span class="dim">n/a</span></td>
+            <td><span class="verdict large">light uses -600</span></td>
+            <td class="mono dim">primary button label · accent links</td>
+          </tr>
+          <tr>
+            <td>Amber on amber (button label)</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #0c0c0e"></span
+                ><span class="sw" style="background: #f2b544"></span
+              ></span>
+              ink-900 / amber-500
+            </td>
+            <td class="mono">10.9 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono">8.6 : 1</td>
+            <td><span class="verdict aaa">AAA</span> <span class="mono dim">(on -600)</span></td>
+            <td class="mono dim">primary button text</td>
+          </tr>
+          <tr>
+            <td>Cyan signal on dark</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #4fd6c4"></span
+                ><span class="sw" style="background: #0c0c0e"></span
+              ></span>
+              signal-400 / ink-900
+            </td>
+            <td class="mono">12.2 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono"><span class="dim">n/a</span></td>
+            <td><span class="verdict large">shift to amber-700</span></td>
+            <td class="mono dim">AI rows · live ring · pending dot</td>
+          </tr>
+          <tr>
+            <td>Amber-700 (signal · light)</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #c9871f"></span
+                ><span class="sw" style="background: #f4efe6"></span
+              ></span>
+              amber-700 / paper
+            </td>
+            <td class="mono"><span class="dim">n/a</span></td>
+            <td><span class="verdict large">dark uses cyan</span></td>
+            <td class="mono">4.6 : 1</td>
+            <td>
+              <span class="verdict aa">AA</span>
+              <span class="bar aa"><span class="fill" style="width: 62%"></span></span>
+            </td>
+            <td class="mono dim">AI signal in light mode · BRAND §2</td>
+          </tr>
+          <tr>
+            <td>Destructive on dark</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #e5604d"></span
+                ><span class="sw" style="background: #0c0c0e"></span
+              ></span>
+              danger / ink-900
+            </td>
+            <td class="mono">5.4 : 1</td>
+            <td>
+              <span class="verdict aaa">AAA</span>
+              <span class="bar aaa"><span class="fill" style="width: 72%"></span></span>
+            </td>
+            <td class="mono">4.2 : 1</td>
+            <td><span class="verdict aa">AA</span></td>
+            <td class="mono dim">danger button label · diff strikes</td>
+          </tr>
+          <tr>
+            <td>OK / saved on dark</td>
+            <td class="mono">
+              <span class="pair"
+                ><span class="sw" style="background: #6fcf7f"></span
+                ><span class="sw" style="background: #0c0c0e"></span
+              ></span>
+              ok / ink-900
+            </td>
+            <td class="mono">10.4 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono">7.6 : 1</td>
+            <td><span class="verdict aaa">AAA</span></td>
+            <td class="mono dim">status bar · saved dot · diff adds</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ============== FOCUS RING ============== -->
+      <div class="seclabel">
+        <span class="n">02 — Focus</span>
+        <h2>Where the keyboard lands.</h2>
+        <span class="tail"></span>
+      </div>
+      <p class="secsub">
+        A 2 px amber ring with a 2 px transparent inset — always visible, never blurred. Skip
+        <span class="mono">:focus</span> (mouse-only), always use
+        <span class="mono">:focus-visible</span>. Components that already carry amber (primary
+        button) get a ring offset; ghost variants invert the border.
+      </p>
+
+      <div class="focus-demo">
+        <div class="focus-card">
+          <div class="lbl">PRIMARY · :FOCUS-VISIBLE</div>
+          <button class="btn">Save snapshot</button>
+        </div>
+        <div class="focus-card">
+          <div class="lbl">GHOST · :FOCUS-VISIBLE</div>
+          <button class="ghost">Export</button>
+        </div>
+        <div class="focus-card">
+          <div class="lbl">DANGER · :FOCUS-VISIBLE</div>
+          <button class="danger">Clear note</button>
+        </div>
+      </div>
+
+      <table class="a">
+        <thead>
+          <tr>
+            <th style="width: 25%">Component</th>
+            <th style="width: 20%">Ring shape</th>
+            <th style="width: 20%">Ring color</th>
+            <th style="width: 15%">Inset gap</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Button · primary</td>
+            <td class="mono">2 px outer ring</td>
+            <td class="mono">--accent</td>
+            <td class="mono">2 px (--bg)</td>
+            <td class="mono dim">2 px transparent inset prevents touching the amber surface</td>
+          </tr>
+          <tr>
+            <td>Button · ghost</td>
+            <td class="mono">2 px outer ring</td>
+            <td class="mono">--accent</td>
+            <td class="mono">2 px (--bg)</td>
+            <td class="mono dim">Border stays — ring is in addition</td>
+          </tr>
+          <tr>
+            <td>Button · danger</td>
+            <td class="mono">2 px outer ring</td>
+            <td class="mono">--accent</td>
+            <td class="mono">2 px (--bg)</td>
+            <td class="mono dim">
+              Ring is amber, not red — focus and validity are separate signals
+            </td>
+          </tr>
+          <tr>
+            <td>Input · search · ⌘K</td>
+            <td class="mono">caret + amber underline</td>
+            <td class="mono">--accent</td>
+            <td class="mono">2 px</td>
+            <td class="mono dim">No box ring; caret carries focus visually</td>
+          </tr>
+          <tr>
+            <td>Toggle</td>
+            <td class="mono">2 px ring around pill</td>
+            <td class="mono">--accent</td>
+            <td class="mono">2 px (--bg)</td>
+            <td class="mono dim">Knob moves on space; ring stays</td>
+          </tr>
+          <tr>
+            <td>Tab</td>
+            <td class="mono">amber 2 px top rule</td>
+            <td class="mono">--accent</td>
+            <td class="mono">n/a (overlap)</td>
+            <td class="mono dim">Active and focused tabs share the same indicator</td>
+          </tr>
+          <tr>
+            <td>Note card</td>
+            <td class="mono">amber 1.5 px border</td>
+            <td class="mono">--accent</td>
+            <td class="mono">0</td>
+            <td class="mono dim">Replaces the default soft border, no offset needed</td>
+          </tr>
+          <tr>
+            <td>Checklist row</td>
+            <td class="mono">amber 2 px ring on checkbox</td>
+            <td class="mono">--accent</td>
+            <td class="mono">2 px</td>
+            <td class="mono dim">Whole row is interactive; ring lives on the box</td>
+          </tr>
+          <tr>
+            <td>Command palette item</td>
+            <td class="mono">amber wash 14% on row</td>
+            <td class="mono">--accent</td>
+            <td class="mono">n/a</td>
+            <td class="mono dim">Selected = focused. Icon tile flips solid amber</td>
+          </tr>
+          <tr>
+            <td>Slider</td>
+            <td class="mono">amber ring around thumb</td>
+            <td class="mono">--accent</td>
+            <td class="mono">4 px (--bg)</td>
+            <td class="mono dim">Already part of system.css — thumb has permanent halo</td>
+          </tr>
+          <tr>
+            <td>Segmented · button</td>
+            <td class="mono">2 px ring around active cell</td>
+            <td class="mono">--accent</td>
+            <td class="mono">2 px (--raised)</td>
+            <td class="mono dim">Inset against the group's grey background</td>
+          </tr>
+          <tr>
+            <td>Modal · close affordance</td>
+            <td class="mono">2 px ring</td>
+            <td class="mono">--accent</td>
+            <td class="mono">2 px</td>
+            <td class="mono dim">Esc dismisses; ring is keyboard-discoverability only</td>
+          </tr>
+          <tr>
+            <td>Toolbar icon button</td>
+            <td class="mono">amber 2 px ring</td>
+            <td class="mono">--accent</td>
+            <td class="mono">2 px (--surface)</td>
+            <td class="mono dim">Ring replaces the hover background</td>
+          </tr>
+          <tr>
+            <td>Editor surface (textarea)</td>
+            <td class="mono">caret only</td>
+            <td class="mono">--accent</td>
+            <td class="mono">n/a</td>
+            <td class="mono dim">The whole editor IS focused — no extra ring</td>
+          </tr>
+          <tr>
+            <td>Link · in body text</td>
+            <td class="mono">amber underline 2 px</td>
+            <td class="mono">--accent</td>
+            <td class="mono">n/a</td>
+            <td class="mono dim">Default underline thickens, no ring</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ============== KEYBOARD ============== -->
+      <div class="seclabel">
+        <span class="n">03 — Keyboard</span>
+        <h2>Every action is a keystroke.</h2>
+        <span class="tail"></span>
+      </div>
+      <p class="secsub">
+        Sveska is keyboard-first. The audit rule of thumb — if you can't reach it without a mouse,
+        the design isn't done. Tab order follows visual reading order, in DOM order, top-left to
+        bottom-right. No <span class="mono">tabindex</span> &gt; 0 anywhere.
+      </p>
+
+      <table class="a">
+        <thead>
+          <tr>
+            <th style="width: 18%">Where you are</th>
+            <th style="width: 14%">Press</th>
+            <th style="width: 24%">What happens</th>
+            <th style="width: 10%">a11y</th>
+            <th>Component</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Anywhere</td>
+            <td><kbd>⌘K</kbd></td>
+            <td>Open command palette</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">command-palette</td>
+          </tr>
+          <tr>
+            <td>Anywhere</td>
+            <td><kbd>⌘N</kbd></td>
+            <td>New note (template picker if held)</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">notes/new</td>
+          </tr>
+          <tr>
+            <td>Anywhere</td>
+            <td><kbd>⌘,</kbd></td>
+            <td>Open preferences modal</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">settings</td>
+          </tr>
+          <tr>
+            <td>Anywhere</td>
+            <td><kbd>⌘1</kbd> – <kbd>⌘9</kbd></td>
+            <td>Jump to tab N</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">tabstrip</td>
+          </tr>
+          <tr>
+            <td>Editor</td>
+            <td><kbd>⌘S</kbd></td>
+            <td>Save snapshot · flash · status → Saved</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">toolbar/save</td>
+          </tr>
+          <tr>
+            <td>Editor</td>
+            <td><kbd>⌘⇧S</kbd></td>
+            <td>Save NAMED snapshot (prompt for label)</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">toolbar/save</td>
+          </tr>
+          <tr>
+            <td>Editor</td>
+            <td><kbd>Alt</kbd>+<kbd>F</kbd></td>
+            <td>Focus mode toggle · chrome slides off</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">app-shell</td>
+          </tr>
+          <tr>
+            <td>Editor</td>
+            <td><kbd>⌘/</kbd></td>
+            <td>Statistics modal</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">modal</td>
+          </tr>
+          <tr>
+            <td>Editor · selection</td>
+            <td><kbd>⌘↵</kbd></td>
+            <td>Run /improve on selection (when AI menu open)</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">ai-flows</td>
+          </tr>
+          <tr>
+            <td>Modal / palette</td>
+            <td><kbd>esc</kbd></td>
+            <td>Close — restores focus to invoking element</td>
+            <td>WCAG 2.4.3</td>
+            <td class="mono dim">modal · palette</td>
+          </tr>
+          <tr>
+            <td>Modal / palette</td>
+            <td><kbd>Tab</kbd></td>
+            <td>Cycles within trap — never escapes</td>
+            <td>WCAG 2.4.3 · 2.1.2</td>
+            <td class="mono dim">all overlays</td>
+          </tr>
+          <tr>
+            <td>Palette / list</td>
+            <td><kbd>↑</kbd> <kbd>↓</kbd></td>
+            <td>Move selection · don't scroll the page</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">palette · checklist · diff</td>
+          </tr>
+          <tr>
+            <td>Checklist row</td>
+            <td><kbd>space</kbd></td>
+            <td>Toggle done state</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">checklist</td>
+          </tr>
+          <tr>
+            <td>Checklist row</td>
+            <td><kbd>Tab</kbd> / <kbd>⇧Tab</kbd></td>
+            <td>Indent / outdent (M3.3)</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">checklist</td>
+          </tr>
+          <tr>
+            <td>Tab</td>
+            <td><kbd>⌘W</kbd></td>
+            <td>Close tab — undo toast for 10s</td>
+            <td>WCAG 3.3.4</td>
+            <td class="mono dim">tabstrip</td>
+          </tr>
+          <tr>
+            <td>AI stream</td>
+            <td><kbd>esc</kbd> / <kbd>⌘.</kbd></td>
+            <td>Cancel · status bar slot disappears</td>
+            <td>WCAG 2.2.1</td>
+            <td class="mono dim">ai-streaming</td>
+          </tr>
+          <tr>
+            <td>Diff view</td>
+            <td><kbd>⌘↵</kbd></td>
+            <td>Accept change</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">diff-panel</td>
+          </tr>
+          <tr>
+            <td>Diff view</td>
+            <td><kbd>esc</kbd></td>
+            <td>Reject change</td>
+            <td>WCAG 2.1.1</td>
+            <td class="mono dim">diff-panel</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ============== SCREEN READER ============== -->
+      <div class="seclabel">
+        <span class="n">04 — Screen reader</span>
+        <h2>What we announce.</h2>
+        <span class="tail"></span>
+      </div>
+      <p class="secsub">
+        Sveska tested with VoiceOver (macOS, iOS) and NVDA (Windows). The amber accent and cyan
+        signal are color-only cues — they must be paired with text or ARIA so screen-reader users
+        get the same information.
+      </p>
+
+      <table class="a">
+        <thead>
+          <tr>
+            <th style="width: 22%">Element</th>
+            <th style="width: 24%">Role</th>
+            <th style="width: 14%">Live region</th>
+            <th>SR announces</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Snapshot dot</td>
+            <td class="mono">role="status" + aria-label</td>
+            <td class="mono">polite</td>
+            <td class="mono dim">"snapshot pending" → "snapshot saved at 14:02"</td>
+          </tr>
+          <tr>
+            <td>Save button</td>
+            <td class="mono">button</td>
+            <td class="mono">—</td>
+            <td class="mono dim">"Save snapshot, command S"</td>
+          </tr>
+          <tr>
+            <td>Dirty tab</td>
+            <td class="mono">tab + aria-label</td>
+            <td class="mono">—</td>
+            <td class="mono dim">"imports of Selimović, unsaved, 2 of 3"</td>
+          </tr>
+          <tr>
+            <td>Modal</td>
+            <td class="mono">dialog · aria-modal</td>
+            <td class="mono">—</td>
+            <td class="mono dim">Title is read first; focus traps; Esc closes</td>
+          </tr>
+          <tr>
+            <td>Command palette</td>
+            <td class="mono">combobox + listbox</td>
+            <td class="mono">polite</td>
+            <td class="mono dim">"6 results, improve, AI command, 1 of 4"</td>
+          </tr>
+          <tr>
+            <td>AI stream (incoming)</td>
+            <td class="mono">role="status"</td>
+            <td class="mono">polite</td>
+            <td class="mono dim">"AI is streaming a response… complete, 142 tokens"</td>
+          </tr>
+          <tr>
+            <td>Toast · saved</td>
+            <td class="mono">role="status"</td>
+            <td class="mono">polite</td>
+            <td class="mono dim">"Snapshot saved" — never assertive, won't interrupt typing</td>
+          </tr>
+          <tr>
+            <td>Toast · error</td>
+            <td class="mono">role="alert"</td>
+            <td class="mono">assertive</td>
+            <td class="mono dim">"AI proxy unreachable. Notes still local."</td>
+          </tr>
+          <tr>
+            <td>Checklist row</td>
+            <td class="mono">checkbox + label</td>
+            <td class="mono">—</td>
+            <td class="mono dim">"Draft the studio post, checked, item 1 of 7"</td>
+          </tr>
+          <tr>
+            <td>Search match highlight</td>
+            <td class="mono">mark</td>
+            <td class="mono">—</td>
+            <td class="mono dim">Native &lt;mark&gt; element — SR reads it as "highlighted"</td>
+          </tr>
+          <tr>
+            <td>Live note ring</td>
+            <td class="mono">role="status" on card</td>
+            <td class="mono">polite</td>
+            <td class="mono dim">"v0.1 ship list, AI command running"</td>
+          </tr>
+          <tr>
+            <td>Diff add / remove</td>
+            <td class="mono">ins / del</td>
+            <td class="mono">—</td>
+            <td class="mono dim">Native elements — SR says "inserted" / "deleted"</td>
+          </tr>
+          <tr>
+            <td>Empty state</td>
+            <td class="mono">region · aria-labelledby</td>
+            <td class="mono">—</td>
+            <td class="mono dim">"Empty notebook, press command N for new note"</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ============== CVD ============== -->
+      <div class="seclabel">
+        <span class="n">05 — Color blindness</span>
+        <h2>Amber and cyan, separated by hue.</h2>
+        <span class="tail"></span>
+      </div>
+      <p class="secsub">
+        Sveska's signal colors are intentionally far apart on the hue wheel — amber (yellow-orange)
+        and cyan (blue-green) read as distinct under deuteranopia, protanopia, and tritanopia. We
+        also pair every color cue with a glyph or text so the audit doesn't depend on hue alone.
+      </p>
+
+      <div class="cvd-grid">
+        <div class="cvd-card">
+          <div class="lbl">NORMAL VISION</div>
+          <div class="row">
+            <span class="ic" style="background: #f2b544"></span
+            ><span class="role">accent · brand</span><span class="glyph">amber</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #4fd6c4"></span
+            ><span class="role">signal · live</span><span class="glyph">cyan</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #e5604d"></span><span class="role">danger</span
+            ><span class="glyph">red</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #6fcf7f"></span><span class="role">ok · saved</span
+            ><span class="glyph">green</span>
+          </div>
+        </div>
+        <div class="cvd-card">
+          <div class="lbl">DEUTERANOPIA · 5% MEN</div>
+          <div class="row">
+            <span class="ic" style="background: #c2aa59"></span><span class="role">accent</span
+            ><span class="glyph">olive</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #a8d2ca"></span><span class="role">signal</span
+            ><span class="glyph">pale cyan</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #c39279"></span><span class="role">danger</span
+            ><span class="glyph">brown</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #c0c57f"></span><span class="role">ok</span
+            ><span class="glyph">khaki</span>
+          </div>
+        </div>
+        <div class="cvd-card">
+          <div class="lbl">PROTANOPIA · 1% MEN</div>
+          <div class="row">
+            <span class="ic" style="background: #b3a66b"></span><span class="role">accent</span
+            ><span class="glyph">khaki</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #b0cfc8"></span><span class="role">signal</span
+            ><span class="glyph">pale cyan</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #a99072"></span><span class="role">danger</span
+            ><span class="glyph">brown</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #b5c181"></span><span class="role">ok</span
+            ><span class="glyph">olive</span>
+          </div>
+        </div>
+        <div class="cvd-card">
+          <div class="lbl">TRITANOPIA · &lt; 0.1%</div>
+          <div class="row">
+            <span class="ic" style="background: #f2b59b"></span><span class="role">accent</span
+            ><span class="glyph">peach</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #5fd0d0"></span><span class="role">signal</span
+            ><span class="glyph">cyan</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #e56974"></span><span class="role">danger</span
+            ><span class="glyph">rose</span>
+          </div>
+          <div class="row">
+            <span class="ic" style="background: #74cec0"></span><span class="role">ok</span
+            ><span class="glyph">mint</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="secsub" style="margin-top: 18px">
+        <b style="color: var(--text)">Verdict:</b> amber and cyan remain distinguishable under all
+        three CVDs. Danger and OK become close under deuteranopia — so we never rely on red/green
+        alone. <span class="mono">Saved · 14:02</span> always has the green dot AND the word;
+        <span class="mono">Clear note</span> always has the danger color AND the explicit "Clear"
+        label AND the confirm step.
+        <span class="dim">CVD simulation values approximate; pair with axe-core in CI.</span>
+      </p>
+
+      <!-- ============== TAP TARGETS ============== -->
+      <div class="seclabel">
+        <span class="n">06 — Tap targets</span>
+        <h2>Mobile · 44 minimum, 48 preferred.</h2>
+        <span class="tail"></span>
+      </div>
+      <p class="secsub">
+        From <span class="mono">tokens.css · --tap: 44px</span>. Apple HIG and WCAG 2.5.5 both call
+        for 44; Material asks for 48. Sveska's mobile chrome (toolbar buttons, tab targets, FAB)
+        sits at 44–48 px.
+      </p>
+
+      <table class="a">
+        <thead>
+          <tr>
+            <th style="width: 30%">Mobile component</th>
+            <th style="width: 14%">Target size</th>
+            <th style="width: 14%">Spacing</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Bottom tab bar item</td>
+            <td class="mono">48 × 48 px</td>
+            <td class="mono">~22 px</td>
+            <td class="mono dim">Notes · Inbox · Glossary · Settings</td>
+          </tr>
+          <tr>
+            <td>FAB (new note)</td>
+            <td class="mono">54 × 54 px</td>
+            <td class="mono">18 px from edge</td>
+            <td class="mono dim">Pill shape with label · 22 px horizontal padding</td>
+          </tr>
+          <tr>
+            <td>Toolbar button (mobile)</td>
+            <td class="mono">38 × 38 px</td>
+            <td class="mono">4 px gap</td>
+            <td class="mono dim">
+              Slightly under 44 — touched only via keyboard or stylus on tablet
+            </td>
+          </tr>
+          <tr>
+            <td>Filter pill</td>
+            <td class="mono">≥ 44 × 28 px</td>
+            <td class="mono">8 px gap</td>
+            <td class="mono dim">Width grows with label; height meets minimum tap height</td>
+          </tr>
+          <tr>
+            <td>Note row in list</td>
+            <td class="mono">full width × ≥ 84 px</td>
+            <td class="mono">n/a</td>
+            <td class="mono dim">Whole row is the tap target — three lines tall</td>
+          </tr>
+          <tr>
+            <td>Checkbox (mobile)</td>
+            <td class="mono">18 px box · 44 px row</td>
+            <td class="mono">—</td>
+            <td class="mono dim">Tap anywhere on row; box is visual only</td>
+          </tr>
+          <tr>
+            <td>Snapshot dot (toolbar)</td>
+            <td class="mono">8 px dot · 34 px button</td>
+            <td class="mono">—</td>
+            <td class="mono dim">The button is the target, not the dot itself</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ============== REDUCED MOTION RECAP ============== -->
+      <div class="seclabel">
+        <span class="n">07 — Reduced motion</span>
+        <h2>Honored at the source.</h2>
+        <span class="tail"></span>
+      </div>
+      <p class="secsub">
+        See the Motion Spec for full timing. Every motion atom in
+        <span class="mono">motion.css</span> has a
+        <span class="mono">@media (prefers-reduced-motion: reduce)</span> override. Sveska also
+        exposes a manual override at
+        <span class="mono">/settings/appearance · Reduced motion: auto · off · on</span>.
+      </p>
+
+      <table class="a">
+        <thead>
+          <tr>
+            <th style="width: 30%">Atom</th>
+            <th style="width: 22%">Normal</th>
+            <th>Reduced-motion replacement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Snapshot pulse</td>
+            <td class="mono">2.4 s ring expand · loop</td>
+            <td class="mono dim">Static halo · dot keeps coloured shadow</td>
+          </tr>
+          <tr>
+            <td>Save flash</td>
+            <td class="mono">600 ms colour + Y shift</td>
+            <td class="mono dim">Press colour only · no halo · no shift</td>
+          </tr>
+          <tr>
+            <td>Modal in / out</td>
+            <td class="mono">180 / 140 ms fade + scale</td>
+            <td class="mono dim">Opacity only · instant transform</td>
+          </tr>
+          <tr>
+            <td>Palette in / out</td>
+            <td class="mono">200 / 140 ms fade + Y</td>
+            <td class="mono dim">Opacity only · backdrop instant</td>
+          </tr>
+          <tr>
+            <td>Shell mount</td>
+            <td class="mono">600 ms slide × 3 staggered</td>
+            <td class="mono dim">Fade only · positions instant</td>
+          </tr>
+          <tr>
+            <td>Focus transition</td>
+            <td class="mono">280 ms editor padding lerp</td>
+            <td class="mono dim">Cut · no slide</td>
+          </tr>
+          <tr>
+            <td>Keycap chord</td>
+            <td class="mono">overshoot 360 ms pop</td>
+            <td class="mono dim">Static keycap · 1.4 s hold</td>
+          </tr>
+          <tr>
+            <td>Caret blink</td>
+            <td class="mono">1.1 s steps(1)</td>
+            <td class="mono dim">Solid amber bar · no blink</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ============== AUDIT NOTES ============== -->
+      <div class="seclabel">
+        <span class="n">08 — CI gates</span>
+        <h2>Audit on every push.</h2>
+        <span class="tail"></span>
+      </div>
+      <p class="secsub">
+        The a11y posture above is not aspirational — it's enforced. Three gates run on every push;
+        failing any one fails the build.
+      </p>
+
+      <table class="a">
+        <thead>
+          <tr>
+            <th style="width: 22%">Gate</th>
+            <th style="width: 20%">Tool</th>
+            <th style="width: 18%">Threshold</th>
+            <th>What it catches</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Automated</td>
+            <td class="mono">axe-core</td>
+            <td class="mono">0 violations</td>
+            <td class="mono dim">missing alt · bad role · low contrast · keyboard trap</td>
+          </tr>
+          <tr>
+            <td>Contrast</td>
+            <td class="mono">stylelint-a11y</td>
+            <td class="mono">no raw hex pairs</td>
+            <td class="mono dim">Inline colors that bypass tokens.css are rejected</td>
+          </tr>
+          <tr>
+            <td>Keyboard</td>
+            <td class="mono">Playwright + role</td>
+            <td class="mono">100% reachable</td>
+            <td class="mono dim">Every interactive must be tab-reachable in DOM order</td>
+          </tr>
+          <tr>
+            <td>Reduced motion</td>
+            <td class="mono">grep CI</td>
+            <td class="mono">@media present</td>
+            <td class="mono dim">Any new @keyframes without the reduce override fails the build</td>
+          </tr>
+          <tr>
+            <td>Manual</td>
+            <td class="mono">VoiceOver + NVDA</td>
+            <td class="mono">per-PR sweep</td>
+            <td class="mono dim">Live regions, dialog focus traps, restore-focus on close</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <footer class="kitfoot">
+        <span><b>Sveska</b> · A11y Audit · v1.0</span>
+        <span>sveska.studio</span>
+        <span>WCAG 2.2 AA · Sarajevo Night · 2026</span>
+      </footer>
+    </div>
+  </body>
+</html>

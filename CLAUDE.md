@@ -1,5 +1,20 @@
 # CLAUDE.md — Sveska
 
+<session-start>
+
+**At session start, read in this order. Do not read this whole file unless making architectural changes.**
+
+1. [`tasks.md`](tasks.md) — current TODO + active ticket
+2. [`plan.md`](plan.md) — per-ticket implementation plan
+3. [`memory.md`](memory.md) — locked decisions, deployment topology, gotchas
+4. This file (CLAUDE.md) — full spec; only re-read if changing architecture
+
+90%+ of needed context lives in the 3 files above. Treat them as authoritative; conversation history beyond the current session is decay.
+
+After every ticket: tick `tasks.md` + update `memory.md` if you learned something durable. Suggest `/compact` when a ticket closes or context > 100k tokens.
+
+</session-start>
+
 > Paste-in spec for Claude Code. Read top-to-bottom before writing code. Build **milestone by milestone, in order**. Do not skip ahead. Each ticket has acceptance criteria — a ticket is done only when criteria pass and a commit is made.
 
 ---

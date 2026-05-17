@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Changelog · Sveska · sveska.studio</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 14.5px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      nav.top {
+        border-bottom: 1px solid var(--ink-700);
+        padding: 18px 0;
+      }
+      nav.top .inner {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+      nav.top .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+      }
+      nav.top .brand .studio {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-weight: 500;
+        font-size: 14px;
+      }
+      nav.top .links {
+        display: inline-flex;
+        gap: 22px;
+        flex: 1;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        color: var(--text-dim);
+      }
+      nav.top .links .on {
+        color: var(--accent);
+      }
+      nav.top .rss {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        padding: 6px 12px;
+        border-radius: 7px;
+        box-shadow: inset 0 0 0 1px var(--ink-700);
+        letter-spacing: 0.04em;
+      }
+
+      header.hero {
+        padding: 64px 0 40px;
+      }
+      .hero .crumbs {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 24px;
+      }
+      .hero .crumbs b {
+        color: var(--accent);
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 72px;
+        letter-spacing: -0.038em;
+        line-height: 0.95;
+        margin: 0 0 18px;
+      }
+      .hero h1 .amb {
+        color: var(--accent);
+      }
+      .hero p {
+        font-size: 17px;
+        color: var(--text-dim);
+        max-width: 60ch;
+        margin: 0;
+        line-height: 1.55;
+      }
+      .hero .stats {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--ink-700);
+        display: flex;
+        gap: 32px;
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+      }
+      .hero .stats b {
+        color: var(--text);
+        font-weight: 500;
+        font-size: 20px;
+        font-family: var(--font-display);
+        display: block;
+        letter-spacing: -0.012em;
+        margin-bottom: 2px;
+      }
+
+      /* filter */
+      .filter-strip {
+        display: flex;
+        gap: 6px;
+        padding: 18px 0;
+        flex-wrap: wrap;
+        align-items: center;
+        border-bottom: 1px solid var(--ink-700);
+        margin-bottom: 32px;
+      }
+      .filter-strip .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-right: 8px;
+      }
+      .pill {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 5px 11px;
+        border-radius: 999px;
+        background: transparent;
+        color: var(--text-dim);
+        box-shadow: inset 0 0 0 1px var(--ink-700);
+        letter-spacing: 0.04em;
+        cursor: pointer;
+      }
+      .pill.on {
+        background: var(--accent);
+        color: #0c0c0e;
+        box-shadow: none;
+      }
+      .pill .n {
+        margin-left: 5px;
+        opacity: 0.65;
+      }
+
+      /* entries */
+      .entries {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+      .entry {
+        padding: 32px 0;
+        border-bottom: 1px solid var(--ink-700);
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 32px;
+      }
+      .entry .side {
+        position: sticky;
+        top: 24px;
+        align-self: start;
+      }
+      .entry .ver {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: -0.025em;
+        line-height: 1;
+        color: var(--text);
+      }
+      .entry .ver .amb {
+        color: var(--accent);
+      }
+      .entry .ver-meta {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+        margin-top: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .entry .ver-meta b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .entry .ver-meta .codename {
+        color: var(--accent);
+      }
+      .entry .body h2 {
+        margin: 0 0 14px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 26px;
+        letter-spacing: -0.018em;
+        line-height: 1.15;
+        color: var(--text);
+      }
+      .entry .body .summary {
+        color: var(--text-dim);
+        font-size: 14.5px;
+        line-height: 1.55;
+        max-width: 60ch;
+        margin-bottom: 18px;
+      }
+
+      .changes {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .change {
+        display: grid;
+        grid-template-columns: 80px 1fr auto;
+        gap: 14px;
+        align-items: flex-start;
+        padding: 12px 16px;
+        border-radius: 8px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+      }
+      .change .tag {
+        font-family: var(--font-mono);
+        font-size: 9.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 4px;
+        height: fit-content;
+      }
+      .change .tag.added {
+        background: color-mix(in oklab, var(--ok) 14%, transparent);
+        color: var(--ok);
+      }
+      .change .tag.fixed {
+        background: color-mix(in oklab, var(--signal-400) 14%, transparent);
+        color: var(--signal-400);
+      }
+      .change .tag.changed {
+        background: color-mix(in oklab, var(--accent) 14%, transparent);
+        color: var(--accent);
+      }
+      .change .tag.removed {
+        background: color-mix(in oklab, var(--danger) 14%, transparent);
+        color: var(--danger);
+      }
+      .change .tag.security {
+        background: #222228;
+        color: var(--text);
+        box-shadow: inset 0 0 0 1px var(--accent);
+      }
+      .change .text {
+        font-family: var(--font-ui);
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.55;
+      }
+      .change .text .ticket {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        color: var(--accent);
+        margin-left: 8px;
+        letter-spacing: 0.04em;
+      }
+      .change .text code {
+        font-family: var(--font-mono);
+        background: var(--bg);
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+      .change .text b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .change .credit {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
+      .entry .body .ship-notes {
+        margin-top: 18px;
+        padding: 14px 18px;
+        border-radius: 10px;
+        background: color-mix(in oklab, var(--accent) 8%, transparent);
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 30%, transparent);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text);
+        line-height: 1.6;
+      }
+      .entry .body .ship-notes .lbl {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 6px;
+      }
+
+      footer.coda {
+        border-top: 1px solid var(--ink-700);
+        padding: 24px 0 56px;
+        margin-top: 48px;
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      footer.coda b {
+        color: var(--text);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska Changelog">
+    <nav class="top">
+      <div class="inner">
+        <a class="brand" href="sveska.studio landing.html">
+          <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
+            <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+            <path
+              d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+              fill="#F2B544"
+            />
+            <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+            <path
+              d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+              fill="none"
+              stroke="#0C0C0E"
+              stroke-width="5.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          sveska<span class="studio">.studio</span>
+        </a>
+        <div class="links">
+          <span>System</span><span>Notebook</span><span>Glossary</span
+          ><span class="on">Changelog</span><span>Field notes</span>
+        </div>
+        <span class="rss">RSS / Atom · /changelog.xml</span>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="hero">
+        <div class="crumbs"><b>CHANGELOG</b> · sveska.studio/changelog · M6.2</div>
+        <h1>What we shipped,<br /><span class="amb">in the order it shipped.</span></h1>
+        <p>
+          Versioned entries. Every commit reaches here only after it's in production. Names follow
+          Bosnian rivers — small, navigable, with character. RSS at the top right; auto-tags filter
+          at the bottom of each entry.
+        </p>
+        <div class="stats">
+          <div><b>v0.1</b>latest · today</div>
+          <div><b>14</b>shipped versions</div>
+          <div><b>97</b>changes total</div>
+          <div><b>11</b>contributors</div>
+          <div><b>0</b>rollbacks</div>
+        </div>
+      </header>
+
+      <div class="filter-strip">
+        <span class="lbl">FILTER</span>
+        <span class="pill on">All<span class="n">14</span></span>
+        <span class="pill">Added<span class="n">48</span></span>
+        <span class="pill">Fixed<span class="n">24</span></span>
+        <span class="pill">Changed<span class="n">18</span></span>
+        <span class="pill">Security<span class="n">5</span></span>
+        <span class="pill">M0–M3<span class="n">11</span></span>
+        <span class="pill">M4+<span class="n">3</span></span>
+        <span style="flex: 1"></span>
+        <span class="pill">Subscribe to RSS ↗</span>
+      </div>
+
+      <div class="entries">
+        <!-- v0.1 -->
+        <article class="entry">
+          <div class="side">
+            <div class="ver">v0.1<span class="amb">.0</span></div>
+            <div class="ver-meta">
+              <span class="codename">"Miljacka"</span>
+              <span><b>2026.05.16</b></span>
+              <span>M0 — M3 shipped</span>
+              <span>by miz + 4</span>
+            </div>
+          </div>
+          <div class="body">
+            <h2>First public release.</h2>
+            <p class="summary">
+              Everything notepad.js.org does, plus multi-note, snapshots, search, mobile PWA, and
+              the platform surfaces (landing, glossary, this changelog). The full system, locked.
+            </p>
+
+            <div class="changes">
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  ><b>Multi-note + tabs</b> with session restore and dirty-state indicators<span
+                    class="ticket"
+                    >M2.1</span
+                  ></span
+                >
+                <span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  ><b>Version history</b> with split-pane diff and named / auto snapshots<span
+                    class="ticket"
+                    >M2.2</span
+                  ></span
+                >
+                <span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  ><b>Fuzzy search</b> across 1k notes in &lt;50ms with title+body match
+                  highlighting<span class="ticket">M2.5</span></span
+                >
+                <span class="credit">@hannah</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  ><b>Command palette</b> <code>⌘K</code> with AI / notes / actions sections<span
+                    class="ticket"
+                    >M3.1</span
+                  ></span
+                >
+                <span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  ><b>PWA · install + share target</b> · iOS &amp; Android, with the Add to Home
+                  Screen guidance bottom sheet<span class="ticket">M3.7</span></span
+                >
+                <span class="credit">@dragan</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  ><b>Glossary engine</b> — 47 terms, auto-linked inside notes and exports<span
+                    class="ticket"
+                    >M6.1</span
+                  ></span
+                >
+                <span class="credit">miz · @rina</span>
+              </div>
+              <div class="change">
+                <span class="tag security">security</span>
+                <span class="text"
+                  ><b>CI grep gate</b> · build fails if <code>VITE_*_API_KEY</code> is found in the
+                  bundle. Confirmed on 287 commits.<span class="ticket">CLAUDE.md §5</span></span
+                >
+                <span class="credit">@isidora</span>
+              </div>
+              <div class="change">
+                <span class="tag changed">changed</span>
+                <span class="text"
+                  >Snapshot dot copy: <code>"unsaved changes"</code> →
+                  <code>"snapshot pending"</code> — procedural, not technical</span
+                >
+                <span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag fixed">fixed</span>
+                <span class="text"
+                  >IndexedDB writes during page-unload race · debounce shortens to 100ms on
+                  <code>visibilitychange</code><span class="ticket">M1.1</span></span
+                >
+                <span class="credit">@hannah</span>
+              </div>
+            </div>
+
+            <div class="ship-notes">
+              <div class="lbl">SHIP NOTES</div>
+              Lighthouse PWA · 100. Main bundle gzip · 168 KB (budget 180). TTI on Pixel 8a · 1.21s
+              (budget 1.5s). a11y · 0 axe violations. Tested · Safari 17.4, Chrome 124, Firefox 125.
+              Migrated 47 internal-test users from notepad.js.org without a single localStorage
+              loss.
+            </div>
+          </div>
+        </article>
+
+        <!-- v0.0.9 -->
+        <article class="entry">
+          <div class="side">
+            <div class="ver">v0.0.9</div>
+            <div class="ver-meta">
+              <span class="codename">"Bistrica"</span>
+              <span><b>2026.05.09</b></span>
+              <span>release candidate</span>
+            </div>
+          </div>
+          <div class="body">
+            <h2>Onboarding + brand collateral.</h2>
+            <p class="summary">
+              The 5-coachmark first-run flow, brand assets at every format (OG, Twitter, business
+              card, email signature), and the print/PDF export stylesheet.
+            </p>
+            <div class="changes">
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  ><b>Onboarding · 5 coachmarks</b> — welcome, title, snapshot, ⌘K, completion</span
+                >
+                <span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  ><b>Print &amp; PDF export</b> · 3-page A4 with title, body, footnotes,
+                  appendix<span class="ticket">T1.3</span></span
+                >
+                <span class="credit">@rina</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  ><b>Brand collateral</b> · OG card, Twitter, business card, email signature,
+                  stickers, PWA manifest preview</span
+                >
+                <span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag changed">changed</span>
+                <span class="text"
+                  >Voice copy across all toasts &amp; banners — dry, stoic, never chirpy (BRAND §4
+                  enforcement)</span
+                >
+                <span class="credit">miz</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- v0.0.8 -->
+        <article class="entry">
+          <div class="side">
+            <div class="ver">v0.0.8</div>
+            <div class="ver-meta">
+              <span class="codename">"Una"</span>
+              <span><b>2026.05.02</b></span>
+            </div>
+          </div>
+          <div class="body">
+            <h2>M2 depth · multi-note in production.</h2>
+            <div class="changes">
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  >Quick-capture inbox · ⌘⇧N · with web share target landing<span class="ticket"
+                    >M2.5</span
+                  ></span
+                >
+                <span class="credit">@dragan</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text">Favorites bar · 4-letter tile rail in the sidebar</span>
+                <span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag fixed">fixed</span>
+                <span class="text"
+                  >Tag pill overflow on narrow sidebar widths · now scrolls horizontally</span
+                >
+                <span class="credit">@hannah</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- v0.0.7 -->
+        <article class="entry">
+          <div class="side">
+            <div class="ver">v0.0.7</div>
+            <div class="ver-meta">
+              <span class="codename">"Vrbas"</span>
+              <span><b>2026.04.24</b></span>
+            </div>
+          </div>
+          <div class="body">
+            <h2>AI · slash commands · M4.</h2>
+            <div class="changes">
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  ><b>/improve, /summarize, /continue, /rewrite</b> · all streaming through edge
+                  proxy<span class="ticket">M4.2</span></span
+                >
+                <span class="credit">@isidora</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span>
+                <span class="text"
+                  >Cyan signal across the live state · snapshot dot, palette AI rows, status bar
+                  slot</span
+                >
+                <span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag security">security</span>
+                <span class="text"
+                  >CSP locked to <code>default-src 'self'</code> + proxy origin · zero third-party
+                  scripts</span
+                >
+                <span class="credit">@isidora</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- v0.0.6 -->
+        <article class="entry">
+          <div class="side">
+            <div class="ver">v0.0.6</div>
+            <div class="ver-meta">
+              <span class="codename">"Tara"</span>
+              <span><b>2026.04.14</b></span>
+            </div>
+          </div>
+          <div class="body">
+            <h2>Focus mode &amp; typewriter · M1.5.</h2>
+            <div class="changes">
+              <div class="change">
+                <span class="tag added">added</span
+                ><span class="text"
+                  >Focus mode · <code>Alt+F</code> · chrome slides off; editor widens to 760px</span
+                ><span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span
+                ><span class="text"
+                  >Typewriter mode · <code>Alt+T</code> · pins active line to vertical center</span
+                ><span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span
+                ><span class="text"
+                  >5 paper textures · dotted, graph, linen, grain (CSS-only)<span class="ticket"
+                    >M3.6</span
+                  ></span
+                ><span class="credit">@rina</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- earlier versions collapsed -->
+        <article class="entry">
+          <div class="side">
+            <div class="ver">v0.0.1 — v0.0.5</div>
+            <div class="ver-meta">
+              <span class="codename">"Drina" through "Neretva"</span>
+              <span><b>2026.03 — 04</b></span>
+              <span>nine prior releases</span>
+            </div>
+          </div>
+          <div class="body">
+            <h2>The scaffold.</h2>
+            <p class="summary">
+              Vite + React + Dexie + vite-plugin-pwa boot. Tokens. The basic editor with autosave +
+              snapshot. Theme switcher. Tabs. Search. Foundation work — nothing user-visible yet
+              stable.
+            </p>
+            <div class="changes">
+              <div class="change">
+                <span class="tag added">added</span
+                ><span class="text"
+                  >Initial scaffold · M0 · installable PWA, dark theme, Lighthouse PWA pass</span
+                ><span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span
+                ><span class="text">Textarea editor with debounced 400ms autosave</span
+                ><span class="credit">@hannah</span>
+              </div>
+              <div class="change">
+                <span class="tag added">added</span
+                ><span class="text">Statistics modal · words / chars / lines / reading time</span
+                ><span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag changed">changed</span
+                ><span class="text"
+                  >Editor font default · system mono → JetBrains Mono 17 / 1.7 line-height</span
+                ><span class="credit">miz</span>
+              </div>
+              <div class="change">
+                <span class="tag removed">removed</span
+                ><span class="text"
+                  >Inline color picker — locked to brand-only · amber stays · no rainbow</span
+                ><span class="credit">miz</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <footer class="coda">
+        <span><b>Sveska</b> · changelog · v0.1.0 · M6.2</span>
+        <span>RSS · /changelog.xml · auto-built from git tags</span>
+        <span>2026.05.16</span>
+      </footer>
+    </div>
+  </body>
+</html>

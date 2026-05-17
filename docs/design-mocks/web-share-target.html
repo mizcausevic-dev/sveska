@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sveska — Web Share Target · M3.7</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 14.5px;
+        line-height: 1.55;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      .wrap {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .topbar b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .topbar .live {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--signal-400);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--signal-400) 22%, transparent);
+        display: inline-block;
+        margin-right: 10px;
+      }
+
+      .hero {
+        padding: 48px 0 24px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 48px;
+        align-items: end;
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 64px;
+        letter-spacing: -0.035em;
+        line-height: 0.96;
+        margin: 0 0 18px;
+      }
+      .hero h1 .ai {
+        color: var(--signal-400);
+      }
+      .hero p {
+        font-size: 16px;
+        color: var(--text-dim);
+        max-width: 62ch;
+        margin: 0;
+        line-height: 1.55;
+      }
+      .hero .stamp {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        text-align: right;
+      }
+      .hero .stamp b {
+        color: var(--text);
+      }
+      .hero .stamp .ai {
+        color: var(--signal-400);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 14px;
+        margin: 24px 0 14px;
+      }
+      .col-4 {
+        grid-column: span 4;
+      }
+      .col-6 {
+        grid-column: span 6;
+      }
+      .col-8 {
+        grid-column: span 8;
+      }
+      .col-12 {
+        grid-column: span 12;
+      }
+
+      .card {
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 340px;
+      }
+      .card .head {
+        padding: 18px 22px 6px;
+        display: flex;
+        gap: 14px;
+        align-items: baseline;
+      }
+      .card .num {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .card .num b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .card .sev {
+        font-family: var(--font-mono);
+        font-size: 9.5px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-left: auto;
+      }
+      .card .sev.info {
+        background: color-mix(in oklab, var(--signal-400) 16%, transparent);
+        color: var(--signal-400);
+      }
+      .card .sev.warn {
+        background: color-mix(in oklab, var(--accent) 16%, transparent);
+        color: var(--accent);
+      }
+      .card .sev.err {
+        background: color-mix(in oklab, var(--danger) 16%, transparent);
+        color: var(--danger);
+      }
+      .card h3 {
+        margin: 6px 0 4px;
+        padding: 0 22px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: -0.018em;
+        line-height: 1.15;
+      }
+      .card .meta {
+        padding: 0 22px 14px;
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        color: var(--text-dim);
+        letter-spacing: 0.02em;
+      }
+
+      .stage {
+        flex: 1;
+        padding: 18px;
+        background: var(--bg);
+        border-top: 1px solid var(--ink-700);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .banner {
+        background: color-mix(in oklab, var(--signal-400) 12%, transparent);
+        border-radius: 10px;
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--signal-400) 40%, transparent);
+        padding: 14px 16px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .banner.err {
+        background: color-mix(in oklab, var(--danger) 10%, transparent);
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--danger) 40%, transparent);
+      }
+      .banner.warn {
+        background: color-mix(in oklab, var(--accent) 8%, transparent);
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 40%, transparent);
+      }
+      .banner .ic {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 12px;
+        background: color-mix(in oklab, var(--signal-400) 22%, transparent);
+        color: var(--signal-400);
+      }
+      .banner.err .ic {
+        background: color-mix(in oklab, var(--danger) 22%, transparent);
+        color: var(--danger);
+      }
+      .banner.warn .ic {
+        background: color-mix(in oklab, var(--accent) 22%, transparent);
+        color: var(--accent);
+      }
+      .banner .lbl {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--signal-400);
+        margin-bottom: 4px;
+      }
+      .banner.err .lbl {
+        color: var(--danger);
+      }
+      .banner.warn .lbl {
+        color: var(--accent);
+      }
+      .banner .title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--text);
+        line-height: 1.2;
+        margin-bottom: 4px;
+      }
+
+      .preview {
+        background: var(--surface);
+        border-radius: 7px;
+        padding: 10px 12px;
+        font-family: var(--font-mono);
+        font-size: 12.5px;
+        color: var(--text);
+        line-height: 1.55;
+        box-shadow: inset 0 0 0 1px var(--ink-700);
+        overflow: hidden;
+      }
+      .preview .url {
+        color: var(--accent);
+        display: block;
+        margin-bottom: 4px;
+      }
+      .preview .meta {
+        color: var(--text-dim);
+        font-size: 11px;
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px solid var(--ink-700);
+      }
+      .preview img.placeholder {
+        display: block;
+        width: 100%;
+        height: 88px;
+        background: repeating-linear-gradient(
+          45deg,
+          color-mix(in oklab, var(--text-dim) 12%, transparent) 0 8px,
+          transparent 8px 18px
+        );
+        border-radius: 5px;
+        margin-top: 6px;
+      }
+
+      .acts {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .btn-p {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 32px;
+        padding: 0 12px;
+        border-radius: 7px;
+        background: var(--accent);
+        color: #0c0c0e;
+        font-family: var(--font-ui);
+        font-weight: 700;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-g {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 32px;
+        padding: 0 12px;
+        border-radius: 7px;
+        background: transparent;
+        color: var(--text);
+        box-shadow: inset 0 0 0 1px var(--ink-700);
+        font-family: var(--font-ui);
+        font-weight: 700;
+        font-size: 12px;
+      }
+
+      .card .foot {
+        padding: 10px 22px;
+        border-top: 1px solid var(--ink-700);
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+      }
+      .card .foot b {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      footer.coda {
+        border-top: 1px solid var(--ink-700);
+        padding: 24px 0 56px;
+        margin-top: 32px;
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      footer.coda b {
+        color: var(--text);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska Web Share Target">
+    <div class="wrap">
+      <div class="topbar">
+        <div>
+          <span class="live"></span><b>Sveska</b> · Web Share Target · M3.7 · the moment after
+          "Share to Sveska"
+        </div>
+        <div><b>2026.05.16</b></div>
+      </div>
+
+      <div class="hero">
+        <div>
+          <h1>When the share<br /><span class="ai">lands here.</span></h1>
+          <p>
+            Six states for the moment Chrome (or any Web Share Target-aware OS) hands a payload to
+            Sveska. URL, text, image, malformed, "we already have this," and append-to-existing.
+            Each state has a single composed action: nothing forces a decision; nothing loses data.
+          </p>
+        </div>
+        <div class="stamp">
+          <b>6 STATES</b><br />
+          <b>POST</b> /share-into-sveska<br />
+          multipart/form-data<br />
+          <span class="ai">always lands in inbox</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- 01 URL only -->
+        <div class="card col-4">
+          <div class="head">
+            <span class="num"><b>01</b>URL ONLY</span><span class="sev info">INFO</span>
+          </div>
+          <h3>A link, no copy.</h3>
+          <div class="meta">payload · <span class="mono">{ url }</span> · most common case</div>
+          <div class="stage">
+            <div class="banner">
+              <span class="ic">↘</span>
+              <div style="flex: 1">
+                <div class="lbl">INCOMING · CHROME → SVESKA</div>
+                <div class="title">Share captured · URL only</div>
+                <div class="preview">
+                  <span class="url">https://www.inkandswitch.com/local-first/</span>
+                  <span style="color: var(--text-dim)"
+                    >no body text, no title — fetched OG metadata: "Local-first software" · Ink
+                    &amp; Switch</span
+                  >
+                  <div class="meta">unfurled · 1.2s · no network calls beyond fetch</div>
+                </div>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="btn-p">Save to inbox</button>
+              <button class="btn-g">New note from URL</button>
+              <button class="btn-g">Append to "weekend.md"</button>
+            </div>
+          </div>
+          <div class="foot">
+            <span>default · <b>Save to inbox</b></span
+            ><span>esc · cancel</span>
+          </div>
+        </div>
+
+        <!-- 02 URL + text -->
+        <div class="card col-4">
+          <div class="head">
+            <span class="num"><b>02</b>URL + TEXT</span><span class="sev info">INFO</span>
+          </div>
+          <h3>The most useful share.</h3>
+          <div class="meta">
+            payload · <span class="mono">{ url, text }</span> · highlight from page
+          </div>
+          <div class="stage">
+            <div class="banner">
+              <span class="ic">↘</span>
+              <div style="flex: 1">
+                <div class="lbl">INCOMING · WITH HIGHLIGHT</div>
+                <div class="title">Share captured · URL + selection</div>
+                <div class="preview">
+                  <span class="url">https://merlin.dev/blog/local-first/</span>
+                  <span style="color: var(--text)"
+                    >"The folded page does not need permission. Software should outlive the company
+                    that made it."</span
+                  >
+                  <div class="meta">
+                    + 142 char selection · auto-detect quote · attribute on save
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="btn-p">Save as quote</button>
+              <button class="btn-g">New note</button>
+              <button class="btn-g">Append</button>
+            </div>
+          </div>
+          <div class="foot">
+            <span>detected · <b>quote</b></span
+            ><span>auto-cite preserves URL</span>
+          </div>
+        </div>
+
+        <!-- 03 Text only -->
+        <div class="card col-4">
+          <div class="head">
+            <span class="num"><b>03</b>TEXT ONLY</span><span class="sev info">INFO</span>
+          </div>
+          <h3>From a non-web app.</h3>
+          <div class="meta">
+            payload · <span class="mono">{ text }</span> · from a notes app, sms, etc.
+          </div>
+          <div class="stage">
+            <div class="banner">
+              <span class="ic">↘</span>
+              <div style="flex: 1">
+                <div class="lbl">INCOMING · TEXT</div>
+                <div class="title">Share captured · 24 words</div>
+                <div class="preview">
+                  <span style="color: var(--text)"
+                    >Snapshot dot reads "snapshot pending" not "unsaved changes". The first name is
+                    procedural; the second is technical. Replace.</span
+                  >
+                  <div class="meta">from · iOS · Notes app · no URL · no source</div>
+                </div>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="btn-p">Save to inbox</button>
+              <button class="btn-g">New note</button>
+            </div>
+          </div>
+          <div class="foot">
+            <span>tag · <b>captured</b></span
+            ><span>no attribution available</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- 04 URL + image -->
+        <div class="card col-6">
+          <div class="head">
+            <span class="num"><b>04</b>URL + IMAGE</span><span class="sev warn">WARN · M5</span>
+          </div>
+          <h3>Image needs the canvas.</h3>
+          <div class="meta">
+            payload · <span class="mono">{ url, files }</span> · screenshot / png / jpg
+          </div>
+          <div class="stage">
+            <div class="banner warn">
+              <span class="ic">▭</span>
+              <div style="flex: 1">
+                <div class="lbl">INCOMING · IMAGE ATTACHED</div>
+                <div class="title">
+                  Share has an image · open the canvas, or store as attachment?
+                </div>
+                <div class="preview">
+                  <span class="url"
+                    >https://www.figma.com/community/file/123 · "Sveska app shell"</span
+                  >
+                  <span style="color: var(--text-dim)">screenshot.png · 1140 × 740 · 287 KB</span>
+                  <img class="placeholder" alt="" />
+                  <div class="meta">
+                    images live in the canvas (M5) — text-only notes link to them
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="btn-p">Open canvas with image</button>
+              <button class="btn-g">Attach to inbox capture</button>
+              <button class="btn-g">Drop the image · keep the URL</button>
+            </div>
+          </div>
+          <div class="foot">
+            <span>requires · <b>canvas enabled</b></span
+            ><span>fallback · attach to capture</span>
+          </div>
+        </div>
+
+        <!-- 05 Append flow -->
+        <div class="card col-6">
+          <div class="head">
+            <span class="num"><b>05</b>APPEND TO EXISTING</span
+            ><span class="sev info">INFO · AI</span>
+          </div>
+          <h3>Same topic, picked up.</h3>
+          <div class="meta">when · AI suggests overlap with a recent note · M2.5</div>
+          <div class="stage">
+            <div class="banner">
+              <span class="ic">+</span>
+              <div style="flex: 1">
+                <div class="lbl">INCOMING · SUGGESTED APPEND</div>
+                <div class="title">This looks like more of "imports of Selimović".</div>
+                <div class="preview">
+                  <span class="url">https://en.wikipedia.org/wiki/Selimović</span>
+                  <span style="color: var(--text-dim)"
+                    >match · pinned note · reading · 11 backlinks · 92% topic similarity</span
+                  >
+                  <div class="meta">
+                    running on-device · no proxy call · classification is local heuristic +
+                    dictionary
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="btn-p">Append to "imports of Selimović"</button>
+              <button class="btn-g">New note instead</button>
+              <button class="btn-g">Send to inbox</button>
+            </div>
+          </div>
+          <div class="foot">
+            <span>classification · <b>on-device</b></span
+            ><span>opt out · /settings/ai</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- 06 Empty -->
+        <div class="card col-6">
+          <div class="head">
+            <span class="num"><b>06</b>EMPTY · MALFORMED</span
+            ><span class="sev err">ERR · M3.7</span>
+          </div>
+          <h3>Nothing in the payload.</h3>
+          <div class="meta">when · POST body is empty / missing all known fields</div>
+          <div class="stage">
+            <div class="banner err">
+              <span class="ic">!</span>
+              <div style="flex: 1">
+                <div class="lbl">SHARE · EMPTY PAYLOAD</div>
+                <div class="title">Whatever was shared came in blank.</div>
+                <div class="preview">
+                  <span style="color: var(--text-dim)"
+                    >Some Chrome share menus send empty fields for media-only shares to apps that
+                    don't declare image support. Open an empty note instead, or paste from
+                    clipboard.</span
+                  >
+                  <div class="meta">
+                    no body · no url · no files · request was POST-only · 0 bytes
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="btn-p">Paste from clipboard</button>
+              <button class="btn-g">New empty note</button>
+              <button class="btn-g">Dismiss</button>
+            </div>
+          </div>
+          <div class="foot">
+            <span>logs · <b>local only</b></span
+            ><span>no telemetry · per CLAUDE.md §5</span>
+          </div>
+        </div>
+
+        <!-- 07 Already captured -->
+        <div class="card col-6">
+          <div class="head">
+            <span class="num"><b>07</b>ALREADY HAVE IT</span
+            ><span class="sev warn">WARN · DEDUP</span>
+          </div>
+          <h3>This URL is in the notebook.</h3>
+          <div class="meta">when · URL matches existing note or inbox item · dedup</div>
+          <div class="stage">
+            <div class="banner warn">
+              <span class="ic">↺</span>
+              <div style="flex: 1">
+                <div class="lbl">DUPLICATE · URL ALREADY PRESENT</div>
+                <div class="title">We have this URL from 2 days ago.</div>
+                <div class="preview">
+                  <span class="url">https://www.inkandswitch.com/local-first/</span>
+                  <span style="color: var(--text-dim)"
+                    >already in · inbox · "save for reading" · 2 days · unprocessed</span
+                  >
+                  <div class="meta">add anyway · merge selections · or open the original</div>
+                </div>
+              </div>
+            </div>
+            <div class="acts">
+              <button class="btn-p">Open the original</button>
+              <button class="btn-g">Merge new selection</button>
+              <button class="btn-g">Add as duplicate anyway</button>
+            </div>
+          </div>
+          <div class="foot">
+            <span>dedup · <b>local hash match</b></span
+            ><span>never silent</span>
+          </div>
+        </div>
+      </div>
+
+      <footer class="coda">
+        <span><b>Sveska</b> · Web Share Target · v1.0 · 7 states</span>
+        <span>manifest.json · share_target · POST · multipart/form-data</span>
+        <span>2026.05.16</span>
+      </footer>
+    </div>
+  </body>
+</html>

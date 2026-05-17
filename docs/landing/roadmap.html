@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Roadmap · Sveska · sveska.studio</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 14.5px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      .wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      nav.top {
+        border-bottom: 1px solid var(--ink-700);
+        padding: 18px 0;
+      }
+      nav.top .inner {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+      nav.top .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+        color: var(--text);
+      }
+      nav.top .brand .studio {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-weight: 500;
+        font-size: 14px;
+      }
+      nav.top .links {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-dim);
+        display: inline-flex;
+        gap: 22px;
+        flex: 1;
+        letter-spacing: 0.04em;
+      }
+      nav.top .links .on {
+        color: var(--accent);
+      }
+
+      .hero {
+        padding: 64px 0 40px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 48px;
+        align-items: end;
+      }
+      .hero .crumbs {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 24px;
+      }
+      .hero .crumbs b {
+        color: var(--accent);
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 80px;
+        letter-spacing: -0.038em;
+        line-height: 0.95;
+        margin: 0 0 18px;
+      }
+      .hero h1 .amb {
+        color: var(--accent);
+      }
+      .hero p {
+        font-size: 17px;
+        color: var(--text-dim);
+        max-width: 60ch;
+        margin: 0;
+        line-height: 1.55;
+      }
+      .hero .stamp {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        text-align: right;
+      }
+      .hero .stamp b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .hero .stamp .amb {
+        color: var(--accent);
+      }
+      .hero .stamp .ai {
+        color: var(--ai);
+      }
+
+      /* timeline ruler */
+      .ruler {
+        margin: 32px 0;
+        padding: 18px 22px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        display: flex;
+        gap: 22px;
+        align-items: center;
+      }
+      .ruler .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .ruler .bar {
+        flex: 1;
+        height: 6px;
+        background: var(--ink-700);
+        border-radius: 999px;
+        position: relative;
+      }
+      .ruler .bar .now {
+        position: absolute;
+        left: 43%;
+        top: -7px;
+        bottom: -7px;
+        width: 2px;
+        background: var(--accent);
+      }
+      .ruler .bar .fill {
+        height: 100%;
+        width: 43%;
+        background: var(--accent);
+        border-radius: 999px;
+      }
+      .ruler .tick {
+        position: absolute;
+        top: -3px;
+        bottom: -3px;
+        width: 1px;
+        background: var(--text-dim);
+        opacity: 0.5;
+      }
+      .ruler .lab {
+        position: absolute;
+        top: 12px;
+        transform: translateX(-50%);
+        font-family: var(--font-mono);
+        font-size: 9.5px;
+        letter-spacing: 0.04em;
+        color: var(--text-dim);
+        white-space: nowrap;
+      }
+
+      /* milestones */
+      .ms {
+        margin-top: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .milestone {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 24px;
+        padding: 24px 28px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+      }
+      .milestone.shipped {
+        border-color: color-mix(in oklab, var(--ok) 40%, transparent);
+        background: color-mix(in oklab, var(--ok) 4%, var(--ink-800));
+      }
+      .milestone.now {
+        border-color: var(--accent);
+        background: color-mix(in oklab, var(--accent) 6%, var(--ink-800));
+      }
+      .milestone.next {
+        border-color: color-mix(in oklab, var(--ai) 40%, transparent);
+      }
+      .milestone.parked {
+        border-style: dashed;
+        opacity: 0.85;
+      }
+
+      .ms-side {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .ms-side .stage {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .milestone.shipped .ms-side .stage {
+        color: var(--ok);
+      }
+      .milestone.now .ms-side .stage {
+        color: var(--accent);
+      }
+      .milestone.next .ms-side .stage {
+        color: var(--ai);
+      }
+      .milestone.parked .ms-side .stage {
+        color: var(--text-dim);
+      }
+      .ms-side .m {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 32px;
+        letter-spacing: -0.025em;
+        line-height: 1;
+        color: var(--text);
+      }
+      .ms-side .codename {
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        color: var(--accent);
+        letter-spacing: 0.04em;
+        margin-top: 3px;
+      }
+      .ms-side .when {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+        margin-top: 6px;
+      }
+      .ms-side .when b {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .ms-body h3 {
+        margin: 0 0 6px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 24px;
+        letter-spacing: -0.018em;
+        line-height: 1.15;
+        color: var(--text);
+      }
+      .ms-body .summary {
+        margin: 0 0 14px;
+        color: var(--text-dim);
+        font-size: 14.5px;
+        line-height: 1.55;
+        max-width: 60ch;
+      }
+      .tickets {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+      }
+      .ticket {
+        display: grid;
+        grid-template-columns: auto 60px 1fr;
+        gap: 8px;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text);
+      }
+      .ticket.done {
+        color: var(--text-dim);
+        background: transparent;
+      }
+      .ticket.done .box {
+        background: var(--ok);
+        border-color: var(--ok);
+        position: relative;
+      }
+      .ticket.done .box::after {
+        content: '';
+        position: absolute;
+        left: 3px;
+        top: 1px;
+        width: 6px;
+        height: 3px;
+        border-left: 1.5px solid #0c0c0e;
+        border-bottom: 1.5px solid #0c0c0e;
+        transform: rotate(-45deg);
+      }
+      .ticket.done .text {
+        text-decoration: line-through;
+        text-decoration-thickness: 0.5px;
+      }
+      .ticket .box {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        border: 1.5px solid var(--text-dim);
+        flex-shrink: 0;
+      }
+      .ticket .id {
+        color: var(--accent);
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        font-size: 11px;
+      }
+      .ticket .text {
+        color: var(--text);
+      }
+
+      .park-note {
+        margin-top: 14px;
+        padding: 14px 18px;
+        background: var(--bg);
+        border-radius: 8px;
+        box-shadow: inset 0 0 0 1px var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-dim);
+        line-height: 1.6;
+        display: flex;
+        gap: 10px;
+      }
+      .park-note .pin {
+        color: var(--accent);
+        flex-shrink: 0;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      /* parking-lot decisions */
+      .parking {
+        margin-top: 48px;
+        padding: 32px 0;
+        border-top: 1px solid var(--ink-700);
+        border-bottom: 1px solid var(--ink-700);
+      }
+      .parking h2 {
+        margin: 0 0 18px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: -0.025em;
+        line-height: 1.05;
+      }
+      .parking p {
+        margin: 0 0 18px;
+        color: var(--text-dim);
+        max-width: 60ch;
+        font-size: 14.5px;
+        line-height: 1.55;
+      }
+      .park-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+      .park-card {
+        padding: 24px 28px;
+        background: var(--ink-800);
+        border: 1px dashed var(--ink-700);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .park-card .num {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .park-card .num b {
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .park-card h4 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: -0.015em;
+        color: var(--text);
+      }
+      .park-card p {
+        margin: 0;
+        color: var(--text-dim);
+        font-size: 13.5px;
+        line-height: 1.55;
+        max-width: none;
+      }
+      .park-card .trigger {
+        margin-top: auto;
+        padding-top: 10px;
+        border-top: 1px solid var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--accent);
+        letter-spacing: 0.04em;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .park-card .trigger::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--accent);
+      }
+
+      footer.coda {
+        padding: 24px 0 56px;
+        margin-top: 32px;
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      footer.coda b {
+        color: var(--text);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska Roadmap">
+    <nav class="top">
+      <div class="inner">
+        <a class="brand" style="text-decoration: none" href="sveska.studio landing.html">
+          <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
+            <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+            <path
+              d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+              fill="#F2B544"
+            />
+            <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+            <path
+              d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+              fill="none"
+              stroke="#0C0C0E"
+              stroke-width="5.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          sveska<span class="studio">.studio</span>
+        </a>
+        <div class="links">
+          <span>System</span><span>Notebook</span><span>Glossary</span
+          ><span class="on">Roadmap</span><span>Field notes</span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="hero">
+        <div>
+          <div class="crumbs"><b>ROADMAP</b> · sveska.studio/roadmap · M0 — M7 · public</div>
+          <h1>Eight milestones,<br /><span class="amb">one notebook.</span></h1>
+          <p>
+            Sveska ships in milestones, not sprints. M0–M3 is the editor people get for free. M4
+            adds AI. M5 adds the canvas. M6 is the platform layer. M7 is hardening. The bar at the
+            top shows where we are; the cards below show what's in each box.
+          </p>
+        </div>
+        <div class="stamp">
+          <span class="amb">● Shipped</span><br />
+          <b>4 of 8</b> · M0–M3<br />
+          next · <span class="ai">M4 · AI · Q3 2026</span><br />
+          latest tag · v0.1.0
+        </div>
+      </header>
+
+      <div class="ruler">
+        <span class="lbl">2026</span>
+        <div class="bar">
+          <span class="fill"></span>
+          <span class="tick" style="left: 0%"></span><span class="lab" style="left: 0%">M0</span>
+          <span class="tick" style="left: 14%"></span><span class="lab" style="left: 14%">M1</span>
+          <span class="tick" style="left: 28%"></span><span class="lab" style="left: 28%">M2</span>
+          <span class="tick" style="left: 43%"></span
+          ><span class="lab" style="left: 43%; color: var(--accent)">M3 · NOW</span>
+          <span class="tick" style="left: 57%"></span><span class="lab" style="left: 57%">M4</span>
+          <span class="tick" style="left: 71%"></span><span class="lab" style="left: 71%">M5</span>
+          <span class="tick" style="left: 85%"></span><span class="lab" style="left: 85%">M6</span>
+          <span class="tick" style="left: 100%"></span
+          ><span class="lab" style="left: 100%">M7</span>
+          <span class="now"></span>
+        </div>
+        <span class="lbl">2027</span>
+      </div>
+
+      <div class="ms">
+        <article class="milestone shipped">
+          <div class="ms-side">
+            <span class="stage">● SHIPPED · M0</span>
+            <span class="m">M0</span>
+            <span class="codename">"Drina"</span>
+            <span class="when">shipped · <b>2026.03</b></span>
+          </div>
+          <div class="ms-body">
+            <h3>Scaffold &amp; platform skeleton.</h3>
+            <p class="summary">
+              Vite + React + TS + Dexie + vite-plugin-pwa. Tokens wired. Manifest + icons. Theme
+              switcher with persistence. SEO meta + sitemap + /glossary placeholder.
+            </p>
+            <div class="tickets">
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T0.1</span
+                ><span class="text">Vite + Dexie + Workbox boot</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T0.2</span
+                ><span class="text">Theme · dark / light / system · persists</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T0.3</span
+                ><span class="text">App shell · routing · analytics stub</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="milestone shipped">
+          <div class="ms-side">
+            <span class="stage">● SHIPPED · M1</span>
+            <span class="m">M1</span>
+            <span class="codename">"Neretva"</span>
+            <span class="when">shipped · <b>2026.04</b></span>
+          </div>
+          <div class="ms-body">
+            <h3>Core editor — notepad.js.org parity.</h3>
+            <p class="summary">
+              Textarea + autosave + snapshots + export (.txt/.md/.html) + statistics + focus mode +
+              preferences + the seven keyboard shortcuts. Full offline.
+            </p>
+            <div class="tickets">
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T1.1</span
+                ><span class="text">Autosave · 400ms debounced</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T1.2</span
+                ><span class="text">Snapshots · dot · restore</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T1.3</span
+                ><span class="text">Export .txt / .md / .html / .pdf</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T1.4</span
+                ><span class="text">Statistics modal</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T1.5</span
+                ><span class="text">Focus mode · Alt+F</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T1.6</span
+                ><span class="text">Preferences panel</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T1.7</span
+                ><span class="text">All keyboard shortcuts</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="milestone shipped">
+          <div class="ms-side">
+            <span class="stage">● SHIPPED · M2</span>
+            <span class="m">M2</span>
+            <span class="codename">"Vrbas"</span>
+            <span class="when">shipped · <b>2026.04</b></span>
+          </div>
+          <div class="ms-body">
+            <h3>Multi-note + persistence depth.</h3>
+            <p class="summary">
+              Tabs with session restore. Local version history + diff. Crash-safe recovery. Tags,
+              pins, saved filters, favorites bar, recents rail. Fuzzy search across 1k notes under
+              50ms. Quick-capture inbox.
+            </p>
+            <div class="tickets">
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T2.1</span
+                ><span class="text">Multi-note tabs · session restore</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T2.2</span
+                ><span class="text">Version history · diff</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T2.3</span
+                ><span class="text">Unsaved-draft recovery</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T2.4</span
+                ><span class="text">Tags · pins · favorites · recents</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T2.5</span
+                ><span class="text">Fuzzy search · inbox</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="milestone now">
+          <div class="ms-side">
+            <span class="stage">▶ NOW · M3</span>
+            <span class="m">M3</span>
+            <span class="codename">"Una"</span>
+            <span class="when">shipping · <b>2026.05</b> · this release</span>
+          </div>
+          <div class="ms-body">
+            <h3>Power UX — the whole keyboard.</h3>
+            <p class="summary">
+              Command palette ⌘K. Slash commands. Per-note Markdown mode. Nested checklists.
+              Templates + snippets. Typewriter + paper textures + writing timer + find/replace. Web
+              Share target, PDF export, share via hash.
+            </p>
+            <div class="tickets">
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T3.1</span
+                ><span class="text">Command palette ⌘K · slash</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T3.2</span
+                ><span class="text">Markdown mode · live preview</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T3.3</span
+                ><span class="text">Nested checklists · drag · filter</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T3.4</span
+                ><span class="text">Templates + snippets + prompts</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T3.5</span
+                ><span class="text">Typewriter · typing sounds</span>
+              </div>
+              <div class="ticket">
+                <span class="box"></span><span class="id">T3.6</span
+                ><span class="text">Paper textures · timer · find&amp;replace</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T3.7</span
+                ><span class="text">Import · share target · PDF · hash share</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="milestone next">
+          <div class="ms-side">
+            <span class="stage">○ NEXT · M4</span>
+            <span class="m">M4</span>
+            <span class="codename">"Bistrica"</span>
+            <span class="when">starts · <b>Q3 2026</b></span>
+          </div>
+          <div class="ms-body">
+            <h3>AI layer · secure by construction.</h3>
+            <p class="summary">
+              Edge function <code class="mono">/api/ai</code> with rate-limit, streaming, key
+              vaulted server-side. Slash AI commands (/improve, /summarize, /continue, /rewrite,
+              "Copy as LinkedIn"). Notes → image visualization. Graceful no-key degradation.
+              Documented threat model.
+            </p>
+            <div class="tickets">
+              <div class="ticket">
+                <span class="box"></span><span class="id">T4.1</span
+                ><span class="text">Edge proxy /api/ai · rate-limit · streamed</span>
+              </div>
+              <div class="ticket">
+                <span class="box"></span><span class="id">T4.2</span
+                ><span class="text">Slash AI commands · diff accept/reject</span>
+              </div>
+              <div class="ticket">
+                <span class="box"></span><span class="id">T4.3</span
+                ><span class="text">Notes → image (concise · detailed)</span>
+              </div>
+            </div>
+            <div class="park-note">
+              <span class="pin">GATE</span>
+              <span
+                >The CI grep for VITE_*_API_KEY in dist/ must pass on every commit · zero exceptions
+                · see <a>/privacy</a></span
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="milestone next">
+          <div class="ms-side">
+            <span class="stage">○ NEXT · M5</span>
+            <span class="m">M5</span>
+            <span class="codename">"Tara"</span>
+            <span class="when">starts · <b>Q4 2026</b></span>
+          </div>
+          <div class="ms-body">
+            <h3>Canvas module · the swappable surface.</h3>
+            <p class="summary">
+              CanvasProvider interface + Excalidraw (MIT) v1 impl. One canvas per note. Export to
+              PNG/SVG/JSON. Offline-capable. tldraw adapter exists behind a build flag — parked
+              until the license decision (see below).
+            </p>
+            <div class="tickets">
+              <div class="ticket">
+                <span class="box"></span><span class="id">T5.1</span
+                ><span class="text">CanvasProvider seam · Excalidraw v1</span>
+              </div>
+              <div class="ticket">
+                <span class="box"></span><span class="id">T5.2</span
+                ><span class="text">tldraw adapter · flag-gated · not shipped</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="milestone next">
+          <div class="ms-side">
+            <span class="stage">○ NEXT · M6</span>
+            <span class="m">M6</span>
+            <span class="codename">"Sutjeska"</span>
+            <span class="when">starts · <b>2027 Q1</b></span>
+          </div>
+          <div class="ms-body">
+            <h3>Platform &amp; monetization.</h3>
+            <p class="summary">
+              Glossary engine with auto-link inside notes &amp; exports. MDX field-notes blog.
+              "Export to blog" from a note. Lead-gen funnel: email capture, ad/affiliate slots in
+              HTML export footer. Free local / Pro sync+AI scaffold. Funnel instrumentation.
+            </p>
+            <div class="tickets">
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T6.1</span
+                ><span class="text">Glossary engine · auto-link</span>
+              </div>
+              <div class="ticket done">
+                <span class="box"></span><span class="id">T6.2</span
+                ><span class="text">Content surface · changelog · MDX blog</span>
+              </div>
+              <div class="ticket">
+                <span class="box"></span><span class="id">T6.3</span
+                ><span class="text">Lead-gen funnel · footer · CTA system</span>
+              </div>
+              <div class="ticket">
+                <span class="box"></span><span class="id">T6.4</span
+                ><span class="text">Pricing scaffold · MRR dashboard</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="milestone next">
+          <div class="ms-side">
+            <span class="stage">○ NEXT · M7</span>
+            <span class="m">M7</span>
+            <span class="codename">"Trebišnjica"</span>
+            <span class="when">starts · <b>2027 Q2</b></span>
+          </div>
+          <div class="ms-body">
+            <h3>Hardening.</h3>
+            <p class="summary">
+              Playwright offline + install + restore suite. Perf budget enforced in CI. Error
+              boundary + crash recovery. Full a11y audit (axe + manual SR). Security review against
+              §5 of the doctrine.
+            </p>
+            <div class="tickets">
+              <div class="ticket">
+                <span class="box"></span><span class="id">T7.1</span
+                ><span class="text">Playwright · perf · a11y · security review</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- parking lot -->
+      <section class="parking">
+        <h2>Parking lot · open decisions.</h2>
+        <p>
+          Things we have decided not to decide yet. Each one has a clear trigger — the conditions
+          under which it gets revisited. None of these is rejected; none of them is committed.
+        </p>
+        <div class="park-grid">
+          <div class="park-card">
+            <div class="num"><b>P1</b> · CANVAS LICENSE</div>
+            <h4>tldraw vs Excalidraw, in production.</h4>
+            <p>
+              tldraw 4.x is dev-only free; production needs a license (~$6k/yr) or hobby with forced
+              watermark. Excalidraw (MIT) ships in M5. We will revisit only when revenue justifies
+              the license.
+            </p>
+            <span class="trigger">trigger · MRR ≥ $15k/mo for 3 consecutive months</span>
+          </div>
+          <div class="park-card">
+            <div class="num"><b>P2</b> · EDGE HOST</div>
+            <h4>Cloudflare Workers vs Vercel Edge.</h4>
+            <p>
+              Both connectors are viable. Workers is cheaper and has a longer free tier; Vercel has
+              tighter local-dev. Decision is reversible; the proxy contract is portable.
+            </p>
+            <span class="trigger">trigger · M4 kickoff · whoever is on call that week chooses</span>
+          </div>
+          <div class="park-card">
+            <div class="num"><b>P3</b> · SYNC</div>
+            <h4>Cross-device, multi-user.</h4>
+            <p>
+              We will ship sync only if it is end-to-end encrypted with client-held keys. Otherwise
+              it is not shipped. This is a non-negotiable from CLAUDE.md §5.
+            </p>
+            <span class="trigger">trigger · post-M6 · and only after a working E2E prototype</span>
+          </div>
+          <div class="park-card">
+            <div class="num"><b>P4</b> · ANALYTICS</div>
+            <h4>Cookieless, self-hosted, consent-gated.</h4>
+            <p>
+              We need some signal for the funnel work in M6. We will never use a tracker that
+              fingerprints users or hits a third-party domain. Plausible self-hosted is the leading
+              candidate.
+            </p>
+            <span class="trigger">trigger · M6.3 kickoff · separate review board</span>
+          </div>
+        </div>
+      </section>
+
+      <footer class="coda">
+        <span><b>Sveska</b> · roadmap · M0–M7</span>
+        <span>updated on every release · git-tracked</span>
+        <span>2026.05.16</span>
+      </footer>
+    </div>
+  </body>
+</html>

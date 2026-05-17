@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>About · Sveska Studio</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 15px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      nav.top {
+        border-bottom: 1px solid var(--ink-700);
+        padding: 18px 0;
+      }
+      nav.top .inner {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+      nav.top .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+        color: var(--text);
+      }
+      nav.top .brand .studio {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-weight: 500;
+        font-size: 14px;
+      }
+      nav.top .links {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-dim);
+        display: inline-flex;
+        gap: 22px;
+        flex: 1;
+        letter-spacing: 0.04em;
+      }
+      nav.top .links .on {
+        color: var(--accent);
+      }
+
+      .hero {
+        padding: 80px 0 56px;
+      }
+      .hero .crumbs {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 24px;
+      }
+      .hero .crumbs b {
+        color: var(--accent);
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 96px;
+        letter-spacing: -0.04em;
+        line-height: 0.92;
+        margin: 0 0 28px;
+      }
+      .hero h1 .amb {
+        color: var(--accent);
+      }
+      .hero .dek {
+        font-family: 'Newsreader', Georgia, serif;
+        font-style: italic;
+        font-size: 24px;
+        color: var(--text-dim);
+        margin: 0;
+        max-width: 42ch;
+        line-height: 1.45;
+      }
+
+      .doctrine {
+        padding: 40px 0 56px;
+      }
+      .doctrine h2 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 42px;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin: 0 0 28px;
+        color: var(--text);
+      }
+      .doctrine h2 .amb {
+        color: var(--accent);
+      }
+      .doctrine .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        margin-top: 14px;
+      }
+      .pr {
+        padding: 28px 32px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .pr .n {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .pr h3 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 26px;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        color: var(--text);
+      }
+      .pr p {
+        margin: 0;
+        color: var(--text-dim);
+        font-size: 14.5px;
+        line-height: 1.55;
+      }
+      .pr .quote {
+        margin-top: auto;
+        padding-top: 14px;
+        border-top: 1px solid var(--ink-700);
+        font-family: 'Newsreader', serif;
+        font-style: italic;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      .city {
+        padding: 48px 0 56px;
+        border-top: 1px solid var(--ink-700);
+      }
+      .city .head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 24px;
+      }
+      .city h2 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 42px;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .city h2 .amb {
+        color: var(--accent);
+      }
+      .city .badge {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 5px 11px;
+        border-radius: 999px;
+        background: var(--ink-700);
+        color: var(--text-dim);
+        letter-spacing: 0.06em;
+      }
+      .city .body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        align-items: start;
+      }
+      .city .body p {
+        margin: 0 0 14px;
+        color: var(--text);
+        font-size: 16px;
+        line-height: 1.65;
+        font-family: 'Newsreader', serif;
+      }
+      .city .body .glyph {
+        padding: 28px 32px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+      }
+      .city .body .glyph .label {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 12px;
+      }
+      .city .body .glyph .word {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 54px;
+        letter-spacing: -0.03em;
+        color: var(--text);
+        line-height: 1;
+      }
+      .city .body .glyph .pron {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        color: var(--text-dim);
+        margin: 6px 0 12px;
+      }
+      .city .body .glyph .def {
+        font-family: 'Newsreader', serif;
+        font-style: italic;
+        color: var(--text);
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
+      .team {
+        padding: 48px 0;
+        border-top: 1px solid var(--ink-700);
+      }
+      .team h2 {
+        margin: 0 0 24px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 42px;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .team .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+      .member {
+        padding: 22px 24px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .member .av {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 20px;
+      }
+      .member .av.a1 {
+        background: var(--accent);
+        color: #0c0c0e;
+      }
+      .member .av.a2 {
+        background: var(--ink-700);
+        color: var(--text);
+      }
+      .member .av.a3 {
+        background: color-mix(in oklab, var(--ai) 28%, transparent);
+        color: var(--ai);
+      }
+      .member .av.a4 {
+        background: color-mix(in oklab, var(--ok) 28%, transparent);
+        color: var(--ok);
+      }
+      .member .name {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: -0.015em;
+        color: var(--text);
+        line-height: 1.15;
+      }
+      .member .role {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        color: var(--accent);
+        text-transform: uppercase;
+      }
+      .member .where {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+      }
+      .member .bio {
+        font-family: 'Newsreader', serif;
+        font-style: italic;
+        font-size: 13px;
+        color: var(--text-dim);
+        line-height: 1.55;
+        margin-top: 4px;
+      }
+
+      .manifesto {
+        padding: 64px 0;
+        margin: 48px 0;
+        border-top: 1px solid var(--ink-700);
+        border-bottom: 1px solid var(--ink-700);
+        text-align: center;
+      }
+      .manifesto h2 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 64px;
+        letter-spacing: -0.035em;
+        line-height: 1;
+        margin: 0 0 12px;
+        color: var(--text);
+      }
+      .manifesto h2 .amb {
+        color: var(--accent);
+      }
+      .manifesto p {
+        font-family: 'Newsreader', serif;
+        font-style: italic;
+        font-size: 18px;
+        color: var(--text-dim);
+        margin: 0;
+        max-width: 48ch;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.55;
+      }
+
+      footer.coda {
+        border-top: 1px solid var(--ink-700);
+        padding: 24px 0 56px;
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      footer.coda b {
+        color: var(--text);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska About">
+    <nav class="top">
+      <div class="inner">
+        <a class="brand" style="text-decoration: none" href="sveska.studio landing.html">
+          <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
+            <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+            <path
+              d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+              fill="#F2B544"
+            />
+            <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+            <path
+              d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+              fill="none"
+              stroke="#0C0C0E"
+              stroke-width="5.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          sveska<span class="studio">.studio</span>
+        </a>
+        <div class="links">
+          <span>System</span><span>Notebook</span><span>Glossary</span><span class="on">About</span
+          ><span>Field notes</span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="hero">
+        <div class="crumbs">
+          <b>ABOUT</b> · sveska.studio/about · the studio behind the notebook
+        </div>
+        <h1>The studio<br /><span class="amb">behind the notebook.</span></h1>
+        <p class="dek">
+          A small team building one thing carefully. The premise: the page deserves the same dignity
+          as paper. The rest is engineering.
+        </p>
+      </header>
+
+      <section class="doctrine">
+        <h2>Our <span class="amb">doctrine.</span></h2>
+        <div class="grid">
+          <div class="pr">
+            <span class="n">01</span>
+            <h3>Local-first, before convenience.</h3>
+            <p>
+              Every Sveska feature must work without a network. Sync, when it ships, is opt-in and
+              end-to-end encrypted. The cloud is an option. It is never a tax.
+            </p>
+            <div class="quote">"Software should outlive the company that made it."</div>
+          </div>
+          <div class="pr">
+            <span class="n">02</span>
+            <h3>One amber, no rainbow.</h3>
+            <p>
+              Sveska's design system has a single accent color and a single signal color. What is
+              not added is the biggest feature. Restraint compounds across years.
+            </p>
+            <div class="quote">
+              "The page that doesn't yell at you is the page you read for hours."
+            </div>
+          </div>
+          <div class="pr">
+            <span class="n">03</span>
+            <h3>Voice over volume.</h3>
+            <p>
+              We don't ship onboarding tours, exit popups, "next step" nags, or congratulatory
+              toasts. The app is dry and competent. Bosnian first on display; English everywhere
+              else.
+            </p>
+            <div class="quote">"Stoic with a punchline."</div>
+          </div>
+          <div class="pr">
+            <span class="n">04</span>
+            <h3>Every project is a platform.</h3>
+            <p>
+              From day zero Sveska is also a glossary, a changelog, a field-note publication, an
+              open-source brand kit. The notebook is the product; the studio is the platform around
+              it.
+            </p>
+            <div class="quote">"Ship the surface alongside the system."</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="city">
+        <div class="head">
+          <h2>Why <span class="amb">Bosnian?</span></h2>
+          <span class="badge">brand · in long form</span>
+        </div>
+        <div class="body">
+          <div>
+            <p>The brand is in Bosnian. The product is in English. The reason is not exoticism.</p>
+            <p>
+              The English word "notebook" is overloaded — by spiral-bound paper, by laptops, by a
+              dozen apps. <i>Sveska</i> means precisely what we are building, with no rooms left
+              over. The word arrives without the baggage of a hundred competitors.
+            </p>
+            <p>
+              The brand concept — Sarajevo Night — comes from the city, but also from the literary
+              tradition we keep returning to. Selimović staged memory as procedure half a century
+              before we tried to. Andrić wrote about bridges in a way that helped us think about
+              pages. Karahasan kept a war journal of the soul. The brand is a debt we pay to that
+              reading list.
+            </p>
+            <p>
+              The wordmark is outlined, the .studio is in JetBrains Mono, and the seam between them
+              — the Bosnian noun meeting the modern surface — is on purpose.
+            </p>
+          </div>
+          <div class="glyph">
+            <div class="label">N. · BOSNIAN · FEMININE</div>
+            <div class="word">sveska</div>
+            <div class="pron">/ˈsvɛska/</div>
+            <div class="def">
+              A notebook. An exercise book. The unmarked surface a writer chooses before they write
+              on it. The plural is <i>sveske</i>; the diminutive <i>sveščica</i>.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="team">
+        <h2>The team.</h2>
+        <div class="grid">
+          <div class="member">
+            <span class="av a1">M</span>
+            <span class="name">Miz Anandi</span>
+            <span class="role">founder · design · brand</span>
+            <span class="where">sarajevo + brooklyn</span>
+            <span class="bio"
+              >Notebook user since age 7. Built the first Sveska prototype on a long train ride.
+              Reads more than is healthy.</span
+            >
+          </div>
+          <div class="member">
+            <span class="av a2">H</span>
+            <span class="name">Hannah J.</span>
+            <span class="role">staff engineer · web</span>
+            <span class="where">berlin</span>
+            <span class="bio"
+              >IndexedDB whisperer. Wrote the autosave debounce. Will argue about
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  background: rgba(0, 0, 0, 0.25);
+                  padding: 1px 5px;
+                  border-radius: 3px;
+                  font-size: 11px;
+                "
+                >prefers-reduced-motion</code
+              >
+              at length.</span
+            >
+          </div>
+          <div class="member">
+            <span class="av a3">I</span>
+            <span class="name">Isidora Š.</span>
+            <span class="role">security · proxies</span>
+            <span class="where">belgrade</span>
+            <span class="bio"
+              >Built the edge proxy. Audits her own CSP. Holds the only PGP key worth holding.</span
+            >
+          </div>
+          <div class="member">
+            <span class="av a4">D</span>
+            <span class="name">Dragan K.</span>
+            <span class="role">mobile · PWA</span>
+            <span class="where">zagreb</span>
+            <span class="bio"
+              >Got iOS Add-to-Home-Screen working without a single "click here next" arrow. Writes
+              typewriter mode.</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="manifesto">
+        <h2>Prazna sveska.<br /><span class="amb">Najbolji početak.</span></h2>
+        <p>
+          An empty notebook. The best beginning. The brand line, but also the studio's working
+          method. We start fresh every week. We close more tickets than we open. We ship.
+        </p>
+      </section>
+
+      <footer class="coda">
+        <span><b>Sveska Studio</b> · about</span>
+        <span>sarajevo · brooklyn · the open web</span>
+        <span>2026.05.16</span>
+      </footer>
+    </div>
+  </body>
+</html>

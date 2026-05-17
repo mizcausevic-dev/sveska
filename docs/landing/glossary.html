@@ -1,0 +1,1262 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sveska — Glossary</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="The words we use at Sveska — local-first computing, Bosnian etymology, design system vocabulary."
+    />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 15px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      .display {
+        font-family: var(--font-display);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .dim {
+        color: var(--text-dim);
+      }
+
+      .wrap {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      /* nav (same as landing) */
+      nav.top {
+        border-bottom: 1px solid var(--ink-700);
+        padding: 18px 0;
+      }
+      nav.top .inner {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+      nav.top .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+        color: var(--text);
+      }
+      nav.top .brand .studio {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-weight: 500;
+        font-size: 14px;
+      }
+      nav.top .links {
+        display: inline-flex;
+        gap: 22px;
+        flex: 1;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        color: var(--text-dim);
+      }
+      nav.top .links a:hover {
+        color: var(--text);
+      }
+      nav.top .links .on {
+        color: var(--accent);
+      }
+      nav.top .cta {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 36px;
+        padding: 0 16px;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #0c0c0e;
+        font-family: var(--font-ui);
+        font-weight: 700;
+        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* hero */
+      header.hero {
+        padding: 56px 0 40px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 48px;
+        align-items: end;
+      }
+      header h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 72px;
+        letter-spacing: -0.035em;
+        line-height: 0.95;
+        margin: 0 0 22px;
+      }
+      header h1 .amb {
+        color: var(--accent);
+      }
+      header p.lead {
+        font-size: 17px;
+        color: var(--text-dim);
+        max-width: 56ch;
+        margin: 0;
+        line-height: 1.55;
+      }
+      header .stamp {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+        min-width: 200px;
+      }
+      header .stamp .row {
+        display: flex;
+        gap: 10px;
+      }
+      header .stamp .row b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      header .stamp .accent {
+        color: var(--accent);
+      }
+
+      /* search */
+      .gl-search {
+        margin: 24px 0 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--surface);
+        border: 1px solid var(--ink-700);
+        border-radius: 12px;
+        padding: 14px 18px;
+      }
+      .gl-search svg {
+        width: 18px;
+        height: 18px;
+        stroke: var(--text-dim);
+        fill: none;
+        stroke-width: 1.75;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .gl-search input {
+        flex: 1;
+        appearance: none;
+        border: 0;
+        background: transparent;
+        outline: 0;
+        font-family: var(--font-ui);
+        font-size: 17px;
+        color: var(--text);
+        caret-color: var(--accent);
+      }
+      .gl-search input::placeholder {
+        color: var(--text-dim);
+      }
+      .gl-search .count {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: var(--raised);
+      }
+
+      /* AZ nav */
+      .az {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 6px 0 32px;
+      }
+      .az a,
+      .az span {
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        background: var(--surface);
+        color: var(--text-dim);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        display: inline-block;
+        min-width: 32px;
+        text-align: center;
+      }
+      .az a:hover {
+        background: var(--raised);
+        color: var(--text);
+      }
+      .az a.has {
+        color: var(--text);
+      }
+      .az a.has b {
+        color: var(--accent);
+        font-weight: 500;
+        margin-left: 6px;
+      }
+      .az span.empty {
+        opacity: 0.35;
+      }
+
+      /* feature card */
+      .feature-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-bottom: 48px;
+      }
+      .feature-term {
+        background: var(--surface);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        padding: 32px 36px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .feature-term .pos {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .feature-term .term {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 54px;
+        letter-spacing: -0.03em;
+        line-height: 0.95;
+        color: var(--text);
+        margin: 0;
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .feature-term .pron {
+        font-family: var(--font-mono);
+        font-size: 18px;
+        color: var(--text-dim);
+        font-weight: 400;
+        letter-spacing: 0;
+      }
+      .feature-term .audio {
+        appearance: none;
+        border: 0;
+        background: var(--raised);
+        color: var(--text);
+        cursor: pointer;
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .feature-term .audio svg {
+        width: 14px;
+        height: 14px;
+        fill: var(--accent);
+        stroke: none;
+      }
+      .feature-term .def {
+        font-size: 16.5px;
+        line-height: 1.6;
+        color: var(--text);
+      }
+      .feature-term .def .em {
+        background: color-mix(in oklab, var(--accent) 18%, transparent);
+        padding: 0 3px;
+        border-radius: 3px;
+        box-shadow: 0 -1px 0 var(--accent) inset;
+      }
+      .feature-term .etym {
+        padding: 14px 16px;
+        border-left: 2px solid var(--accent);
+        background: color-mix(in oklab, var(--accent) 6%, transparent);
+        border-radius: 0 6px 6px 0;
+      }
+      .feature-term .etym .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 4px;
+      }
+      .feature-term .etym p {
+        margin: 0;
+        color: var(--text);
+        font-size: 14px;
+        line-height: 1.55;
+        font-family: var(--font-serif, 'Newsreader', serif);
+        font-style: italic;
+      }
+      .feature-term .meta {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-top: auto;
+        padding-top: 14px;
+        border-top: 1px solid var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+      }
+      .feature-term .meta b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .feature-term .meta .ai-link {
+        color: var(--accent);
+      }
+
+      /* auto-link demo */
+      .autolink {
+        background: #161619;
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .autolink .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--ai);
+      }
+      .autolink h3 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.018em;
+        line-height: 1.05;
+        margin: 0;
+        color: var(--text);
+      }
+      .autolink .demo {
+        background: var(--bg);
+        border: 1px solid var(--ink-700);
+        border-radius: 8px;
+        padding: 18px 20px;
+        font-family: var(--font-mono);
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--text);
+      }
+      .autolink .demo .h {
+        color: var(--accent);
+      }
+      .autolink .demo .auto {
+        color: var(--text);
+        background: color-mix(in oklab, var(--ai) 14%, transparent);
+        padding: 0 4px;
+        border-radius: 3px;
+        border-bottom: 1px dashed var(--ai);
+        cursor: pointer;
+      }
+      .autolink .footnote {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+        display: flex;
+        justify-content: space-between;
+      }
+      .autolink .footnote b {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      /* terms grid */
+      .group {
+        margin-bottom: 42px;
+      }
+      .group .letter {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--ink-700);
+      }
+      .group .letter h2 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 46px;
+        letter-spacing: -0.03em;
+        color: var(--accent);
+        margin: 0;
+        line-height: 1;
+        width: 64px;
+      }
+      .group .letter .meta {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .group .letter .meta b {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .terms {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .term {
+        background: var(--surface);
+        border: 1px solid var(--ink-700);
+        border-radius: 8px;
+        padding: 18px 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        cursor: pointer;
+        transition: border-color 0.12s ease;
+      }
+      .term:hover {
+        border-color: var(--accent);
+      }
+      .term .head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .term .name {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.018em;
+        color: var(--text);
+        line-height: 1.1;
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+      .term .name .pron {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-dim);
+        font-weight: 400;
+        letter-spacing: 0;
+      }
+      .term .pos {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .term .def {
+        color: var(--text-dim);
+        font-size: 13.5px;
+        line-height: 1.55;
+      }
+      .term .foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 4px;
+        padding-top: 8px;
+        border-top: 1px solid var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+      }
+      .term .foot a {
+        color: var(--accent);
+      }
+      .term .foot .backlinks {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .term .foot .backlinks::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--ai);
+      }
+
+      /* contribute card at end */
+      .contribute {
+        background: var(--accent);
+        color: #0c0c0e;
+        border-radius: 14px;
+        padding: 32px 36px;
+        margin: 48px 0 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 32px;
+      }
+      .contribute h3 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 32px;
+        letter-spacing: -0.025em;
+        line-height: 1;
+        margin: 0 0 8px;
+      }
+      .contribute p {
+        margin: 0;
+        font-size: 14.5px;
+        max-width: 48ch;
+        opacity: 0.85;
+      }
+      .contribute .actions {
+        display: flex;
+        gap: 10px;
+        flex-shrink: 0;
+      }
+      .contribute .actions button {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 42px;
+        padding: 0 18px;
+        border-radius: 9px;
+        background: #0c0c0e;
+        color: var(--accent);
+        font-family: var(--font-ui);
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .contribute .actions button.ghost {
+        background: transparent;
+        color: #0c0c0e;
+        box-shadow: inset 0 0 0 1px rgba(12, 12, 14, 0.3);
+      }
+
+      /* footer */
+      footer.coda {
+        border-top: 1px solid var(--ink-700);
+        padding: 24px 0 56px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      footer.coda b {
+        color: var(--text);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body data-screen-label="sveska.studio glossary">
+    <div class="wrap">
+      <nav class="top">
+        <div class="inner">
+          <a href="sveska.studio landing.html" class="brand">
+            <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
+              <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+              <path
+                d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                fill="#F2B544"
+              />
+              <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+              <path
+                d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                fill="none"
+                stroke="#0C0C0E"
+                stroke-width="5.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            sveska<span class="studio">.studio</span>
+          </a>
+          <div class="links">
+            <a href="sveska.studio landing.html#system">System</a>
+            <a href="sveska.studio landing.html#features">Notebook</a>
+            <a class="on">Glossary</a>
+            <a href="sveska.studio landing.html#pricing">Pricing</a>
+            <a href="sveska.studio landing.html#fieldnotes">Field notes</a>
+          </div>
+          <button class="cta">Open the notebook ↗</button>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <div>
+          <div
+            class="mono"
+            style="
+              font-size: 11px;
+              letter-spacing: 0.1em;
+              color: var(--text-dim);
+              text-transform: uppercase;
+              margin-bottom: 24px;
+            "
+          >
+            04 / Glossary &nbsp;·&nbsp; sveska.studio/glossary
+          </div>
+          <h1>The words<br /><span class="amb">we use.</span></h1>
+          <p class="lead">
+            Local-first computing, Bosnian etymology, design-system vocabulary, and a few things
+            only Sveska means. Every entry auto-links inside notes and exports — and lives at its
+            own URL for the web to find.
+          </p>
+        </div>
+        <div class="stamp">
+          <div class="row"><b>Terms</b><span class="accent">47</span></div>
+          <div class="row"><span>Bosnian</span><span>11</span></div>
+          <div class="row"><span>Computing</span><span>19</span></div>
+          <div class="row"><span>Sveska</span><span>17</span></div>
+          <div class="row"><span>Last edit</span><span>3d</span></div>
+        </div>
+      </header>
+
+      <!-- search -->
+      <div class="gl-search">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="7" />
+          <path d="M20 20l-3.5-3.5" />
+        </svg>
+        <input placeholder="Search the glossary — try ‘snap’, ‘sevdah’, or ‘local-first’" />
+        <span class="count">47 of 47</span>
+      </div>
+
+      <!-- A-Z nav -->
+      <div class="az">
+        <a class="has" href="#A">A <b>3</b></a>
+        <span class="empty">B</span>
+        <a class="has" href="#C">C <b>4</b></a>
+        <a class="has" href="#D">D <b>2</b></a>
+        <span class="empty">E</span>
+        <a class="has" href="#F">F <b>3</b></a>
+        <a class="has" href="#G">G <b>2</b></a>
+        <span class="empty">H</span>
+        <a class="has" href="#I">I <b>2</b></a>
+        <span class="empty">J</span>
+        <span class="empty">K</span>
+        <a class="has" href="#L">L <b>3</b></a>
+        <a class="has" href="#M">M <b>2</b></a>
+        <a class="has" href="#N">N <b>3</b></a>
+        <span class="empty">O</span>
+        <a class="has" href="#P">P <b>4</b></a>
+        <span class="empty">Q</span>
+        <a class="has" href="#R">R <b>2</b></a>
+        <a class="has" href="#S">S <b>9</b></a>
+        <a class="has" href="#T">T <b>2</b></a>
+        <span class="empty">U</span>
+        <a class="has" href="#V">V <b>2</b></a>
+        <span class="empty">W</span>
+        <span class="empty">X</span>
+        <span class="empty">Y</span>
+        <span class="empty">Z</span>
+      </div>
+
+      <!-- featured term + autolink demo -->
+      <div class="feature-row">
+        <article class="feature-term" id="sveska">
+          <div class="pos">N. · BOSNIAN · FEMININE</div>
+          <h2 class="term">
+            sveska
+            <span class="pron">/ˈsvɛska/</span>
+            <button class="audio" aria-label="Listen">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            </button>
+          </h2>
+          <div class="def">
+            A <span class="em">notebook</span>. An exercise book. The unmarked surface a writer
+            chooses before they write on it. The plural is <i>sveske</i>; the diminutive
+            <i>sveščica</i>. Etymological cousin of <i>vez</i> — to bind, to fold.
+          </div>
+          <div class="etym">
+            <div class="lbl">ETYMOLOGY</div>
+            <p>
+              "From Proto-Slavic *съвѧзка — that which is bound together. The same root yields
+              English <i>weave</i>, Latin <i>vincire</i>, and Sanskrit <i>vāyati</i> (to bind).
+              Every notebook is, etymologically, a bundle held shut against the wind."
+            </p>
+          </div>
+          <div class="meta">
+            <span
+              >See also: <a style="color: var(--accent)">notebook</a> ·
+              <a style="color: var(--accent)">fold</a> ·
+              <a style="color: var(--accent)">page</a></span
+            >
+            <span><b>14</b> backlinks · used in <b>3</b> field notes</span>
+            <span class="ai-link">↗ /api/glossary/sveska</span>
+          </div>
+        </article>
+
+        <aside class="autolink">
+          <div class="lbl">✦ AUTO-LINK · M6.1</div>
+          <h3>Every term, anywhere it appears.</h3>
+          <p class="dim" style="font-size: 13.5px; margin: 0">
+            In notes, exports, blog posts — terms are detected and underlined. Hover for the
+            definition; click to jump here. Disabled with one toggle.
+          </p>
+          <div class="demo">
+            <span class="h"># notes from selimović</span><br /><br />
+            "Death and the Dervish" — <span class="auto">Selimović</span> stages memory as
+            <span class="auto">procedure</span>. Move the chapter-3 notes here; cross-reference with
+            the studio post.<br /><br />
+            <span class="dim"
+              >The protagonist's relationship to time isn't sequential; it's recursive. Useful frame
+              for a notebook app — the </span
+            ><span class="auto">snapshot</span
+            ><span class="dim"> as a recursive anchor, not a linear save. </span
+            ><span class="auto">Sevdah</span><span class="dim"> is the durative form of this.</span>
+          </div>
+          <div class="footnote">
+            <span><b>3</b> terms auto-linked in this passage</span>
+            <span>⌥ + click to disable</span>
+          </div>
+        </aside>
+      </div>
+
+      <!-- ─────── A ─────── -->
+      <div class="group" id="A">
+        <div class="letter">
+          <h2>A</h2>
+          <div class="meta"><b>3</b> terms · accent · amber · android</div>
+        </div>
+        <div class="terms">
+          <article class="term">
+            <div class="head">
+              <span class="name">amber <span class="pron">— color</span></span>
+              <span class="pos">N. · DESIGN SYSTEM</span>
+            </div>
+            <div class="def">
+              The brand color. Three steps in the scale:
+              <span class="mono" style="color: var(--accent)">amber-500</span> (default action),
+              <span class="mono">amber-600</span> (hover),
+              <span class="mono">amber-700</span> (pressed and the AI signal in light mode).
+            </div>
+            <div class="foot">
+              <span>see: <a>fold</a> · <a>accent</a> · <a>signal</a></span
+              ><span class="backlinks">9 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">accent</span>
+              <span class="pos">N. · DESIGN SYSTEM</span>
+            </div>
+            <div class="def">
+              The single non-neutral color a system uses to mark action and brand. Sveska's accent
+              is amber; never tinted, never replaced. The "no rainbow" rule lives here.
+            </div>
+            <div class="foot">
+              <span>see: <a>amber</a> · <a>signal</a></span
+              ><span class="backlinks">5 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">Andrić, Ivo</span>
+              <span class="pos">N. · BOSNIAN · LITERATURE</span>
+            </div>
+            <div class="def">
+              Yugoslav novelist (1892–1975), Nobel laureate 1961.
+              <i>The Bridge on the Drina</i> stages four centuries of conflict at a single river
+              crossing. Frequently cited in Sveska's field notes as a model for how a single object
+              — a page, a bridge — can hold a system together.
+            </div>
+            <div class="foot">
+              <span>see: <a>Selimović</a> · <a>fold</a></span
+              ><span class="backlinks">3 backlinks</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ─────── C ─────── -->
+      <div class="group" id="C">
+        <div class="letter">
+          <h2>C</h2>
+          <div class="meta"><b>4</b> terms · canvas · caret · ⌘k · cyan</div>
+        </div>
+        <div class="terms">
+          <article class="term">
+            <div class="head">
+              <span class="name">canvas</span>
+              <span class="pos">N. · SVESKA · M5</span>
+            </div>
+            <div class="def">
+              The drawing surface bound to a note. Implemented behind a
+              <i>CanvasProvider</i> interface — Excalidraw is the default; tldraw is a parked
+              alternate. One canvas per noteId, lazy-loaded, exportable to .png / .svg / .json /
+              .pdf.
+            </div>
+            <div class="foot">
+              <span>see: <a>provider</a> · <a>excalidraw</a></span
+              ><span class="backlinks">11 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">caret</span>
+              <span class="pos">N. · TYPOGRAPHY · COMPUTING</span>
+            </div>
+            <div class="def">
+              The blinking vertical line that marks where text will be inserted. Sveska's caret is
+              2px amber, blinks on a 1.1s steps(1) loop, and remains solid under
+              <span class="mono">prefers-reduced-motion: reduce</span>.
+            </div>
+            <div class="foot">
+              <span>see: <a>blink</a> · <a>focus</a></span
+              ><span class="backlinks">4 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">⌘K · command palette</span>
+              <span class="pos">N. · UX</span>
+            </div>
+            <div class="def">
+              A keyboard-summoned search-and-action menu. Sveska's contains AI commands, notes, and
+              actions in one list — selected rows show an amber wash; AI rows wear a cyan icon tile.
+            </div>
+            <div class="foot">
+              <span>see: <a>slash</a> · <a>shortcut</a></span
+              ><span class="backlinks">8 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">cyan signal</span>
+              <span class="pos">N. · DESIGN SYSTEM</span>
+            </div>
+            <div class="def">
+              The color <span class="mono" style="color: var(--signal-400)">#4FD6C4</span>, reserved
+              for live states only — AI streaming, pending snapshots, incoming shares, live note
+              rings. In light mode the signal shifts to <span class="mono">amber-700</span> for
+              contrast.
+            </div>
+            <div class="foot">
+              <span>see: <a>signal</a> · <a>live</a></span
+              ><span class="backlinks">12 backlinks</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ─────── L ─────── -->
+      <div class="group" id="L">
+        <div class="letter">
+          <h2>L</h2>
+          <div class="meta"><b>3</b> terms · live · local-first · lockup</div>
+        </div>
+        <div class="terms">
+          <article class="term" id="local-first">
+            <div class="head">
+              <span class="name">local-first</span>
+              <span class="pos">N. · COMPUTING · ARCHITECTURE</span>
+            </div>
+            <div class="def">
+              A class of software where the source of truth is the user's device. Networks are
+              optional; sync is opt-in and end-to-end encrypted. The product still functions when
+              the cloud does not. Coined by Ink &amp; Switch (2019); now Sveska's first
+              non-negotiable.
+            </div>
+            <div class="foot">
+              <span>see: <a>CRDT</a> · <a>offline</a> · <a>IndexedDB</a></span
+              ><span class="backlinks">22 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">live</span>
+              <span class="pos">ADJ. · STATE</span>
+            </div>
+            <div class="def">
+              Currently doing something. In Sveska, "live" is always indicated in cyan (or amber-700
+              in light) — pulsing dot, ringed card, or status-bar slot.
+            </div>
+            <div class="foot">
+              <span>see: <a>signal</a> · <a>snapshot</a></span
+              ><span class="backlinks">14 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">lockup</span>
+              <span class="pos">N. · BRAND</span>
+            </div>
+            <div class="def">
+              The fixed arrangement of mark + wordmark. Sveska has two — horizontal for headers,
+              vertical for narrow surfaces. Both outlined; the wordmark is Bricolage Grotesque 700
+              and is never re-typeset.
+            </div>
+            <div class="foot">
+              <span>see: <a>mark</a> · <a>wordmark</a></span
+              ><span class="backlinks">3 backlinks</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ─────── P ─────── -->
+      <div class="group" id="P">
+        <div class="letter">
+          <h2>P</h2>
+          <div class="meta"><b>4</b> terms · paper · pinned · provider · pwa</div>
+        </div>
+        <div class="terms">
+          <article class="term">
+            <div class="head">
+              <span class="name">paper</span>
+              <span class="pos">N. · DESIGN SYSTEM</span>
+            </div>
+            <div class="def">
+              The light surface color <span class="mono">#F4EFE6</span> — body text on dark, ground
+              in light mode. Named for the metaphor: a notebook page that hasn't yet been written
+              on.
+            </div>
+            <div class="foot">
+              <span>see: <a>canvas</a> · <a>ink</a></span
+              ><span class="backlinks">7 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">pinned</span>
+              <span class="pos">ADJ. · NOTE</span>
+            </div>
+            <div class="def">
+              A note marked to always appear at the top of the recents rail. Pinned notes show a
+              small amber tag. Set with the pin icon in the toolbar or ⌘P.
+            </div>
+            <div class="foot">
+              <span>see: <a>favorites</a> · <a>tag</a></span
+              ><span class="backlinks">4 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">provider</span>
+              <span class="pos">N. · ARCHITECTURE</span>
+            </div>
+            <div class="def">
+              An interchangeable implementation behind an interface. Sveska has two:
+              <i>CanvasProvider</i> (Excalidraw / tldraw) and <i>AIProvider</i> (the /api/ai edge
+              function). App code never imports an impl directly.
+            </div>
+            <div class="foot">
+              <span>see: <a>canvas</a> · <a>seam</a></span
+              ><span class="backlinks">9 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">PWA</span>
+              <span class="pos">N. · COMPUTING · ABBR.</span>
+            </div>
+            <div class="def">
+              Progressive Web App. A website that installs to the home screen, works offline, and
+              behaves like a native app. Sveska is a PWA first — there is no native iOS or Android
+              binary.
+            </div>
+            <div class="foot">
+              <span>see: <a>local-first</a> · <a>manifest</a></span
+              ><span class="backlinks">11 backlinks</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ─────── S ─────── -->
+      <div class="group" id="S">
+        <div class="letter">
+          <h2>S</h2>
+          <div class="meta"><b>9</b> terms · the longest letter</div>
+        </div>
+        <div class="terms">
+          <article class="term" id="sevdah">
+            <div class="head">
+              <span class="name">sevdah <span class="pron">/ˈsɛʋdah/</span></span>
+              <span class="pos">N. · BOSNIAN · UNTRANSLATABLE</span>
+            </div>
+            <div class="def">
+              A specifically Bosnian variety of melancholia. The closest English approximation is
+              <i>ache</i>, but the connotation is durative — a settled, almost contented sadness
+              that one inhabits. Comparable to Portuguese <i>saudade</i> but more sociable; sevdah
+              is sung in groups, over rakija, well past midnight.
+            </div>
+            <div class="foot">
+              <span>see: <a>saudade</a> · <a>Selimović</a></span
+              ><span class="backlinks">6 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">snapshot</span>
+              <span class="pos">N. · SVESKA · M1.2</span>
+            </div>
+            <div class="def">
+              A named or automatic point-in-time copy of a note. Procedural memory — what the writer
+              chooses to keep — not redo history. The snapshot dot in the toolbar is the system's
+              heartbeat.
+            </div>
+            <div class="foot">
+              <span>see: <a>version</a> · <a>restore</a></span
+              ><span class="backlinks">18 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">Sarajevo Night</span>
+              <span class="pos">N. · BRAND · CONCEPT</span>
+            </div>
+            <div class="def">
+              The brand concept. Tradition (paper, ink, the folded page) meets innovation (the
+              caret, the canvas). Dark-mode first. The palette is named after the city the team
+              can't stop reading about.
+            </div>
+            <div class="foot">
+              <span>see: <a>Inked Paper</a> · <a>amber</a></span
+              ><span class="backlinks">5 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">Selimović, Meša</span>
+              <span class="pos">N. · BOSNIAN · LITERATURE</span>
+            </div>
+            <div class="def">
+              Yugoslav novelist (1910–1982). <i>Death and the Dervish</i> (1966) stages memory as
+              procedure — a structural model frequently cited in Sveska's design rationale. The
+              protagonist's relationship to time is recursive, not sequential.
+            </div>
+            <div class="foot">
+              <span>see: <a>sevdah</a> · <a>Andrić</a></span
+              ><span class="backlinks">7 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">seam</span>
+              <span class="pos">N. · ARCHITECTURE</span>
+            </div>
+            <div class="def">
+              The place an interface meets its impl. Sveska names two: the Canvas seam (where
+              Excalidraw lives) and the AI seam (where /api/ai lives). Seams are where the product
+              stays composable.
+            </div>
+            <div class="foot">
+              <span>see: <a>provider</a> · <a>swappable</a></span
+              ><span class="backlinks">8 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">slash command</span>
+              <span class="pos">N. · UX</span>
+            </div>
+            <div class="def">
+              A command invoked by typing
+              <span class="mono" style="color: var(--accent)">/</span> followed by a name. Sveska's
+              slash commands are AI-first:
+              <span class="mono" style="color: var(--ai)">/improve</span>,
+              <span class="mono" style="color: var(--ai)">/summarize</span>,
+              <span class="mono" style="color: var(--ai)">/continue</span>,
+              <span class="mono" style="color: var(--ai)">/rewrite</span>,
+              <span class="mono" style="color: var(--ai)">/sketch</span>. Inline picker pops at the
+              caret.
+            </div>
+            <div class="foot">
+              <span>see: <a>⌘k</a> · <a>AI</a></span
+              ><span class="backlinks">10 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">signal</span>
+              <span class="pos">N. · DESIGN SYSTEM</span>
+            </div>
+            <div class="def">
+              The cyan color <span class="mono" style="color: var(--signal-400)">#4FD6C4</span>,
+              used only for live functional states. Never decorative. In light mode signal shifts to
+              amber-700 for contrast.
+            </div>
+            <div class="foot">
+              <span>see: <a>cyan signal</a> · <a>live</a></span
+              ><span class="backlinks">15 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">.studio</span>
+              <span class="pos">N. · BRAND · TLD</span>
+            </div>
+            <div class="def">
+              The top-level domain Sveska lives on. The amber
+              <span class="mono" style="color: var(--accent)">.studio</span> in the wordmark is set
+              in JetBrains Mono — a deliberate seam between the Bosnian noun and the modern surface.
+            </div>
+            <div class="foot">
+              <span>see: <a>wordmark</a> · <a>lockup</a></span
+              ><span class="backlinks">2 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">swappable</span>
+              <span class="pos">ADJ. · ARCHITECTURE</span>
+            </div>
+            <div class="def">
+              Replaceable without changes to surrounding code. Required of every provider in Sveska.
+              See CLAUDE.md §3, principle 4: "Every project is a platform, every dependency is a
+              flag."
+            </div>
+            <div class="foot">
+              <span>see: <a>seam</a> · <a>provider</a></span
+              ><span class="backlinks">4 backlinks</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- ─────── F ─────── -->
+      <div class="group" id="F">
+        <div class="letter">
+          <h2>F</h2>
+          <div class="meta"><b>3</b> terms · focus mode · fold · favorites bar</div>
+        </div>
+        <div class="terms">
+          <article class="term">
+            <div class="head">
+              <span class="name">fold (verb)</span>
+              <span class="pos">VERB · SVESKA</span>
+            </div>
+            <div class="def">
+              To mark a page as done — to fold it shut and move on. The amber accent is the fold;
+              the pressed amber (-700) is the fold complete. The mark's geometry is a folded corner.
+            </div>
+            <div class="foot">
+              <span>see: <a>amber-700</a> · <a>snapshot</a></span
+              ><span class="backlinks">6 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">focus mode</span>
+              <span class="pos">N. · SVESKA · M1.5</span>
+            </div>
+            <div class="def">
+              Alt+F. Hides every chrome element — sidebar, tabs, toolbar — and widens the editor's
+              side margins. The status bar stays. Reduces to writing.
+            </div>
+            <div class="foot">
+              <span>see: <a>typewriter</a> · <a>chrome</a></span
+              ><span class="backlinks">5 backlinks</span>
+            </div>
+          </article>
+          <article class="term">
+            <div class="head">
+              <span class="name">favorites bar</span>
+              <span class="pos">N. · SVESKA · M2.4</span>
+            </div>
+            <div class="def">
+              A horizontal row of four-letter tiles in the sidebar — your most-used notes, always
+              one click away. Editable; the primary tile is amber.
+            </div>
+            <div class="foot">
+              <span>see: <a>pinned</a> · <a>sidebar</a></span
+              ><span class="backlinks">2 backlinks</span>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- contribute -->
+      <div class="contribute">
+        <div>
+          <h3>Found something we missed?</h3>
+          <p>
+            The glossary is hand-written; suggestions are read by humans, not LLMs. Send the term
+            and a one-sentence definition. We'll attribute if you want.
+          </p>
+        </div>
+        <div class="actions">
+          <button>Suggest a term ↗</button>
+          <button class="ghost">Read the contribution guide</button>
+        </div>
+      </div>
+
+      <footer class="coda">
+        <span><b>Sveska</b> · Glossary · 47 terms · v1.0</span>
+        <span>auto-linked across notes &amp; exports · M6.1</span>
+        <span>2026.05.16 · sveska.studio/glossary</span>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>The folded page · Sveska · field notes</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Why local-first software gives the user the same dignity as paper."
+    />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Newsreader', Georgia, serif;
+        font-size: 18px;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      .display {
+        font-family: var(--font-display);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+      .dim {
+        color: var(--text-dim);
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        border-bottom: 1px solid color-mix(in oklab, var(--accent) 40%, transparent);
+      }
+      a:hover {
+        border-bottom-color: var(--accent);
+      }
+
+      .wrap {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 0 32px;
+      }
+      .wrap-wide {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      nav.top {
+        border-bottom: 1px solid var(--ink-700);
+        padding: 18px 0;
+        font-family: var(--font-ui);
+      }
+      nav.top .inner {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+      nav.top .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+        color: var(--text);
+      }
+      nav.top .brand .studio {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-weight: 500;
+        font-size: 14px;
+      }
+      nav.top .links {
+        display: inline-flex;
+        gap: 22px;
+        flex: 1;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        color: var(--text-dim);
+      }
+      nav.top .links .on {
+        color: var(--accent);
+      }
+
+      /* hero */
+      .post-head {
+        padding: 80px 0 48px;
+      }
+      .post-head .crumbs {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 24px;
+      }
+      .post-head .crumbs b {
+        color: var(--accent);
+      }
+      .post-head h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 80px;
+        letter-spacing: -0.04em;
+        line-height: 0.95;
+        margin: 0 0 22px;
+        color: var(--text);
+      }
+      .post-head h1 .amb {
+        color: var(--accent);
+      }
+      .post-head .dek {
+        font-family: 'Newsreader', serif;
+        font-size: 22px;
+        font-weight: 400;
+        font-style: italic;
+        color: var(--text-dim);
+        margin: 0 0 28px;
+        max-width: 48ch;
+        line-height: 1.45;
+      }
+      .post-head .meta {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        color: var(--text-dim);
+        padding-top: 22px;
+        border-top: 1px solid var(--ink-700);
+      }
+      .post-head .meta b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .post-head .meta .live {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--accent);
+      }
+      .post-head .meta .live::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--accent);
+      }
+
+      /* body */
+      article {
+        padding: 24px 0 56px;
+        font-family: 'Newsreader', serif;
+      }
+      article p {
+        margin: 0 0 22px;
+      }
+      article p.lede {
+        font-size: 22px;
+        line-height: 1.55;
+        color: var(--text);
+        margin-bottom: 32px;
+      }
+      article p.lede::first-letter {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 72px;
+        line-height: 0.85;
+        float: left;
+        padding: 6px 12px 0 0;
+        color: var(--accent);
+      }
+      article h2 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: -0.025em;
+        line-height: 1.1;
+        margin: 48px 0 18px;
+        color: var(--text);
+      }
+      article h3 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.018em;
+        line-height: 1.2;
+        margin: 32px 0 12px;
+        color: var(--text);
+      }
+      article blockquote {
+        margin: 32px 0;
+        padding: 18px 28px;
+        border-left: 3px solid var(--accent);
+        background: color-mix(in oklab, var(--accent) 6%, transparent);
+        border-radius: 0 8px 8px 0;
+        font-family: 'Newsreader', serif;
+        font-style: italic;
+        font-size: 20px;
+        line-height: 1.5;
+        color: var(--text);
+      }
+      article blockquote .src {
+        display: block;
+        margin-top: 10px;
+        font-family: var(--font-mono);
+        font-style: normal;
+        font-size: 11.5px;
+        letter-spacing: 0.06em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      article code {
+        font-family: var(--font-mono);
+        background: var(--surface);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 15px;
+        color: var(--text);
+      }
+      article .term {
+        background: color-mix(in oklab, var(--accent) 14%, transparent);
+        padding: 0 3px;
+        border-radius: 3px;
+        box-shadow: 0 -1px 0 var(--accent) inset;
+        cursor: help;
+      }
+      article .term sup {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--accent);
+        margin-left: 1px;
+        font-weight: 500;
+      }
+      article ul,
+      article ol {
+        margin: 0 0 22px;
+        padding-left: 24px;
+      }
+      article li {
+        margin-bottom: 8px;
+      }
+
+      .pullquote {
+        margin: 48px -40px;
+        padding: 36px 40px;
+        border-top: 1px solid var(--ink-700);
+        border-bottom: 1px solid var(--ink-700);
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 38px;
+        letter-spacing: -0.028em;
+        line-height: 1.1;
+        color: var(--text);
+        text-align: center;
+      }
+      .pullquote .amb {
+        color: var(--accent);
+      }
+
+      /* canvas embed */
+      .canvas-embed {
+        margin: 36px -40px;
+        padding: 18px 40px;
+        background: var(--ink-800);
+        border-top: 1px solid var(--ink-700);
+        border-bottom: 1px solid var(--ink-700);
+        display: flex;
+        gap: 28px;
+        align-items: center;
+      }
+      .canvas-embed .label {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        flex: 0 0 160px;
+      }
+      .canvas-embed .label b {
+        color: var(--text);
+        font-weight: 500;
+        display: block;
+        margin-top: 4px;
+        font-size: 13px;
+        letter-spacing: 0.02em;
+        text-transform: none;
+        font-family: var(--font-ui);
+      }
+      .canvas-embed .sketch {
+        flex: 1;
+        background: var(--bg);
+        border-radius: 8px;
+        padding: 18px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--text-dim);
+        line-height: 1.6;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px dashed var(--ink-700);
+      }
+      .canvas-embed .sketch svg {
+        width: 100%;
+        max-width: 380px;
+        height: auto;
+      }
+
+      /* end matter */
+      .end-matter {
+        margin-top: 64px;
+        padding-top: 28px;
+        border-top: 1px solid var(--ink-700);
+        font-family: var(--font-ui);
+        font-size: 14.5px;
+      }
+      .end-matter h4 {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0 0 14px;
+      }
+      .end-matter .footnotes ol {
+        margin: 0;
+        padding-left: 18px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--text-dim);
+        line-height: 1.65;
+      }
+      .end-matter .footnotes ol li {
+        margin-bottom: 8px;
+      }
+      .end-matter .footnotes ol b {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .author {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 32px;
+      }
+      .author .av {
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: #0c0c0e;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .author .info {
+        flex: 1;
+      }
+      .author .info .name {
+        font-family: var(--font-ui);
+        font-weight: 700;
+        color: var(--text);
+      }
+      .author .info .role {
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        color: var(--text-dim);
+        letter-spacing: 0.02em;
+      }
+
+      /* newsletter cta inline */
+      .nl {
+        margin-top: 48px;
+        padding: 28px 32px;
+        border-radius: 14px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        display: flex;
+        gap: 24px;
+        align-items: center;
+      }
+      .nl .info {
+        flex: 1;
+      }
+      .nl h4 {
+        margin: 0 0 6px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.018em;
+        color: var(--text);
+        line-height: 1.15;
+      }
+      .nl p {
+        margin: 0;
+        color: var(--text-dim);
+        font-size: 13.5px;
+        font-family: var(--font-ui);
+        line-height: 1.55;
+      }
+      .nl form {
+        display: flex;
+        gap: 0;
+        min-width: 340px;
+        background: var(--bg);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        padding: 6px;
+      }
+      .nl input {
+        flex: 1;
+        appearance: none;
+        border: 0;
+        background: transparent;
+        outline: 0;
+        font-family: var(--font-ui);
+        font-size: 13.5px;
+        color: var(--text);
+        padding: 0 12px;
+        min-width: 0;
+      }
+      .nl button {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 38px;
+        padding: 0 16px;
+        border-radius: 6px;
+        background: var(--accent);
+        color: #0c0c0e;
+        font-family: var(--font-ui);
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      /* related */
+      .related {
+        margin-top: 48px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .related .item {
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 8px;
+        padding: 18px 20px;
+        cursor: pointer;
+      }
+      .related .item .num {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .related .item .num b {
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .related .item h5 {
+        margin: 6px 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 17px;
+        letter-spacing: -0.015em;
+        line-height: 1.2;
+        color: var(--text);
+      }
+      .related .item p {
+        margin: 0;
+        color: var(--text-dim);
+        font-size: 12.5px;
+        font-family: var(--font-ui);
+        line-height: 1.5;
+      }
+
+      footer.coda {
+        border-top: 1px solid var(--ink-700);
+        padding: 24px 0 56px;
+        margin-top: 48px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      footer.coda b {
+        color: var(--text);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body data-screen-label="The folded page — field note">
+    <div class="wrap-wide">
+      <nav class="top">
+        <div class="inner">
+          <a class="brand" style="border: 0" href="sveska.studio landing.html">
+            <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
+              <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+              <path
+                d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                fill="#F2B544"
+              />
+              <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+              <path
+                d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                fill="none"
+                stroke="#0C0C0E"
+                stroke-width="5.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            sveska<span class="studio">.studio</span>
+          </a>
+          <div class="links" style="font-family: var(--font-mono)">
+            <span>System</span><span>Notebook</span><span>Glossary</span
+            ><span style="color: var(--accent)">Field notes</span>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="wrap">
+      <header class="post-head">
+        <div class="crumbs"><b>FIELD NOTE · 003</b> · sveska.studio/fieldnotes/the-folded-page</div>
+        <h1>The folded page<br /><span class="amb">does not need permission.</span></h1>
+        <p class="dek">
+          Why local-first software gives the user the same dignity as paper — and why "the cloud" is
+          a bad answer when your reading habit is the subject.
+        </p>
+        <div class="meta">
+          <span class="live">2026.05.16 · MIZ ANANDI</span>
+          <span><b>10</b> min read · 2,140 words</span>
+          <span><b>5</b> footnotes · <b>3</b> glossary references</span>
+          <span>tags · <b>local-first</b> · doctrine · paper</span>
+        </div>
+      </header>
+
+      <article>
+        <p class="lede">
+          The folded page does not need permission to be written on. You open the notebook, your
+          hand finds the pen, the ink lands on paper — and the entire question of
+          <i>whose</i> notebook, <i>whose</i> server, <i>whose</i> uptime, simply does not arise.
+          The page is yours because it is in front of you. Local-first software is the work of
+          restoring that elementary dignity to digital writing.
+        </p>
+
+        <p>
+          For about fifteen years we let ourselves be talked into something strange: that our notes
+          — drafts of letters, half-formed thoughts, reading marginalia — should live on someone
+          else's computer, gated by an account, dependent on a network. The argument was always
+          convenience. The reality, as <a>everyone who has watched a service shut down</a> can
+          attest, was that we rented something we used to own.
+        </p>
+
+        <h2>What gets given up</h2>
+
+        <p>
+          When a notebook moves to the cloud, three quiet things are surrendered. The first is
+          <span class="term">durability<sup>1</sup></span> — your access to the words is gated by
+          someone else's continued willingness to keep their server running. The second is
+          <span class="term">privacy<sup>2</sup></span> — your half-thoughts traverse the open
+          internet, are stored on disks you do not control, and are read by systems you cannot
+          audit. The third, less obvious, is
+          <span class="term">latency of the soul<sup>3</sup></span> — the small but real psychic
+          delay between "I want to write" and "the input is ready."
+        </p>
+
+        <blockquote>
+          "Software should outlive the company that made it."
+          <span class="src">— from a captured tweet · field-note inbox · author unknown</span>
+        </blockquote>
+
+        <p>
+          The paper notebook concedes none of these. Its durability is on the order of decades; its
+          privacy is whatever the lock on your drawer affords; its latency is the time it takes to
+          open the cover. <span class="term">Sveska<sup>4</sup></span> — the Bosnian word for
+          notebook — is built on the wager that we can restore all three to the browser.
+        </p>
+
+        <h2>What "local-first" actually means</h2>
+
+        <p>
+          The phrase comes from a 2019 essay by Ink &amp; Switch. The core claim is small:
+          <strong>the source of truth lives on your device.</strong> Networks are optional. Sync,
+          when it exists, is opt-in and end-to-end encrypted. The product still functions when the
+          cloud does not.
+        </p>
+
+        <p>In Sveska this looks like:</p>
+
+        <ul>
+          <li>
+            Your notes live in <code>IndexedDB</code>, in this browser, tied to this domain. No
+            account required.
+          </li>
+          <li>
+            The AI proxy — the only network call the app makes — is optional. Disable it and the app
+            loses one capability; it does not lose your notes.
+          </li>
+          <li>
+            Every snapshot, every tag, every preference is stored locally. Sveska can be opened
+            tomorrow with the network unplugged and behave identically.
+          </li>
+        </ul>
+
+        <div class="pullquote">
+          Local-first does not mean<br /><span class="amb">offline-tolerant.</span> It means<br />the
+          network is the optional thing.
+        </div>
+
+        <h2>The folded page metaphor</h2>
+
+        <p>
+          The mark on the corner of Sveska's icon — the amber triangle, the dog-ear — is not
+          decoration. It is the operative gesture of the system. To fold a page is to commit a
+          thought; to unfold it is to return. The application's verbs are folding (saving a
+          snapshot, marking a checklist item) and unfolding (restoring, browsing history, opening a
+          snapshot from a month ago).
+        </p>
+
+        <p>
+          This is why <span class="term">snapshots<sup>5</sup></span> are named, not numbered. The
+          redo stack is loss-less; what the writer chooses to keep is not. A snapshot is not a save
+          — it is a fold. You make one when you have decided that something is worth returning to.
+        </p>
+
+        <div class="canvas-embed">
+          <div class="label">EMBEDDED SKETCH<b>The fold, visualized</b></div>
+          <div class="sketch">
+            <svg viewBox="0 0 280 160" aria-hidden="true">
+              <defs>
+                <pattern id="g" width="14" height="14" patternUnits="userSpaceOnUse">
+                  <path d="M14 0H0V14" fill="none" stroke="#222228" stroke-width=".5" />
+                </pattern>
+              </defs>
+              <rect width="280" height="160" fill="url(#g)" />
+              <path
+                d="M40 30 H180 L220 70 V130 A8 8 0 0 1 212 138 H40 A8 8 0 0 1 32 130 V38 A8 8 0 0 1 40 30 Z"
+                fill="#F2B544"
+              />
+              <path d="M180 30 L220 70 H188 A8 8 0 0 1 180 62 Z" fill="#C9871F" />
+              <text x="50" y="60" font-family="JetBrains Mono" font-size="9" fill="#0C0C0E">
+                page
+              </text>
+              <text x="186" y="58" font-family="JetBrains Mono" font-size="8" fill="#0C0C0E">
+                fold
+              </text>
+              <text x="40" y="105" font-family="JetBrains Mono" font-size="10" fill="#0C0C0E">
+                snapshot
+              </text>
+              <text
+                x="40"
+                y="120"
+                font-family="JetBrains Mono"
+                font-size="9"
+                fill="rgba(12,12,14,.6)"
+              >
+                named · returnable
+              </text>
+            </svg>
+          </div>
+        </div>
+
+        <h2>What we trade away</h2>
+
+        <p>
+          Honesty requires admitting what local-first gives up. There are real things the cloud is
+          good at — sharing, collaborative editing, mobile-desktop sync without thinking — that
+          local-first either refuses outright or solves with more friction.
+        </p>
+
+        <p>
+          Sveska's answer is to be selective. We keep sharing (through URL-encoded payloads in the
+          location hash, plaintext, opt-in, with a warning). We do AI (through a thin edge proxy
+          whose only job is to be the place the key lives — never in your browser). We may
+          eventually do sync (post-M6, only if E2E-encrypted, never speculatively). What we do not
+          do is force any of these to be the price of opening the app.
+        </p>
+
+        <h2>One amber, no rainbow</h2>
+
+        <p>
+          A small note on aesthetics. Sveska's design system is built on a single accent color —
+          amber, in three steps — and one signal color — cyan, only for live functional states. This
+          is not minimalism. It is the same principle as the local-first one:
+          <strong>what is not added is the biggest feature.</strong> A notebook with one accent is a
+          notebook you can read for hours without the page yelling at you. The same restraint we ask
+          of the network, we ask of the screen.
+        </p>
+
+        <p>
+          An empty notebook, in Bosnian, is <i>prazna sveska</i>. The phrase doubles as the
+          empty-state copy and as a small private benediction we send to ourselves each time we open
+          the app:
+        </p>
+
+        <div class="pullquote">Prazna sveska.<br /><span class="amb">Najbolji početak.</span></div>
+
+        <p>An empty notebook. The best beginning.</p>
+
+        <div class="end-matter">
+          <h4>FOOTNOTES &amp; CITATIONS</h4>
+          <div class="footnotes">
+            <ol>
+              <li>
+                <b>1. Durability</b> — see <i>Local-First Software</i>, Kleppmann et al. (Ink &amp;
+                Switch, 2019).
+              </li>
+              <li>
+                <b>2. Privacy</b> — for the threat model Sveska adopts, see
+                <a>sveska.studio/privacy</a>.
+              </li>
+              <li>
+                <b>3. Latency of the soul</b> — borrowed, with some violence, from Henri Bergson;
+                cf. <i>Time and Free Will</i>, 1889.
+              </li>
+              <li>
+                <b>4. Sveska</b> /ˈsvɛska/ — Bosnian, feminine. A notebook. See
+                <a>sveska.studio/glossary/sveska</a>.
+              </li>
+              <li>
+                <b>5. Snapshots</b> — Sveska's term for procedural memory. See
+                <a>sveska.studio/glossary/snapshot</a>.
+              </li>
+            </ol>
+          </div>
+
+          <div class="author">
+            <span class="av">M</span>
+            <div class="info">
+              <div class="name">Miz Anandi</div>
+              <div class="role">founder · sveska studio · sarajevo + brooklyn</div>
+            </div>
+          </div>
+
+          <div class="nl">
+            <div class="info">
+              <h4>One letter a month.<br />Restraint, in your inbox.</h4>
+              <p>A few hundred words. No tracking. No "you might also like."</p>
+            </div>
+            <form onsubmit="event.preventDefault()">
+              <input type="email" placeholder="you@somewhere.studio" />
+              <button type="submit">Subscribe ↵</button>
+            </form>
+          </div>
+
+          <div class="related">
+            <div class="item">
+              <div class="num"><b>FIELD NOTE 002</b> · 2026.05.02</div>
+              <h5>One amber, no rainbow.</h5>
+              <p>Building Sveska's color system from a single accent. How restraint compounds.</p>
+            </div>
+            <div class="item">
+              <div class="num"><b>FIELD NOTE 001</b> · 2026.04.21</div>
+              <h5>Why we picked Bosnian.</h5>
+              <p>
+                The brand is in Bosnian. The product is in English. The reason is not exoticism.
+              </p>
+            </div>
+            <div class="item">
+              <div class="num"><b>GLOSSARY</b> · all 47</div>
+              <h5>The words we use.</h5>
+              <p>Sveska's hand-written glossary. Auto-linked inside notes and exports.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <footer class="coda">
+        <span
+          ><b>Sveska</b> · field note 003 ·
+          <span style="color: var(--accent)">the folded page</span></span
+        >
+        <span>10 min · 5 footnotes · 3 glossary refs</span>
+        <span>sveska.studio · 2026.05.16</span>
+      </footer>
+    </div>
+  </body>
+</html>

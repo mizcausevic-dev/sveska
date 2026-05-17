@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en" data-mode="print">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sveska — Print / PDF Export · preview</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="handoff/print.css" />
+
+    <style>
+      /* This page is the on-screen *preview* of what the .pdf export looks like.
+     The actual print.css applies @media print as well — Cmd+P from any
+     Sveska note produces the same layout you see below. */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        color-scheme: light;
+      }
+      body {
+        margin: 0;
+        font-family: 'Satoshi', system-ui, sans-serif;
+        background: #e9e2d2;
+      }
+
+      .sv-preview-bar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #0c0c0e;
+        color: #f4efe6;
+        border-bottom: 1px solid #222228;
+        padding: 12px 28px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+      }
+      .sv-preview-bar .live {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #f2b544;
+        box-shadow: 0 0 0 3px color-mix(in oklab, #f2b544 22%, transparent);
+      }
+      .sv-preview-bar b {
+        color: #f2b544;
+        font-weight: 500;
+      }
+      .sv-preview-bar .meta {
+        color: #b8b2a6;
+        text-transform: uppercase;
+      }
+      .sv-preview-bar .meta span {
+        color: #f4efe6;
+      }
+      .sv-preview-bar .actions {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+      }
+      .sv-preview-bar .actions button {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 30px;
+        padding: 0 12px;
+        border-radius: 7px;
+        background: #222228;
+        color: #f4efe6;
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 11px;
+        letter-spacing: 0.04em;
+      }
+      .sv-preview-bar .actions button.primary {
+        background: #f2b544;
+        color: #0c0c0e;
+        font-weight: 600;
+      }
+
+      .sv-deck {
+        padding: 28px 0 80px;
+      }
+
+      /* page label between pages */
+      .sv-page-no {
+        text-align: center;
+        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        color: rgba(20, 17, 10, 0.45);
+        text-transform: uppercase;
+        margin: -8mm 0 4mm;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska Print Export">
+    <!-- preview chrome (suppressed on real print) -->
+    <div class="sv-preview-bar sv-screen-only">
+      <span class="live"></span>
+      <b>Sveska</b>
+      <span class="meta">PRINT PREVIEW · <span>weekend.md</span></span>
+      <span class="meta">· A4 · 3 pages · <span>1 footnote / 5 terms</span></span>
+      <span class="meta">· <span>print.css v1.0</span></span>
+      <div class="actions">
+        <button>Re-render</button>
+        <button class="primary" onclick="window.print()">Print &middot; ⌘P</button>
+      </div>
+    </div>
+
+    <div class="sv-deck">
+      <!-- ═══════════════════════════ PAGE 1 ═══════════════════════════ -->
+      <div class="sv-page">
+        <div class="sv-running top">
+          <span><span class="dot"></span>sveska<b>.studio</b></span>
+          <span>weekend &middot; <b>2026.05.16</b></span>
+          <span>page <b>1</b> of 3</span>
+        </div>
+
+        <div class="sv-title-block">
+          <div class="eyebrow">A study-grade local-first notebook &middot; export</div>
+          <h1>The folded page<br />does not need permission.</h1>
+          <div class="meta">
+            <span><b>312</b> words</span>
+            <span>·</span>
+            <span><b>14</b> min read</span>
+            <span>·</span>
+            <span>snapshot <b>14:02</b></span>
+            <span>·</span>
+            <span><b>7</b> revisions</span>
+            <span>·</span>
+            <span>auto-linked <b>5</b> terms</span>
+          </div>
+        </div>
+
+        <div class="sv-body">
+          <p class="sv-lede">
+            The folded page does not need permission to be written on. Local-first means the app
+            keeps working when the network does not.
+            <span class="sv-term">Sveska<sup>1</sup></span> &mdash; the Bosnian word for notebook
+            &mdash; is built on this premise: your notes outlive the network, and the cloud is an
+            option, not a tax.
+          </p>
+
+          <p>
+            We are tired of "products" that demand an account before they will let you type. The
+            redo stack is loss-less; <span class="sv-term">procedural memory<sup>2</sup></span> is
+            what the writer chooses to keep. The app makes the second one easy, and the first one
+            invisible.
+          </p>
+
+          <h2>What lives where</h2>
+
+          <p>
+            The note body, the snapshots, the canvas, the tabs &mdash; everything lives in
+            <span class="sv-term">IndexedDB<sup>3</sup></span
+            >, in your browser, under your domain. No keys ship in the bundle. AI calls route
+            through an edge function whose only job is to be the place the key isn't.
+          </p>
+
+          <pre>
+// CLAUDE.md §5 — the security gate
+$ grep -r -E "(sk-[a-z0-9-_]{20,}|VITE_.*_API_KEY)" dist/
+  → no matches, build OK</pre
+          >
+
+          <p>
+            That grep runs on every commit. A leak fails the build. The browser is not a vault; it
+            never has to be.
+          </p>
+
+          <h2>The list, for this weekend</h2>
+
+          <ul class="sv-check">
+            <li class="done">Draft the studio post</li>
+            <li>
+              Ship Sveska v0.1 &mdash; M0 + M1
+              <ul class="sv-check">
+                <li class="done">Wire Vite + Dexie + Workbox</li>
+                <li>Textarea + 400ms autosave</li>
+                <li>Snapshot dot + restore</li>
+              </ul>
+            </li>
+            <li>
+              Read <span class="sv-term">Selimović<sup>4</sup></span
+              >, chapter 3
+            </li>
+            <li class="done">Pour the rakija</li>
+          </ul>
+        </div>
+
+        <div class="sv-footnotes">
+          <div class="label">Footnotes &middot; auto-linked terms</div>
+          <ol>
+            <li>
+              <b>1. Sveska</b> /ˈsvɛska/ &mdash; Bosnian, feminine. A notebook; the unmarked surface
+              a writer chooses before they write on it. See sveska.studio/glossary/sveska.
+            </li>
+            <li>
+              <b>2. Procedural memory</b> &mdash; in Sveska, a named or automatic point-in-time copy
+              of a note. The system's "snapshot". Not redo history.
+            </li>
+          </ol>
+        </div>
+
+        <div class="sv-running bottom">
+          <span>sveska<b>.studio</b> &middot; weekend.md</span>
+          <span><b>Prazna sveska. Najbolji početak.</b></span>
+          <span>1 / 3</span>
+        </div>
+      </div>
+
+      <div class="sv-page-no sv-screen-only">— page 2 —</div>
+
+      <!-- ═══════════════════════════ PAGE 2 ═══════════════════════════ -->
+      <div class="sv-page">
+        <div class="sv-running top">
+          <span><span class="dot"></span>sveska<b>.studio</b></span>
+          <span>weekend &middot; <b>2026.05.16</b></span>
+          <span>page <b>2</b> of 3</span>
+        </div>
+
+        <div class="sv-body">
+          <h1>Reading notes</h1>
+
+          <p>
+            <span class="sv-term">Selimović<sup>4</sup></span
+            >'s <i>Death and the Dervish</i> stages memory as procedure. The protagonist's
+            relationship to time isn't sequential; it's recursive. Every chapter folds back into the
+            same handful of fixed points. Useful frame for a notebook app &mdash; the snapshot as a
+            recursive anchor, not a linear save.
+          </p>
+
+          <blockquote>
+            "There is no greater silence than the silence after a great noise. I sit in mine, and
+            the city goes on without me."<br />
+            &mdash; Meša Selimović, ch. 14
+          </blockquote>
+
+          <p>
+            Andrić's bridges work the same way. Every conflict in <i>The Bridge on the Drina</i> is
+            staged as a passage &mdash; an object that holds two banks in tension without resolving
+            them. The page does this too.
+          </p>
+
+          <h2>What we're calling things</h2>
+
+          <p>
+            Sveska's vocabulary is small and intentional.
+            <span class="sv-term">Sevdah<sup>5</sup></span> is borrowed from sevdalinka &mdash; the
+            slow songs of Sarajevo, a durative kind of grief. The product borrows it back: a
+            settled, contented relationship to making things slowly.
+          </p>
+
+          <p>
+            Three terms, one principle: <b>seam</b> (where an interface meets its impl),
+            <b>signal</b> (the cyan that marks anything alive), <b>fold</b> (to mark a page as done,
+            and move on).
+          </p>
+
+          <h3>System ledger</h3>
+
+          <ol>
+            <li><b>Local-first.</b> Source of truth is your device. Always.</li>
+            <li><b>No keys in the browser.</b> CI fails the build if a key is found.</li>
+            <li><b>Every project is a platform.</b> Glossary, blog, and SEO ship from day zero.</li>
+            <li><b>Swappable canvas.</b> Excalidraw v1; tldraw behind a flag.</li>
+            <li><b>Performance budget.</b> TTI &lt; 1.5s, bundle &lt; 180 KB gz.</li>
+          </ol>
+        </div>
+
+        <div class="sv-footnotes">
+          <div class="label">Footnotes &middot; continued</div>
+          <ol start="3">
+            <li>
+              <b>3. IndexedDB</b> &mdash; browser-native database, ~50 MB safely available. Sveska
+              uses Dexie.js as a typed layer over it.
+            </li>
+            <li>
+              <b>4. Selimović, Meša</b> (1910–1982) &mdash; Yugoslav novelist.
+              <i>Death and the Dervish</i>, 1966. The structural model for Sveska's snapshot design.
+            </li>
+            <li>
+              <b>5. Sevdah</b> /ˈsɛʋdah/ &mdash; Bosnian; untranslatable. The durative form of
+              melancholia. Closest English: "ache".
+            </li>
+          </ol>
+        </div>
+
+        <div class="sv-running bottom">
+          <span>sveska<b>.studio</b> &middot; weekend.md</span>
+          <span><b>Prazna sveska. Najbolji početak.</b></span>
+          <span>2 / 3</span>
+        </div>
+      </div>
+
+      <div class="sv-page-no sv-screen-only">— page 3 · appendix —</div>
+
+      <!-- ═══════════════════════════ PAGE 3 — APPENDIX ═══════════════════════════ -->
+      <div class="sv-page">
+        <div class="sv-running top">
+          <span><span class="dot"></span>sveska<b>.studio</b></span>
+          <span>weekend &middot; <b>2026.05.16</b></span>
+          <span>page <b>3</b> of 3 &middot; appendix</span>
+        </div>
+
+        <div class="sv-body">
+          <h1>Appendix &middot; revisions</h1>
+
+          <p style="color: var(--dim-print)">
+            Every snapshot of this note, with timestamp, type, and delta. Named snapshots are amber;
+            auto-snapshots are grey. Restore any with <code>⌘H</code> in Sveska, or open the .json
+            bundle below.
+          </p>
+
+          <div class="sv-appendix">
+            <div class="row">
+              <span class="when named">14:02</span>
+              <span class="label"><b>ship list final</b> &middot; named</span>
+              <span class="delta">+18 / −2</span>
+            </div>
+            <div class="row">
+              <span class="when">13:48</span>
+              <span class="label">auto-snapshot &middot; 5 min interval</span>
+              <span class="delta">+24 / −7</span>
+            </div>
+            <div class="row">
+              <span class="when named">13:32</span>
+              <span class="label"><b>before AI rewrite</b> &middot; named</span>
+              <span class="delta">+62 / −0</span>
+            </div>
+            <div class="row">
+              <span class="when">13:14</span>
+              <span class="label">auto-snapshot</span>
+              <span class="delta">+12 / −3</span>
+            </div>
+            <div class="row">
+              <span class="when named">13:09</span>
+              <span class="label"><b>first draft</b> &middot; named</span>
+              <span class="delta">+204 / −0</span>
+            </div>
+            <div class="row">
+              <span class="when">12:55</span>
+              <span class="label">opened note &middot; first version</span>
+              <span class="delta">+1 / −0</span>
+            </div>
+          </div>
+
+          <h2>Provenance</h2>
+
+          <pre>
+note.id        : 0193-c4a7-49b1-a8d7-weekend-md
+created        : 2026-05-15T12:55:00Z (saturday)
+last edited    : 2026-05-16T14:02:00Z
+storage        : indexeddb · dexie 4.x · local only
+exported       : 2026-05-16T14:08:00Z · pdf · via print.css v1.0
+auto-linked    : 5 terms from /glossary
+ai commands    : /improve x 1 · /summarize x 0 · /sketch x 0
+canvas         : none (text mode)
+bytes exported : 8,420 (excl. fonts)</pre
+          >
+
+          <h2>Reproduce</h2>
+
+          <p style="color: var(--dim-print); font-size: 9.5pt">
+            This PDF is rendered by <code>handoff/print.css</code> applied to the same DOM Sveska
+            renders on screen. Open <code>sveska.studio/notes/weekend-md</code> in any browser,
+            press <code>⌘P</code>, and you get this file. No extra dependencies, no PDF library
+            &mdash; the browser is the engine.
+          </p>
+        </div>
+
+        <div class="sv-footnotes">
+          <div class="label">Glossary references in this document</div>
+          <ol>
+            <li>
+              <b>Sveska, procedural memory, IndexedDB, Selimović, sevdah</b> &mdash; full entries at
+              sveska.studio/glossary &middot; auto-linked under <code>M6.1</code>
+            </li>
+          </ol>
+        </div>
+
+        <div class="sv-running bottom">
+          <span>sveska<b>.studio</b> &middot; weekend.md &middot; appendix</span>
+          <span><b>Prazna sveska. Najbolji početak.</b></span>
+          <span>3 / 3</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

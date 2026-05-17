@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sveska — Migration · Legacy Import</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 14.5px;
+        line-height: 1.55;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      .wrap {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .topbar b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .topbar .live {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--signal-400);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--signal-400) 22%, transparent);
+        display: inline-block;
+        margin-right: 10px;
+      }
+
+      .hero {
+        padding: 48px 0 32px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 48px;
+        align-items: end;
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 64px;
+        letter-spacing: -0.035em;
+        line-height: 0.96;
+        margin: 0 0 18px;
+      }
+      .hero h1 .amb {
+        color: var(--accent);
+      }
+      .hero p {
+        font-size: 16px;
+        color: var(--text-dim);
+        max-width: 62ch;
+        margin: 0;
+        line-height: 1.55;
+      }
+      .hero .stamp {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        text-align: right;
+      }
+      .hero .stamp b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .hero .stamp .accent {
+        color: var(--accent);
+      }
+
+      /* step strip */
+      .steps {
+        display: flex;
+        gap: 0;
+        align-items: center;
+        padding: 10px 0 28px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .steps .s {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px;
+        border-radius: 6px;
+      }
+      .steps .s.on {
+        background: color-mix(in oklab, var(--accent) 14%, transparent);
+        color: var(--accent);
+      }
+      .steps .s.done {
+        color: var(--ok);
+      }
+      .steps .s .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: currentColor;
+      }
+      .steps .arr {
+        margin: 0 8px;
+        color: var(--text-dim);
+        opacity: 0.5;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 14px;
+        margin: 0 0 14px;
+      }
+      .col-12 {
+        grid-column: span 12;
+      }
+      .col-6 {
+        grid-column: span 6;
+      }
+      .col-4 {
+        grid-column: span 4;
+      }
+
+      .card {
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 340px;
+      }
+      .card .head {
+        padding: 18px 22px 4px;
+        display: flex;
+        gap: 14px;
+        align-items: baseline;
+      }
+      .card .num {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .card .num b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .card .num .sev {
+        font-family: var(--font-mono);
+        font-size: 9.5px;
+        padding: 2px 7px;
+        border-radius: 4px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-left: auto;
+        background: color-mix(in oklab, var(--accent) 14%, transparent);
+        color: var(--accent);
+      }
+      .card h3 {
+        margin: 6px 0 4px;
+        padding: 0 22px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.018em;
+        line-height: 1.15;
+      }
+      .card .meta {
+        padding: 0 22px 14px;
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+      }
+
+      .stage {
+        flex: 1;
+        padding: 18px 22px;
+        background: var(--bg);
+        border-top: 1px solid var(--ink-700);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        position: relative;
+      }
+
+      /* banner */
+      .banner {
+        background: color-mix(in oklab, var(--signal-400) 10%, transparent);
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--signal-400) 40%, transparent);
+        border-radius: 10px;
+        padding: 18px 22px;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        width: 100%;
+        max-width: 560px;
+      }
+      .banner .ic {
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+        flex-shrink: 0;
+        background: color-mix(in oklab, var(--signal-400) 22%, transparent);
+        color: var(--signal-400);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .banner .body {
+        flex: 1;
+      }
+      .banner .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--signal-400);
+        margin-bottom: 6px;
+      }
+      .banner .title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: -0.015em;
+        color: var(--text);
+        line-height: 1.2;
+        margin-bottom: 6px;
+      }
+      .banner .desc {
+        color: var(--text-dim);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .banner .acts {
+        display: inline-flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .btn-p {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 36px;
+        padding: 0 16px;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #0c0c0e;
+        font-family: var(--font-ui);
+        font-weight: 700;
+        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-g {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 36px;
+        padding: 0 14px;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--text);
+        box-shadow: inset 0 0 0 1px var(--ink-700);
+        font-family: var(--font-ui);
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .btn-d {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 36px;
+        padding: 0 14px;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--danger);
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--danger) 40%, transparent);
+        font-family: var(--font-ui);
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      /* preview block */
+      .legacy-preview {
+        width: 100%;
+        max-width: 520px;
+        background: var(--surface);
+        border-radius: 8px;
+        border: 1px solid var(--ink-700);
+        padding: 16px 18px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--text);
+        line-height: 1.65;
+      }
+      .legacy-preview .src {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        color: var(--accent);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .legacy-preview .src .b {
+        color: var(--text-dim);
+      }
+      .legacy-preview .ascii {
+        color: var(--text-dim);
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        white-space: pre-wrap;
+        line-height: 1.6;
+      }
+
+      .checklist {
+        margin-top: 14px;
+        width: 100%;
+        max-width: 520px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .checklist .row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 10px 12px;
+        border-radius: 7px;
+        background: var(--surface);
+        box-shadow: inset 0 0 0 1px var(--ink-700);
+      }
+      .checklist .row .box {
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        flex-shrink: 0;
+        box-shadow: inset 0 0 0 1.5px var(--text-dim);
+        margin-top: 1px;
+        position: relative;
+      }
+      .checklist .row.on .box {
+        background: var(--accent);
+        box-shadow: inset 0 0 0 1.5px var(--accent);
+      }
+      .checklist .row.on .box::after {
+        content: '';
+        position: absolute;
+        left: 3px;
+        top: 1px;
+        width: 9px;
+        height: 5px;
+        border-left: 2px solid #0c0c0e;
+        border-bottom: 2px solid #0c0c0e;
+        transform: rotate(-45deg);
+      }
+      .checklist .row .label {
+        flex: 1;
+        font-family: var(--font-ui);
+        font-size: 13.5px;
+        color: var(--text);
+        font-weight: 500;
+      }
+      .checklist .row .hint {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        margin-top: 2px;
+        letter-spacing: 0.02em;
+      }
+
+      .success-glyph {
+        width: 64px;
+        height: 64px;
+        border-radius: 14px;
+        background: color-mix(in oklab, var(--ok) 18%, transparent);
+        color: var(--ok);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-ui);
+        font-weight: 700;
+        font-size: 32px;
+      }
+
+      footer.coda {
+        border-top: 1px solid var(--ink-700);
+        padding: 24px 0 56px;
+        margin-top: 32px;
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      footer.coda b {
+        color: var(--text);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska Migration">
+    <div class="wrap">
+      <div class="topbar">
+        <div>
+          <span class="live"></span><b>Sveska</b> · Migration · legacy import · for refugees from
+          notepad.js.org
+        </div>
+        <div><b>2026.05.16</b></div>
+      </div>
+
+      <div class="hero">
+        <div>
+          <h1>You're not<br /><span class="amb">starting from zero.</span></h1>
+          <p>
+            If you arrive at sveska.studio with notes already in localStorage from notepad.js.org or
+            a similar single-textarea app, Sveska detects them on first run and offers a one-tap
+            import. Three quiet steps; your old note becomes your first Sveska note.
+          </p>
+        </div>
+        <div class="stamp">
+          <b>3 STEPS</b> · 12 SECONDS<br />
+          <span class="accent">no network calls</span><br />
+          pure indexeddb migration
+        </div>
+      </div>
+
+      <div class="steps">
+        <span class="s on"><span class="dot"></span>01 · detected</span><span class="arr">→</span>
+        <span class="s"><span class="dot"></span>02 · preview</span><span class="arr">→</span>
+        <span class="s"><span class="dot"></span>03 · confirmed</span>
+      </div>
+
+      <div class="grid">
+        <!-- 01 -->
+        <div class="card col-4">
+          <div class="head">
+            <span class="num"><b>01</b>DETECTED</span><span class="sev">CONSENT</span>
+          </div>
+          <h3>"We see prior notes here."</h3>
+          <div class="meta">
+            trigger · first run · <span class="mono">localStorage["note"]</span> non-empty
+          </div>
+          <div class="stage">
+            <div class="banner">
+              <span class="ic">↳</span>
+              <div class="body">
+                <div class="lbl">LEGACY IMPORT · DETECTED</div>
+                <div class="title">Looks like you used <i>notepad.js.org</i> in this browser.</div>
+                <div class="desc">
+                  A draft sits in <span class="mono">localStorage["note"]</span> — 1,247 characters.
+                  Want to import it as your first Sveska note? Nothing leaves this browser; the
+                  source key is cleared after.
+                </div>
+                <div class="acts">
+                  <button class="btn-g">Preview first</button>
+                  <button class="btn-p">Import</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="card col-4">
+          <div class="head">
+            <span class="num"><b>02</b>PREVIEW</span><span class="sev">VERIFY</span>
+          </div>
+          <h3>What it'll become.</h3>
+          <div class="meta">step · review · choose title + tags</div>
+          <div class="stage">
+            <div class="legacy-preview">
+              <div class="src">
+                <span>notepad.js.org → sveska</span><span class="b">1,247 chars</span>
+              </div>
+              <div class="ascii">
+                draft of the studio post --- The folded page does not need permission to be written
+                on. Local-first means the app keeps working when the network does not. todo: - read
+                selimović ch 3 - ship v0.1 …
+              </div>
+            </div>
+            <div class="checklist">
+              <div class="row on">
+                <div class="box"></div>
+                <div>
+                  <div class="label">Detect title from first line</div>
+                  <div class="hint">→ "draft of the studio post"</div>
+                </div>
+              </div>
+              <div class="row on">
+                <div class="box"></div>
+                <div>
+                  <div class="label">
+                    Add tag · <span style="color: var(--accent)">imported</span>
+                  </div>
+                  <div class="hint">filter later from the sidebar</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="box"></div>
+                <div>
+                  <div class="label">Convert URLs to glossary candidates</div>
+                  <div class="hint">none found</div>
+                </div>
+              </div>
+              <div class="row on">
+                <div class="box"></div>
+                <div>
+                  <div class="label">Clear the old localStorage key after import</div>
+                  <div class="hint">honest cleanup · reversible for 24h via Trash</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="card col-4">
+          <div class="head">
+            <span class="num"><b>03</b>CONFIRMED</span><span class="sev">DONE</span>
+          </div>
+          <h3>One Sveska note, ready.</h3>
+          <div class="meta">step · success · auto-snapshot taken</div>
+          <div class="stage">
+            <div class="success-glyph">✓</div>
+            <div style="text-align: center; max-width: 48ch">
+              <div
+                style="
+                  font-family: var(--font-display);
+                  font-weight: 700;
+                  font-size: 22px;
+                  letter-spacing: -0.018em;
+                  color: var(--text);
+                  line-height: 1.15;
+                  margin-bottom: 6px;
+                "
+              >
+                Imported. Snapshot taken.
+              </div>
+              <p style="margin: 0; color: var(--text-dim); font-size: 13.5px; line-height: 1.55">
+                "draft of the studio post" is now your first note. The first snapshot is named
+                <span class="mono" style="color: var(--accent)">imported from legacy</span> —
+                restore it any time with ⌘H.
+              </p>
+            </div>
+            <div class="acts" style="display: inline-flex; gap: 8px">
+              <button class="btn-g">Open inbox</button>
+              <button class="btn-p">Open the note · ⌘1</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- additional considerations -->
+      <div class="grid">
+        <div class="card col-6">
+          <div class="head">
+            <span class="num"><b>04</b>EDGE · NOTHING TO IMPORT</span>
+          </div>
+          <h3>No banner, no nag.</h3>
+          <div class="meta">
+            when · <span class="mono">localStorage["note"]</span> empty / not present
+          </div>
+          <div class="stage" style="align-items: flex-start">
+            <p
+              style="
+                font-family: var(--font-mono);
+                font-size: 13px;
+                color: var(--text-dim);
+                margin: 0;
+                max-width: 56ch;
+                line-height: 1.7;
+              "
+            >
+              If there's nothing to import, the banner doesn't appear. We never ask permission to
+              look — the check runs once, locally, and silently. If you want to import a file later,
+              the path is <span style="color: var(--accent)">/settings/data → Import</span>.
+            </p>
+            <div
+              style="
+                margin-top: 14px;
+                padding: 10px 14px;
+                background: var(--surface);
+                border-radius: 8px;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--text-dim);
+                box-shadow: inset 0 0 0 1px var(--ink-700);
+              "
+            >
+              <span style="color: var(--accent)">// src/notes/migrate.ts</span><br />
+              <span style="color: var(--ai)">if</span> (localStorage[<span style="color: var(--ok)"
+                >"note"</span
+              >] &amp;&amp; !prefs.<span style="color: var(--text)">migrationDone</span>)
+              <span style="color: var(--text)">{ </span
+              ><span style="color: var(--accent)">offerLegacyImport</span>();
+              <span style="color: var(--text)">}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card col-6">
+          <div class="head">
+            <span class="num"><b>05</b>EDGE · MULTIPLE LEGACY KEYS</span>
+          </div>
+          <h3>Pick which ones.</h3>
+          <div class="meta">when · several known legacy keys are found</div>
+          <div class="stage" style="align-items: flex-start">
+            <div class="checklist" style="max-width: none">
+              <div class="row on">
+                <div class="box"></div>
+                <div>
+                  <div class="label">notepad.js.org · "note"</div>
+                  <div class="hint">1,247 chars · last touched yesterday</div>
+                </div>
+              </div>
+              <div class="row on">
+                <div class="box"></div>
+                <div>
+                  <div class="label">caretdown.com · "draft"</div>
+                  <div class="hint">812 chars · last touched 14d ago</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="box"></div>
+                <div>
+                  <div class="label">simple-notepad · "content"</div>
+                  <div class="hint">3 chars · "abc" — probably test data, skip</div>
+                </div>
+              </div>
+            </div>
+            <div class="acts" style="margin-top: 14px; display: inline-flex; gap: 8px">
+              <button class="btn-g">Skip all</button>
+              <button class="btn-p">Import 2 of 3</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="coda">
+        <span><b>Sveska</b> · Migration · v1.0 · 3 steps + 2 edges</span>
+        <span>localStorage["note"] → IndexedDB · CLAUDE.md §4</span>
+        <span>2026.05.16</span>
+      </footer>
+    </div>
+  </body>
+</html>

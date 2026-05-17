@@ -1,0 +1,1001 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Press · Sveska · sveska.studio</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 14.5px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      .wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      nav.top {
+        border-bottom: 1px solid var(--ink-700);
+        padding: 18px 0;
+      }
+      nav.top .inner {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+      nav.top .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+        color: var(--text);
+      }
+      nav.top .brand .studio {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-weight: 500;
+        font-size: 14px;
+      }
+      nav.top .links {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-dim);
+        display: inline-flex;
+        gap: 22px;
+        flex: 1;
+        letter-spacing: 0.04em;
+      }
+      nav.top .links .on {
+        color: var(--accent);
+      }
+
+      .hero {
+        padding: 64px 0 40px;
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 48px;
+        align-items: end;
+      }
+      .hero .crumbs {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 24px;
+      }
+      .hero .crumbs b {
+        color: var(--accent);
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 80px;
+        letter-spacing: -0.038em;
+        line-height: 0.95;
+        margin: 0 0 18px;
+      }
+      .hero h1 .amb {
+        color: var(--accent);
+      }
+      .hero p {
+        font-size: 17px;
+        color: var(--text-dim);
+        max-width: 56ch;
+        margin: 0;
+        line-height: 1.55;
+      }
+      .hero .stamp {
+        padding: 24px 28px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .hero .stamp .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 4px;
+      }
+      .hero .stamp .row {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text);
+      }
+      .hero .stamp .row b {
+        color: var(--accent);
+        font-weight: 500;
+      }
+
+      .quick-strip {
+        margin: 32px 0 48px;
+        padding: 18px 22px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+      }
+      .quick-strip .item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .quick-strip .item .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .quick-strip .item .val {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.018em;
+        color: var(--text);
+        line-height: 1;
+      }
+      .quick-strip .item .val .amb {
+        color: var(--accent);
+      }
+
+      .seclabel {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        padding: 32px 0 18px;
+      }
+      .seclabel .n {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .seclabel h2 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: -0.025em;
+      }
+      .seclabel .tail {
+        flex: 1;
+        height: 1px;
+        background: var(--ink-700);
+        transform: translateY(-6px);
+      }
+
+      /* boilerplate copy blocks */
+      .boilerplate {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .blurb {
+        padding: 24px 28px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .blurb .meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .blurb .len {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .blurb .count {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+      }
+      .blurb p {
+        margin: 0;
+        color: var(--text);
+        font-family: 'Newsreader', serif;
+        font-size: 15.5px;
+        line-height: 1.55;
+      }
+      .blurb .copy {
+        margin-top: auto;
+        padding-top: 10px;
+        border-top: 1px solid var(--ink-700);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+      }
+      .blurb .copy button {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 28px;
+        padding: 0 10px;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--accent);
+        box-shadow: inset 0 0 0 1px var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.04em;
+        font-weight: 500;
+      }
+
+      /* quotes */
+      .quotes {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+      .quote {
+        padding: 24px 28px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .quote .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .quote blockquote {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.018em;
+        line-height: 1.25;
+        color: var(--text);
+      }
+      .quote blockquote .amb {
+        color: var(--accent);
+      }
+      .quote .attr {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+        padding-top: 14px;
+        border-top: 1px solid var(--ink-700);
+      }
+      .quote .attr b {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      /* assets grid */
+      .assets {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .asset {
+        padding: 20px 22px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .asset .preview {
+        height: 140px;
+        background: var(--bg);
+        border-radius: 8px;
+        border: 1px solid var(--ink-700);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+      }
+      .asset .preview svg {
+        max-width: 80%;
+        max-height: 80%;
+      }
+      .asset .preview.paper {
+        background: #f4efe6;
+      }
+      .asset .name {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 17px;
+        letter-spacing: -0.012em;
+        color: var(--text);
+      }
+      .asset .meta {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.04em;
+        display: flex;
+        justify-content: space-between;
+      }
+      .asset .meta b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .asset .formats {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        padding-top: 8px;
+        border-top: 1px solid var(--ink-700);
+      }
+      .asset .formats .fmt {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 4px 9px;
+        border-radius: 5px;
+        background: var(--ink-700);
+        color: var(--text);
+        letter-spacing: 0.04em;
+        cursor: pointer;
+      }
+      .asset .formats .fmt.primary {
+        background: var(--accent);
+        color: #0c0c0e;
+        font-weight: 600;
+      }
+
+      /* screenshots */
+      .shots {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+      .shot {
+        padding: 14px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 10px;
+      }
+      .shot .img {
+        aspect-ratio: 16/10;
+        border-radius: 6px;
+        background: #0c0c0e;
+        border: 1px solid var(--ink-700);
+        margin-bottom: 10px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .shot .img .mini-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 14px;
+        background: var(--ink-800);
+        border-bottom: 1px solid var(--ink-700);
+        display: flex;
+        align-items: center;
+        padding: 0 6px;
+        gap: 3px;
+      }
+      .shot .img .mini-bar i {
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        display: block;
+      }
+      .shot .img .ill {
+        position: absolute;
+        inset: 18px 8px 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .shot .img .ill .row {
+        height: 6px;
+        background: var(--ink-700);
+        border-radius: 3px;
+      }
+      .shot .img .ill .row.amb {
+        background: var(--accent);
+        width: 30%;
+      }
+      .shot .img .ill .row.short {
+        width: 60%;
+      }
+      .shot .img .ill .row.cyan {
+        background: var(--ai);
+        width: 40%;
+      }
+      .shot .label {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text);
+        letter-spacing: 0.04em;
+        display: flex;
+        justify-content: space-between;
+      }
+      .shot .label b {
+        color: var(--accent);
+        font-weight: 500;
+      }
+      .shot .size {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-dim);
+        margin-top: 3px;
+        letter-spacing: 0.04em;
+      }
+
+      /* contact */
+      .contact {
+        margin-top: 48px;
+        padding: 32px 40px;
+        border-radius: 14px;
+        background: var(--accent);
+        color: #0c0c0e;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 32px;
+        align-items: center;
+      }
+      .contact h2 {
+        margin: 0 0 8px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: -0.025em;
+        line-height: 1.05;
+      }
+      .contact p {
+        margin: 0;
+        font-size: 14.5px;
+        max-width: 54ch;
+      }
+      .contact .info {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        line-height: 1.7;
+        padding: 16px 18px;
+        background: #0c0c0e;
+        color: var(--accent);
+        border-radius: 10px;
+      }
+      .contact .info b {
+        color: var(--paper);
+        font-weight: 500;
+      }
+
+      footer.coda {
+        border-top: 1px solid var(--ink-700);
+        padding: 24px 0 56px;
+        margin-top: 32px;
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      footer.coda b {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .download-strip {
+        display: flex;
+        gap: 8px;
+        padding-top: 14px;
+        margin-top: 14px;
+        border-top: 1px solid var(--ink-700);
+      }
+      .download-strip a {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--text);
+        box-shadow: inset 0 0 0 1px var(--ink-700);
+        letter-spacing: 0.04em;
+      }
+      .download-strip a.primary {
+        background: var(--accent);
+        color: #0c0c0e;
+        box-shadow: none;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska Press">
+    <nav class="top">
+      <div class="inner">
+        <a class="brand" style="text-decoration: none" href="sveska.studio landing.html">
+          <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
+            <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+            <path
+              d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+              fill="#F2B544"
+            />
+            <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+            <path
+              d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+              fill="none"
+              stroke="#0C0C0E"
+              stroke-width="5.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          sveska<span class="studio">.studio</span>
+        </a>
+        <div class="links">
+          <span>System</span><span>Notebook</span><span>Glossary</span><span class="on">Press</span
+          ><span>Field notes</span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="hero">
+        <div>
+          <div class="crumbs">
+            <b>PRESS KIT</b> · sveska.studio/press · v1.0 · for journalists &amp; reviewers
+          </div>
+          <h1>Press &amp; <span class="amb">media kit.</span></h1>
+          <p>
+            Everything you need to cover Sveska — pre-written boilerplate at three lengths,
+            on-record quotes, screenshots in high-res, logo files in every format, and a direct line
+            to the team. No NDAs. No embargo theater.
+          </p>
+        </div>
+        <div class="stamp">
+          <div class="lbl">FAST FACTS</div>
+          <div class="row"><span>Founded</span><b>2026</b></div>
+          <div class="row"><span>Where</span><span>Sarajevo + Brooklyn</span></div>
+          <div class="row"><span>Team</span><span>4 people</span></div>
+          <div class="row"><span>Launch</span><b>2026.05.16</b></div>
+          <div class="row"><span>Funding</span><span>Bootstrapped</span></div>
+          <div class="row"><span>Stack</span><span>Vite · React · Dexie · PWA</span></div>
+          <div class="row"><span>License</span><span>App proprietary · brand kit MIT</span></div>
+        </div>
+      </header>
+
+      <div class="quick-strip">
+        <div class="item">
+          <span class="lbl">PRODUCT</span
+          ><span class="val">Local-first <span class="amb">notebook PWA</span></span>
+        </div>
+        <div class="item"><span class="lbl">USERS · BETA</span><span class="val">2,141</span></div>
+        <div class="item">
+          <span class="lbl">NOTES · WRITTEN</span><span class="val">47,802</span>
+        </div>
+        <div class="item"><span class="lbl">BUNDLE GZIP</span><span class="val">168 KB</span></div>
+        <div class="item"><span class="lbl">TTI · MOBILE</span><span class="val">1.21 s</span></div>
+      </div>
+
+      <!-- BOILERPLATE -->
+      <div class="seclabel">
+        <span class="n">01 — Boilerplate</span>
+        <h2>Copy-paste descriptions.</h2>
+        <span class="tail"></span>
+      </div>
+      <div class="boilerplate">
+        <div class="blurb">
+          <div class="meta">
+            <span class="len">ONE LINE</span><span class="count">12 words</span>
+          </div>
+          <p>Sveska is a local-first notebook PWA — your notes outlive the network.</p>
+          <div class="copy"><button>Copy</button><span>plaintext &middot; tweet-safe</span></div>
+        </div>
+
+        <div class="blurb">
+          <div class="meta">
+            <span class="len">ONE PARAGRAPH</span><span class="count">58 words</span>
+          </div>
+          <p>
+            Sveska is a studio-grade, local-first notebook that runs entirely in your browser. Notes
+            live in IndexedDB, never on a server. There is no account; there is no key in the
+            bundle. AI commands route through a thin edge proxy. The app is offline-first by default
+            and works exactly the same when the network is gone.
+          </p>
+          <div class="copy">
+            <button>Copy</button><span>articles · about pages · capsule reviews</span>
+          </div>
+        </div>
+
+        <div class="blurb">
+          <div class="meta">
+            <span class="len">LONG FORM</span><span class="count">142 words</span>
+          </div>
+          <p>
+            Sveska — Bosnian for <i>notebook</i> — is an attempt to restore to digital writing the
+            elementary dignity of paper. Built on the local-first principle from Ink &amp; Switch,
+            the app keeps every note on your device, in IndexedDB, tied to your browser and your
+            domain. No account, no telemetry, no third-party scripts. Snapshots are named,
+            restorable, and stored alongside the note as procedural memory. The optional AI layer —
+            slash commands like /improve and /summarize — routes through an edge function whose only
+            job is to be the place the API key lives, never the browser. Sveska ships M0–M3 in v0.1.
+            The canvas, the AI proxy, the encrypted sync, and the platform layer follow. The studio
+            is in Sarajevo and Brooklyn; the doctrine is in Bosnian.
+          </p>
+          <div class="copy">
+            <button>Copy</button
+            ><span>full features &middot; pitch decks &middot; longer pieces</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUOTES -->
+      <div class="seclabel">
+        <span class="n">02 — On-record quotes</span>
+        <h2>Pull these. Attribute as shown.</h2>
+        <span class="tail"></span>
+      </div>
+      <div class="quotes">
+        <div class="quote">
+          <span class="lbl">ON LOCAL-FIRST</span>
+          <blockquote>
+            "Local-first doesn't mean offline-tolerant. It means the network is
+            <span class="amb">the optional thing.</span>"
+          </blockquote>
+          <span class="attr"><b>Miz Anandi</b> · founder · Sveska Studio</span>
+        </div>
+        <div class="quote">
+          <span class="lbl">ON THE BRAND</span>
+          <blockquote>
+            "The page that doesn't yell at you is
+            <span class="amb">the page you read for hours.</span>"
+          </blockquote>
+          <span class="attr"><b>Miz Anandi</b> · founder · Sveska Studio</span>
+        </div>
+        <div class="quote">
+          <span class="lbl">ON THE STACK</span>
+          <blockquote>
+            "We grep the production bundle for API keys on every commit. It has never matched.
+            That's not vigilance — that's <span class="amb">architecture.</span>"
+          </blockquote>
+          <span class="attr"><b>Isidora Š.</b> · security · Sveska Studio</span>
+        </div>
+        <div class="quote">
+          <span class="lbl">ON THE NAME</span>
+          <blockquote>
+            "<i>Sveska</i> means precisely the thing we are building.
+            <span class="amb">English already has too many notebook apps.</span>"
+          </blockquote>
+          <span class="attr"><b>Miz Anandi</b> · field note 001</span>
+        </div>
+      </div>
+
+      <!-- BRAND ASSETS -->
+      <div class="seclabel">
+        <span class="n">03 — Brand assets</span>
+        <h2>Logos, marks, lockups.</h2>
+        <span class="tail"></span>
+      </div>
+      <div class="assets">
+        <div class="asset">
+          <div class="preview">
+            <svg viewBox="0 0 64 64" width="80" height="80" aria-hidden="true">
+              <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+              <path
+                d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                fill="#F2B544"
+              />
+              <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+              <path
+                d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                fill="none"
+                stroke="#0C0C0E"
+                stroke-width="5.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <span class="name">Mark · dark</span>
+          <span class="meta"><span>square · primary use</span><b>amber on ink</b></span>
+          <div class="formats">
+            <span class="fmt primary">SVG</span><span class="fmt">PNG · 512</span
+            ><span class="fmt">PNG · 192</span><span class="fmt">ICO</span>
+          </div>
+        </div>
+
+        <div class="asset">
+          <div class="preview paper">
+            <svg viewBox="0 0 64 64" width="80" height="80" aria-hidden="true">
+              <rect x="0" y="0" width="64" height="64" rx="14" fill="#F4EFE6" stroke="#E2DCCE" />
+              <path
+                d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                fill="#EDA92E"
+              />
+              <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+              <path
+                d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                fill="none"
+                stroke="#15110A"
+                stroke-width="5.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <span class="name">Mark · light</span>
+          <span class="meta"><span>square · for paper grounds</span><b>amber-600 on paper</b></span>
+          <div class="formats">
+            <span class="fmt primary">SVG</span><span class="fmt">PNG · 512</span>
+          </div>
+        </div>
+
+        <div class="asset">
+          <div class="preview">
+            <div style="display: flex; align-items: center; gap: 14px">
+              <svg viewBox="0 0 64 64" width="44" height="44" aria-hidden="true">
+                <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+                <path
+                  d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                  fill="#F2B544"
+                />
+                <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                <path
+                  d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                  fill="none"
+                  stroke="#0C0C0E"
+                  stroke-width="5.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span
+                style="
+                  font-family: var(--font-display);
+                  font-weight: 700;
+                  font-size: 30px;
+                  letter-spacing: -0.025em;
+                  color: #f4efe6;
+                "
+                >sveska<span
+                  style="
+                    font-family: var(--font-mono);
+                    color: var(--accent);
+                    font-size: 20px;
+                    font-weight: 500;
+                  "
+                  >.studio</span
+                ></span
+              >
+            </div>
+          </div>
+          <span class="name">Lockup · horizontal</span>
+          <span class="meta"><span>headers · footers</span><b>min 120px wide</b></span>
+          <div class="formats">
+            <span class="fmt primary">SVG</span><span class="fmt">PNG · 2x</span
+            ><span class="fmt">EPS</span>
+          </div>
+        </div>
+      </div>
+      <div class="download-strip">
+        <a class="primary" download>Download all brand assets · .zip · 1.4 MB</a>
+        <a>SVG bundle</a>
+        <a>PNG bundle</a>
+        <a>Brand guidelines.pdf</a>
+        <a>Color tokens.css</a>
+      </div>
+
+      <!-- SCREENSHOTS -->
+      <div class="seclabel">
+        <span class="n">04 — Screenshots</span>
+        <h2>The product, captured.</h2>
+        <span class="tail"></span>
+      </div>
+      <div class="shots">
+        <div class="shot">
+          <div class="img">
+            <div class="mini-bar">
+              <i style="background: #ff5f57"></i><i style="background: #febc2e"></i
+              ><i style="background: #28c840"></i>
+            </div>
+            <div class="ill">
+              <div class="row amb"></div>
+              <div class="row short"></div>
+              <div class="row"></div>
+              <div class="row"></div>
+              <div class="row short"></div>
+            </div>
+          </div>
+          <div class="label">App shell · dark<b>① · primary</b></div>
+          <div class="size">1440 × 900 · PNG 2× · 380 KB</div>
+        </div>
+        <div class="shot">
+          <div class="img" style="background: #f4efe6">
+            <div class="mini-bar" style="background: #fbf8f1; border-bottom-color: #e2dcce">
+              <i style="background: #ff5f57"></i><i style="background: #febc2e"></i
+              ><i style="background: #28c840"></i>
+            </div>
+            <div class="ill">
+              <div class="row amb"></div>
+              <div class="row short" style="background: #e2dcce"></div>
+              <div class="row" style="background: #e2dcce"></div>
+              <div class="row" style="background: #e2dcce"></div>
+              <div class="row short" style="background: #e2dcce"></div>
+            </div>
+          </div>
+          <div class="label">App shell · light<b>② · mirror</b></div>
+          <div class="size">1440 × 900 · PNG 2× · 412 KB</div>
+        </div>
+        <div class="shot">
+          <div class="img">
+            <div class="mini-bar">
+              <i style="background: #ff5f57"></i><i style="background: #febc2e"></i
+              ><i style="background: #28c840"></i>
+            </div>
+            <div class="ill">
+              <div class="row cyan"></div>
+              <div class="row short"></div>
+              <div class="row"></div>
+              <div class="row" style="background: var(--ai); opacity: 0.6"></div>
+              <div class="row short"></div>
+            </div>
+          </div>
+          <div class="label">⌘K · command palette<b>③ · AI</b></div>
+          <div class="size">1440 × 900 · PNG 2× · 364 KB</div>
+        </div>
+        <div class="shot">
+          <div class="img">
+            <div class="mini-bar">
+              <i style="background: #ff5f57"></i><i style="background: #febc2e"></i
+              ><i style="background: #28c840"></i>
+            </div>
+            <div class="ill">
+              <div class="row amb"></div>
+              <div class="row short"></div>
+              <div class="row"></div>
+              <div class="row" style="background: var(--ok); opacity: 0.5"></div>
+              <div class="row short" style="background: var(--ok); opacity: 0.5"></div>
+            </div>
+          </div>
+          <div class="label">Version diff<b>④ · history</b></div>
+          <div class="size">1440 × 900 · PNG 2× · 398 KB</div>
+        </div>
+
+        <div class="shot">
+          <div class="img" style="aspect-ratio: 9/16; max-width: 140px; margin: 0 auto"></div>
+          <div class="label">PWA · iOS<b>⑤ · mobile</b></div>
+          <div class="size">402 × 874 · PNG 3× · 240 KB</div>
+        </div>
+        <div class="shot">
+          <div class="img" style="aspect-ratio: 9/16; max-width: 140px; margin: 0 auto"></div>
+          <div class="label">PWA · Android<b>⑥ · share</b></div>
+          <div class="size">412 × 892 · PNG 3× · 256 KB</div>
+        </div>
+        <div class="shot">
+          <div class="img">
+            <div class="mini-bar">
+              <i style="background: #ff5f57"></i><i style="background: #febc2e"></i
+              ><i style="background: #28c840"></i>
+            </div>
+          </div>
+          <div class="label">Canvas mode<b>⑦ · M5</b></div>
+          <div class="size">1440 × 900 · PNG 2× · 442 KB</div>
+        </div>
+        <div class="shot">
+          <div class="img">
+            <div class="mini-bar">
+              <i style="background: #ff5f57"></i><i style="background: #febc2e"></i
+              ><i style="background: #28c840"></i>
+            </div>
+          </div>
+          <div class="label">Settings · AI proxy<b>⑧ · security</b></div>
+          <div class="size">1440 × 900 · PNG 2× · 312 KB</div>
+        </div>
+      </div>
+      <div class="download-strip">
+        <a class="primary" download>Download all screenshots · .zip · 18 MB</a>
+        <a>2× retina set</a>
+        <a>3× retina set</a>
+        <a>Hero only · 4K</a>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="contact">
+        <div>
+          <h2>One inbox. We answer fast.</h2>
+          <p>
+            Questions for an article, an interview request, or a fact-check on something we shipped
+            — same address, replied to in person, usually within 24 hours.
+          </p>
+        </div>
+        <div class="info">
+          <b
+            ><a
+              href="/cdn-cgi/l/email-protection"
+              class="__cf_email__"
+              data-cfemail="7a0a081f09093a090c1f09111b54090e0f1e1315"
+              >[email&#160;protected]</a
+            ></b
+          ><br />
+          <span style="opacity: 0.65">PGP · B7E2 …5F09</span><br /><br />
+          For an embargo'd preview of M4 or anything not yet public, mention "embargo · sveska" in
+          the subject line.
+        </div>
+      </div>
+
+      <footer class="coda">
+        <span><b>Sveska</b> · press kit · v1.0</span>
+        <span>sarajevo + brooklyn · 2026</span>
+        <span>sveska.studio/press</span>
+      </footer>
+    </div>
+    <script
+      data-cfasync="false"
+      src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+    ></script>
+  </body>
+</html>

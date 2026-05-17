@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Privacy &amp; Security · Sveska</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 15px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+      nav.top {
+        border-bottom: 1px solid var(--ink-700);
+        padding: 18px 0;
+      }
+      nav.top .inner {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+      nav.top .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: -0.02em;
+        color: var(--text);
+      }
+      nav.top .brand .studio {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-weight: 500;
+        font-size: 14px;
+      }
+      nav.top .links {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-dim);
+        display: inline-flex;
+        gap: 22px;
+        flex: 1;
+        letter-spacing: 0.04em;
+      }
+      nav.top .links .on {
+        color: var(--accent);
+      }
+
+      .hero {
+        padding: 64px 0 32px;
+      }
+      .hero .crumbs {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        margin-bottom: 24px;
+      }
+      .hero .crumbs b {
+        color: var(--accent);
+      }
+      .hero h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 72px;
+        letter-spacing: -0.038em;
+        line-height: 0.95;
+        margin: 0 0 18px;
+      }
+      .hero h1 .amb {
+        color: var(--accent);
+      }
+      .hero h1 .ok {
+        color: var(--ok);
+      }
+      .hero p {
+        font-size: 17px;
+        color: var(--text-dim);
+        max-width: 62ch;
+        margin: 0;
+        line-height: 1.6;
+      }
+
+      .promise {
+        margin: 32px 0 56px;
+        padding: 28px 32px;
+        border-radius: 14px;
+        background: color-mix(in oklab, var(--ok) 8%, transparent);
+        box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ok) 30%, transparent);
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+      .promise .ic {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: color-mix(in oklab, var(--ok) 22%, transparent);
+        color: var(--ok);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .promise .body {
+        flex: 1;
+      }
+      .promise .lbl {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ok);
+        margin-bottom: 4px;
+      }
+      .promise h2 {
+        margin: 0 0 4px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.015em;
+        color: var(--text);
+        line-height: 1.2;
+      }
+      .promise p {
+        margin: 0;
+        color: var(--text-dim);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .sec {
+        padding: 32px 0 24px;
+        border-bottom: 1px solid var(--ink-700);
+      }
+      .sec .head {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+      .sec .head .n {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .sec .head h2 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: -0.025em;
+      }
+      .sec .head .tail {
+        flex: 1;
+        height: 1px;
+        background: var(--ink-700);
+        transform: translateY(-6px);
+      }
+      .sec p {
+        color: var(--text);
+        margin: 0 0 14px;
+        max-width: 60ch;
+      }
+      .sec p.dim {
+        color: var(--text-dim);
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 14px;
+      }
+      .panel {
+        padding: 24px 28px;
+        border-radius: 10px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+      }
+      .panel.green {
+        background: color-mix(in oklab, var(--ok) 8%, transparent);
+        border-color: color-mix(in oklab, var(--ok) 30%, transparent);
+      }
+      .panel.red {
+        background: color-mix(in oklab, var(--danger) 8%, transparent);
+        border-color: color-mix(in oklab, var(--danger) 30%, transparent);
+      }
+      .panel h3 {
+        margin: 0 0 14px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.018em;
+        color: var(--text);
+      }
+      .panel h3 .ok {
+        color: var(--ok);
+      }
+      .panel h3 .dan {
+        color: var(--danger);
+      }
+      .panel ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .panel li {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-family: var(--font-ui);
+        font-size: 14.5px;
+        color: var(--text);
+        line-height: 1.5;
+      }
+      .panel li::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        margin-top: 9px;
+        flex-shrink: 0;
+      }
+      .panel.green li::before {
+        background: var(--ok);
+      }
+      .panel.red li::before {
+        background: var(--danger);
+      }
+      .panel li b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .panel li code {
+        font-family: var(--font-mono);
+        background: rgba(0, 0, 0, 0.25);
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 13px;
+      }
+
+      .threat-grid {
+        display: grid;
+        grid-template-columns: 200px 1fr 1fr;
+        gap: 0;
+        margin-top: 14px;
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .threat-grid > div {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--ink-700);
+        border-right: 1px solid var(--ink-700);
+      }
+      .threat-grid > div:nth-child(3n) {
+        border-right: 0;
+      }
+      .threat-grid > div.h {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        background: color-mix(in oklab, var(--bg) 60%, var(--ink-800));
+      }
+      .threat-grid > div.h.acc {
+        color: var(--accent);
+      }
+      .threat-grid .role {
+        font-family: var(--font-ui);
+        font-weight: 500;
+        font-size: 14px;
+        color: var(--text);
+      }
+      .threat-grid .role .hint {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-dim);
+        display: block;
+        margin-top: 2px;
+        letter-spacing: 0.02em;
+      }
+      .threat-grid .cell {
+        font-family: var(--font-mono);
+        font-size: 12.5px;
+        color: var(--text);
+        line-height: 1.55;
+      }
+      .threat-grid .cell b {
+        color: var(--ok);
+      }
+      .threat-grid .cell b.warn {
+        color: var(--accent);
+      }
+      .threat-grid .cell b.dan {
+        color: var(--danger);
+      }
+
+      .gates {
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .gate {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 14px;
+        align-items: center;
+        padding: 14px 18px;
+        background: var(--ink-800);
+        border-radius: 8px;
+        border: 1px solid var(--ink-700);
+      }
+      .gate .ic {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        background: color-mix(in oklab, var(--ok) 18%, transparent);
+        color: var(--ok);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+      }
+      .gate .info {
+        font-family: var(--font-ui);
+        font-size: 14px;
+        color: var(--text);
+      }
+      .gate .info .h {
+        font-weight: 500;
+      }
+      .gate .info .d {
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        color: var(--text-dim);
+        margin-top: 2px;
+        letter-spacing: 0.02em;
+      }
+      .gate .info code {
+        font-family: var(--font-mono);
+        background: var(--bg);
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 12px;
+      }
+      .gate .status {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--ok);
+        letter-spacing: 0.04em;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .gate .status::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--ok);
+      }
+
+      .csp {
+        padding: 20px 24px;
+        background: var(--ink-900);
+        border-radius: 10px;
+        border: 1px solid var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 12.5px;
+        line-height: 1.8;
+        margin-top: 14px;
+        overflow-x: auto;
+      }
+      .csp .kw {
+        color: var(--accent);
+      }
+      .csp .v {
+        color: var(--ok);
+      }
+      .csp .com {
+        color: var(--text-dim);
+      }
+
+      .contact {
+        margin-top: 48px;
+        padding: 32px 40px;
+        border-radius: 14px;
+        background: var(--accent);
+        color: #0c0c0e;
+        display: flex;
+        gap: 32px;
+        align-items: center;
+      }
+      .contact h2 {
+        margin: 0 0 6px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: -0.022em;
+        line-height: 1.1;
+      }
+      .contact p {
+        margin: 0;
+        font-size: 14px;
+        max-width: 48ch;
+      }
+      .contact .info {
+        flex: 1;
+      }
+      .contact .pgp {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        background: #0c0c0e;
+        color: var(--accent);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      footer.coda {
+        border-top: 1px solid var(--ink-700);
+        padding: 24px 0 56px;
+        margin-top: 32px;
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      footer.coda b {
+        color: var(--text);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska Privacy">
+    <nav class="top">
+      <div class="inner">
+        <a class="brand" style="text-decoration: none" href="sveska.studio landing.html">
+          <svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
+            <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+            <path
+              d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+              fill="#F2B544"
+            />
+            <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+            <path
+              d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+              fill="none"
+              stroke="#0C0C0E"
+              stroke-width="5.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          sveska<span class="studio">.studio</span>
+        </a>
+        <div class="links">
+          <span>System</span><span>Notebook</span><span>Glossary</span
+          ><span class="on">Privacy</span><span>Field notes</span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="hero">
+        <div class="crumbs">
+          <b>PRIVACY &amp; SECURITY</b> · sveska.studio/privacy · CLAUDE.md §5
+        </div>
+        <h1>
+          Your notes <span class="amb">stay</span><br /><span class="ok">in your browser.</span>
+        </h1>
+        <p>
+          Sveska is local-first. The source of truth is your device. No account is required to use
+          the product. The only network calls leave when you explicitly invoke an AI command — and
+          even then, your key never lives in the client. This page is the threat model, the
+          technical gates that enforce it, and the parts we don't gloss over.
+        </p>
+      </header>
+
+      <div class="promise">
+        <span class="ic">✓</span>
+        <div class="body">
+          <div class="lbl">THE PROMISE</div>
+          <h2>Zero personal data leaves your browser. Ever. Unless you click an export.</h2>
+          <p>
+            No analytics. No third-party scripts. No fingerprinting. AI calls only when you
+            explicitly invoke <code class="mono">/improve</code> or similar, and even then the only
+            thing sent is the prompt — never your other notes.
+          </p>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="head">
+          <span class="n">01 — Data</span>
+          <h2>What we collect.</h2>
+          <span class="tail"></span>
+        </div>
+        <p class="dim">
+          Two columns. The left is everything Sveska keeps. The right is everything other products
+          take that we deliberately do not.
+        </p>
+        <div class="grid-2">
+          <div class="panel green">
+            <h3>We <span class="ok">do</span> store, locally only</h3>
+            <ul>
+              <li><b>Your notes</b> · in IndexedDB · tied to this browser + domain</li>
+              <li><b>Snapshots &amp; versions</b> · point-in-time copies you create</li>
+              <li><b>Preferences</b> · theme, font size, slash-command list</li>
+              <li><b>Tabs &amp; session</b> · so we can restore where you left off</li>
+              <li><b>Inbox captures</b> · until you process or dismiss them</li>
+            </ul>
+          </div>
+          <div class="panel red">
+            <h3>We <span class="dan">do not</span> collect</h3>
+            <ul>
+              <li><b>Email / account</b> · there is no account</li>
+              <li><b>IP address</b> · the static site logs none we can read</li>
+              <li><b>Analytics &amp; telemetry</b> · no Plausible, no Mixpanel, no anything</li>
+              <li><b>Crash reports</b> · errors stay in your console</li>
+              <li>
+                <b>AI training</b> · prompts to <code>/api/ai</code> are not logged or used to train
+              </li>
+              <li><b>Fingerprints</b> · no canvas / WebGL / font enumeration</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="head">
+          <span class="n">02 — Threat model</span>
+          <h2>Who could read your notes.</h2>
+          <span class="tail"></span>
+        </div>
+        <p class="dim">
+          Honest about every actor. Green = blocked by design. Amber = mitigated. Red = the things
+          you, the user, control.
+        </p>
+        <div class="threat-grid">
+          <div class="h">Actor</div>
+          <div class="h acc">Can read your notes?</div>
+          <div class="h">Mitigation</div>
+
+          <div class="role">Sveska (the company)<span class="hint">us, on our servers</span></div>
+          <div class="cell"><b>no</b> · we never see them</div>
+          <div class="cell">
+            Notes never leave your browser. We have no database for them. There is nothing for us to
+            leak.
+          </div>
+
+          <div class="role">
+            AI provider (Anthropic)<span class="hint">when you run /improve</span>
+          </div>
+          <div class="cell"><b class="warn">prompt only</b> · contents you select</div>
+          <div class="cell">
+            Edge proxy <code>/api/ai</code> forwards only the prompt + selection. No metadata, no
+            other notes. Per Anthropic ToS, not used for training.
+          </div>
+
+          <div class="role">
+            Your browser vendor<span class="hint">Chrome, Safari, Firefox</span>
+          </div>
+          <div class="cell"><b class="warn">stored bytes</b> · at rest</div>
+          <div class="cell">
+            Sveska uses IndexedDB. The vendor implements it. Use a browser you trust; we can't
+            change the rules below us.
+          </div>
+
+          <div class="role">
+            Anyone with physical access<span class="hint">unlocked device, shared computer</span>
+          </div>
+          <div class="cell"><b class="dan">yes</b> · same as paper</div>
+          <div class="cell">
+            Lock your device. Sveska has no per-note password yet (post-M6). Same protection a paper
+            notebook gets — the lock on your drawer.
+          </div>
+
+          <div class="role">A network attacker<span class="hint">MITM, hostile wifi</span></div>
+          <div class="cell"><b>no</b> · HTTPS-only + offline</div>
+          <div class="cell">
+            Strict transport. CSP locked. App functions fully offline; no exfil channel exists.
+          </div>
+
+          <div class="role">
+            A malicious browser extension<span class="hint">you installed</span>
+          </div>
+          <div class="cell"><b class="dan">yes</b> · they're inside the wall</div>
+          <div class="cell">
+            Extensions run with page-level DOM access. Sveska can't stop this. Audit your
+            extensions.
+          </div>
+
+          <div class="role">
+            A future Sveska employee<span class="hint">an insider attack</span>
+          </div>
+          <div class="cell"><b>no</b> · nothing to attack</div>
+          <div class="cell">
+            There is no server-side database of notes to read. Sync, when shipped, will be
+            E2E-encrypted with client-held keys.
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="head">
+          <span class="n">03 — Technical gates</span>
+          <h2>What enforces it.</h2>
+          <span class="tail"></span>
+        </div>
+        <p class="dim">
+          Promises are easy. These are the build-time and runtime checks that make the promise above
+          structurally true.
+        </p>
+        <div class="gates">
+          <div class="gate">
+            <span class="ic">$</span>
+            <div class="info">
+              <span class="h">CI grep for API keys</span>
+              <div class="d">
+                Every push runs
+                <code>grep -r -E "(sk-[a-z0-9-_]{20,}|VITE_.*_API_KEY)" dist/</code> — non-empty
+                match fails the build
+              </div>
+            </div>
+            <span class="status">passing · 287 commits</span>
+          </div>
+          <div class="gate">
+            <span class="ic">⛨</span>
+            <div class="info">
+              <span class="h">Content Security Policy</span>
+              <div class="d">
+                Locked to <code>default-src 'self'</code> + AI proxy origin only — no third-party
+                scripts can load
+              </div>
+            </div>
+            <span class="status">enforced · header</span>
+          </div>
+          <div class="gate">
+            <span class="ic">⌖</span>
+            <div class="info">
+              <span class="h">DOMPurify on all Markdown render</span>
+              <div class="d">Sanitizes every imported MD / HTML — XSS at the render boundary</div>
+            </div>
+            <span class="status">all paths · runtime</span>
+          </div>
+          <div class="gate">
+            <span class="ic">⬢</span>
+            <div class="info">
+              <span class="h">Edge proxy holds the key</span>
+              <div class="d">
+                AI API key lives in Cloudflare Worker env, never touches the browser bundle.
+                Rate-limited; streams responses
+              </div>
+            </div>
+            <span class="status">server-side · vaulted</span>
+          </div>
+          <div class="gate">
+            <span class="ic">⊘</span>
+            <div class="info">
+              <span class="h">No third-party analytics</span>
+              <div class="d">
+                No Plausible, GA, Mixpanel, Heap, Segment, Sentry, LogRocket. Network panel will
+                confirm.
+              </div>
+            </div>
+            <span class="status">zero requests · verified</span>
+          </div>
+          <div class="gate">
+            <span class="ic">↻</span>
+            <div class="info">
+              <span class="h">Reproducible builds</span>
+              <div class="d">
+                Source on GitHub · same input · same dist hash · you can verify the shipped bundle
+                matches
+              </div>
+            </div>
+            <span class="status">SBOM published</span>
+          </div>
+        </div>
+        <div class="csp">
+          <span class="com"># sveska.studio CSP header (production)</span>
+          <span class="kw">Content-Security-Policy:</span>
+          <span class="kw">default-src</span> <span class="v">'self'</span>;
+          <span class="kw">script-src</span> <span class="v">'self'</span>;
+          <span class="kw">style-src</span> <span class="v">'self' 'unsafe-inline'</span>;
+          <span class="com">/* CSS-only inline */</span> <span class="kw">font-src</span>
+          <span class="v">'self' data:</span>; <span class="kw">connect-src</span>
+          <span class="v">'self' https://api.sveska.studio</span>;
+          <span class="com">/* AI proxy only */</span> <span class="kw">img-src</span>
+          <span class="v">'self' data: blob:</span>; <span class="kw">frame-src</span>
+          <span class="v">'none'</span>; <span class="kw">object-src</span>
+          <span class="v">'none'</span>; <span class="kw">base-uri</span>
+          <span class="v">'self'</span>; <span class="kw">form-action</span>
+          <span class="v">'self'</span>; <span class="kw">upgrade-insecure-requests</span>;
+        </div>
+      </div>
+
+      <div class="sec">
+        <div class="head">
+          <span class="n">04 — Hash-share &amp; export</span>
+          <h2>What you can choose to share.</h2>
+          <span class="tail"></span>
+        </div>
+        <p>
+          You can share a note via URL (the body lives in the <code class="mono">#</code> fragment —
+          never sent to any server). Plaintext, opt-in, with a warning. You can export
+          <code class="mono">.txt / .md / .html / .pdf</code> — every export is a file you save, not
+          an upload.
+        </p>
+        <p class="dim">
+          Hash-share is a feature, not a default. The CTA always reads
+          <code class="mono">"share via URL · plaintext"</code> — no euphemism.
+        </p>
+      </div>
+
+      <div class="sec">
+        <div class="head">
+          <span class="n">05 — Sub-processors</span>
+          <h2>Everyone we depend on.</h2>
+          <span class="tail"></span>
+        </div>
+        <p class="dim">
+          Three vendors. Each is gated behind a single, replaceable seam (CLAUDE.md §3).
+        </p>
+        <div class="threat-grid">
+          <div class="h">Vendor</div>
+          <div class="h acc">What for</div>
+          <div class="h">What they see</div>
+
+          <div class="role">Cloudflare Pages<span class="hint">static hosting</span></div>
+          <div class="cell">serving HTML/JS/CSS</div>
+          <div class="cell">
+            <b>request logs</b> · IP + UA · 24h retention · per Cloudflare ToS · no app-level data
+          </div>
+
+          <div class="role">Cloudflare Workers<span class="hint">AI edge proxy</span></div>
+          <div class="cell"><code>/api/ai</code> requests</div>
+          <div class="cell">
+            <b class="warn">prompt body</b> when you invoke a slash command · not stored beyond
+            rate-limit window
+          </div>
+
+          <div class="role">Anthropic<span class="hint">AI model provider</span></div>
+          <div class="cell">model inference</div>
+          <div class="cell">
+            <b class="warn">prompt + selection</b> · per Anthropic ToS, not used for training;
+            deleted within 30 days
+          </div>
+        </div>
+      </div>
+
+      <div class="contact">
+        <div class="info">
+          <h2>Found a vulnerability?</h2>
+          <p>
+            Tell us before you tell the world. We acknowledge within 48 hours, ship a fix within 7
+            days, and publish a credit (with your name, if you want one).
+          </p>
+        </div>
+        <span class="pgp"
+          ><a
+            href="/cdn-cgi/l/email-protection"
+            class="__cf_email__"
+            data-cfemail="ee9d8b8d9b9c879a97ae9d988b9d858fc09d9a9b8a8781"
+            >[email&#160;protected]</a
+          >
+          · PGP B7E2 …5F09</span
+        >
+      </div>
+
+      <footer class="coda">
+        <span><b>Sveska</b> · privacy &amp; security · v1.0 · CLAUDE.md §5</span>
+        <span>last reviewed · 2026.05.16</span>
+        <span>sveska.studio/privacy</span>
+      </footer>
+    </div>
+    <script
+      data-cfasync="false"
+      src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+    ></script>
+  </body>
+</html>

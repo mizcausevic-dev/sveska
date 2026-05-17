@@ -1,0 +1,1688 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sveska — Brand Collateral · v1.0</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 14.5px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: var(--font-mono);
+      }
+      .display {
+        font-family: var(--font-display);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .dim {
+        color: var(--text-dim);
+      }
+
+      .wrap {
+        max-width: 1320px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .topbar b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .topbar .live {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--signal-400);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--signal-400) 22%, transparent);
+        display: inline-block;
+        margin-right: 10px;
+      }
+
+      header.hero {
+        padding: 56px 0 56px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 48px;
+        align-items: end;
+      }
+      header h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 80px;
+        letter-spacing: -0.035em;
+        line-height: 0.95;
+        margin: 0 0 22px;
+      }
+      header h1 .amb {
+        color: var(--accent);
+      }
+      header p.lead {
+        font-size: 17px;
+        color: var(--text-dim);
+        max-width: 62ch;
+        margin: 0;
+        line-height: 1.55;
+      }
+      header .stamp {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-end;
+        min-width: 240px;
+      }
+      header .stamp .row {
+        display: flex;
+        gap: 14px;
+      }
+      header .stamp .row b {
+        color: var(--text);
+        font-weight: 500;
+      }
+      header .stamp .accent {
+        color: var(--accent);
+      }
+
+      /* card grid */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 14px;
+        margin: 14px 0;
+      }
+      .card {
+        background: var(--ink-800);
+        border: 1px solid var(--ink-700);
+        border-radius: 6px;
+        padding: 0;
+        position: relative;
+        overflow: hidden;
+        min-height: 240px;
+        display: flex;
+        flex-direction: column;
+      }
+      .card.paper {
+        background: #fbf8f1;
+        color: #15110a;
+        border-color: #e2dcce;
+      }
+      .card.amber {
+        background: var(--accent);
+        color: #0c0c0e;
+        border-color: #c9871f;
+      }
+      .card .num {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        display: flex;
+        gap: 14px;
+        align-items: baseline;
+        padding: 18px 22px 0;
+      }
+      .card .num b {
+        color: var(--text);
+        font-weight: 500;
+        letter-spacing: 0.04em;
+      }
+      .card.paper .num {
+        color: #6b6457;
+      }
+      .card.paper .num b {
+        color: #15110a;
+      }
+      .card.amber .num {
+        color: rgba(12, 12, 14, 0.6);
+      }
+      .card.amber .num b {
+        color: #0c0c0e;
+      }
+      .card .footnote {
+        margin-top: auto;
+        padding: 18px 22px;
+        border-top: 1px solid var(--ink-700);
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.04em;
+        color: var(--text-dim);
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 14px;
+      }
+      .card.paper .footnote {
+        border-top-color: #e2dcce;
+        color: #6b6457;
+      }
+      .card.paper .footnote b {
+        color: #15110a;
+        font-weight: 500;
+      }
+      .card .footnote b {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .col-12 {
+        grid-column: span 12;
+      }
+      .col-8 {
+        grid-column: span 8;
+      }
+      .col-7 {
+        grid-column: span 7;
+      }
+      .col-6 {
+        grid-column: span 6;
+      }
+      .col-5 {
+        grid-column: span 5;
+      }
+      .col-4 {
+        grid-column: span 4;
+      }
+      .col-3 {
+        grid-column: span 3;
+      }
+
+      /* OG card surface */
+      .og-stage {
+        flex: 1;
+        padding: 18px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at 50% 40%, #0c0c0e, #0c0c0e 70%);
+      }
+      .og {
+        width: 100%;
+        max-width: 760px;
+        aspect-ratio: 1200 / 630;
+        background: #0c0c0e;
+        border-radius: 8px;
+        border: 1px solid var(--ink-700);
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      }
+      .og::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 100% 0%,
+            color-mix(in oklab, var(--accent) 12%, transparent) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 0% 100%,
+            color-mix(in oklab, var(--signal-400) 8%, transparent) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+      }
+      .og .inner {
+        position: absolute;
+        inset: 0;
+        padding: 60px 64px;
+        display: flex;
+        flex-direction: column;
+        z-index: 2;
+        color: #f4efe6;
+      }
+      .og .brand-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .og .brand-row svg {
+        width: 48px;
+        height: 48px;
+      }
+      .og .brand-row .wm {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: -0.025em;
+        line-height: 1;
+        color: #f4efe6;
+      }
+      .og .brand-row .wm .studio {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-size: 22px;
+        font-weight: 500;
+      }
+      .og .title {
+        margin-top: auto;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 80px;
+        letter-spacing: -0.035em;
+        line-height: 0.95;
+      }
+      .og .title .amb {
+        color: var(--accent);
+      }
+      .og .sub {
+        margin-top: 18px;
+        font-family: var(--font-mono);
+        font-size: 18px;
+        color: #b8b2a6;
+        letter-spacing: 0.04em;
+      }
+      .og .foot-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+        padding-top: 18px;
+        border-top: 1px solid #222228;
+        font-family: var(--font-mono);
+        font-size: 14px;
+        letter-spacing: 0.06em;
+        color: #b8b2a6;
+        text-transform: uppercase;
+      }
+      .og .foot-row b {
+        color: #f4efe6;
+        font-weight: 500;
+      }
+      .og .foot-row .live {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+      }
+      .og .foot-row .live::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--accent);
+      }
+
+      /* twitter card variant */
+      .tw-stage {
+        flex: 1;
+        padding: 18px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .tw {
+        width: 100%;
+        max-width: 520px;
+        aspect-ratio: 2 / 1;
+        background: #f4efe6;
+        color: #15110a;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      }
+      .tw .inner {
+        position: absolute;
+        inset: 0;
+        padding: 38px 42px;
+        display: flex;
+        flex-direction: column;
+      }
+      .tw .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .tw .brand svg {
+        width: 32px;
+        height: 32px;
+      }
+      .tw .brand .wm {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.022em;
+      }
+      .tw .brand .wm .studio {
+        font-family: var(--font-mono);
+        color: #c9871f;
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .tw .title {
+        margin-top: auto;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 46px;
+        letter-spacing: -0.035em;
+        line-height: 0.95;
+      }
+      .tw .title .amb {
+        color: #c9871f;
+      }
+      .tw .foot {
+        margin-top: 14px;
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        color: #6b6457;
+        text-transform: uppercase;
+      }
+      .tw .foot b {
+        color: #15110a;
+        font-weight: 500;
+      }
+
+      /* business card */
+      .bc-stage {
+        flex: 1;
+        padding: 18px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+      .bc {
+        width: 100%;
+        max-width: 340px;
+        aspect-ratio: 85 / 54;
+        border-radius: 10px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+        overflow: hidden;
+        position: relative;
+      }
+      .bc-front {
+        background: #0c0c0e;
+        color: #f4efe6;
+        padding: 22px 24px;
+        display: flex;
+        flex-direction: column;
+      }
+      .bc-front .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .bc-front .name {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.018em;
+        color: #f4efe6;
+      }
+      .bc-front .role {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #b8b2a6;
+        margin-top: 2px;
+      }
+      .bc-front .mini {
+        width: 38px;
+        height: 38px;
+      }
+      .bc-front .bottom {
+        margin-top: auto;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.04em;
+        color: #b8b2a6;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .bc-front .bottom b {
+        color: #f4efe6;
+        font-weight: 500;
+      }
+      .bc-back {
+        background: var(--accent);
+        color: #0c0c0e;
+        padding: 22px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 6px;
+        position: relative;
+      }
+      .bc-back .quote {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 24px;
+        letter-spacing: -0.022em;
+        line-height: 1;
+        color: #0c0c0e;
+      }
+      .bc-back .sub {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(12, 12, 14, 0.6);
+        margin-top: 4px;
+      }
+      .bc-back svg.deco {
+        position: absolute;
+        bottom: 14px;
+        right: 14px;
+        opacity: 0.7;
+      }
+
+      /* email signature */
+      .es-stage {
+        flex: 1;
+        padding: 30px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .es {
+        background: #f4efe6;
+        color: #15110a;
+        border-radius: 0;
+        padding: 24px 28px;
+        width: 100%;
+        max-width: 520px;
+        font-family:
+          var(--font-ui),
+          -apple-system,
+          system-ui,
+          sans-serif;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+        border-left: 3px solid var(--accent);
+      }
+      .es .name {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: -0.015em;
+        color: #15110a;
+        margin-bottom: 2px;
+      }
+      .es .role {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11.5px;
+        letter-spacing: 0.06em;
+        color: #6b6457;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+      .es .row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: #15110a;
+        padding: 2px 0;
+      }
+      .es .row .k {
+        color: #6b6457;
+        min-width: 60px;
+      }
+      .es .row a {
+        color: #c9871f;
+        text-decoration: none;
+      }
+      .es .divider {
+        height: 1px;
+        background: #e2dcce;
+        margin: 14px 0 12px;
+      }
+      .es .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .es .footer .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: -0.02em;
+        color: #15110a;
+      }
+      .es .footer .brand .studio {
+        font-family: 'JetBrains Mono', monospace;
+        color: #c9871f;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .es .footer .tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        color: #6b6457;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      /* sticker / pin */
+      .pin-stage {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        background: var(--ink-900);
+      }
+      .pin {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #0c0c0e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 18px 36px rgba(0, 0, 0, 0.55),
+          inset 0 0 0 5px #0c0c0e,
+          inset 0 0 0 6px var(--accent);
+        text-align: center;
+        position: relative;
+      }
+      .pin .small {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 0.16em;
+        color: rgba(12, 12, 14, 0.6);
+        text-transform: uppercase;
+        position: absolute;
+        top: 18px;
+      }
+      .pin .mark {
+        margin-top: 8px;
+      }
+      .pin .big {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.025em;
+        line-height: 1;
+        margin-top: 6px;
+      }
+      .pin .url {
+        font-family: var(--font-mono);
+        font-size: 8.5px;
+        letter-spacing: 0.14em;
+        color: rgba(12, 12, 14, 0.6);
+        text-transform: uppercase;
+        position: absolute;
+        bottom: 18px;
+      }
+
+      .pin.alt {
+        background: #0c0c0e;
+        color: var(--accent);
+        box-shadow:
+          0 18px 36px rgba(0, 0, 0, 0.55),
+          inset 0 0 0 5px var(--accent),
+          inset 0 0 0 6px #0c0c0e;
+      }
+      .pin.alt .small,
+      .pin.alt .url {
+        color: color-mix(in oklab, var(--accent) 60%, transparent);
+      }
+      .pin.alt .big {
+        color: var(--accent);
+      }
+
+      .pin.cyan {
+        background: #0c0c0e;
+        color: var(--signal-400);
+        box-shadow:
+          0 18px 36px rgba(0, 0, 0, 0.55),
+          inset 0 0 0 5px var(--signal-400),
+          inset 0 0 0 6px #0c0c0e;
+      }
+      .pin.cyan .small,
+      .pin.cyan .url {
+        color: color-mix(in oklab, var(--signal-400) 60%, transparent);
+      }
+      .pin.cyan .big {
+        color: var(--signal-400);
+        font-size: 12px;
+        line-height: 1.2;
+      }
+
+      /* app icon set */
+      .ic-stage {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+      }
+      .ic-tile {
+        background: #000;
+        border-radius: 24%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+      }
+      .ic-tile.s120 {
+        width: 120px;
+        height: 120px;
+      }
+      .ic-tile.s84 {
+        width: 84px;
+        height: 84px;
+        border-radius: 22%;
+      }
+      .ic-tile.s60 {
+        width: 60px;
+        height: 60px;
+        border-radius: 20%;
+      }
+      .ic-tile.s40 {
+        width: 40px;
+        height: 40px;
+        border-radius: 18%;
+      }
+      .ic-tile.s24 {
+        width: 24px;
+        height: 24px;
+        border-radius: 14%;
+      }
+      .ic-tile.s16 {
+        width: 16px;
+        height: 16px;
+        border-radius: 10%;
+      }
+
+      /* social profile card */
+      .profile-stage {
+        flex: 1;
+        padding: 24px 28px;
+        background: #15110a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .profile {
+        width: 100%;
+        max-width: 380px;
+        background: #0c0c0e;
+        border-radius: 14px;
+        border: 1px solid var(--ink-700);
+        overflow: hidden;
+        position: relative;
+      }
+      .profile .banner {
+        height: 100px;
+        background: linear-gradient(
+          135deg,
+          #0c0c0e 0%,
+          #222228 60%,
+          color-mix(in oklab, var(--accent) 25%, #0c0c0e) 100%
+        );
+        position: relative;
+        overflow: hidden;
+      }
+      .profile .banner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at 80% 30%,
+          color-mix(in oklab, var(--signal-400) 14%, transparent) 0%,
+          transparent 60%
+        );
+      }
+      .profile .banner-text {
+        position: absolute;
+        bottom: 14px;
+        right: 18px;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+        text-transform: uppercase;
+      }
+      .profile .avatar {
+        position: absolute;
+        top: 60px;
+        left: 18px;
+        width: 78px;
+        height: 78px;
+        border-radius: 18px;
+        background: #000;
+        border: 4px solid #0c0c0e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .profile .body {
+        padding: 50px 18px 18px;
+      }
+      .profile .handle {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: -0.018em;
+        color: #f4efe6;
+        line-height: 1.2;
+      }
+      .profile .handle .at {
+        font-family: var(--font-mono);
+        color: var(--accent);
+        font-size: 14px;
+        font-weight: 500;
+        margin-left: 4px;
+      }
+      .profile .bio {
+        margin-top: 8px;
+        font-family: var(--font-ui);
+        font-size: 13px;
+        color: #b8b2a6;
+        line-height: 1.5;
+      }
+      .profile .meta {
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid #222228;
+        display: flex;
+        gap: 14px;
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        color: #b8b2a6;
+        letter-spacing: 0.04em;
+      }
+      .profile .meta b {
+        color: #f4efe6;
+        font-weight: 500;
+      }
+      .profile .meta .live {
+        display: inline-flex;
+        gap: 5px;
+        align-items: center;
+        color: var(--signal-400);
+      }
+      .profile .meta .live::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--signal-400);
+      }
+
+      /* T-shirt / merch */
+      .tee-stage {
+        flex: 1;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+      }
+      .tee {
+        width: 180px;
+        aspect-ratio: 0.85;
+        border-radius: 24px 24px 18px 18px;
+        background: #0c0c0e;
+        position: relative;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+      }
+      .tee::before,
+      .tee::after {
+        content: '';
+        position: absolute;
+        top: -10px;
+        width: 60px;
+        height: 34px;
+        background: #0c0c0e;
+        border-radius: 26px 26px 0 0;
+      }
+      .tee::before {
+        left: -32px;
+      }
+      .tee::after {
+        right: -32px;
+      }
+      .tee .neck {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 48px;
+        height: 18px;
+        border-bottom-left-radius: 50% 60%;
+        border-bottom-right-radius: 50% 60%;
+        background: var(--ink-900);
+        box-shadow: inset 0 -1px 0 var(--ink-700);
+      }
+      .tee .design {
+        position: absolute;
+        top: 62px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+      }
+      .tee .design .big {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.025em;
+        color: #f2b544;
+        line-height: 1;
+      }
+      .tee .design .small {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 0.1em;
+        color: #b8b2a6;
+        text-transform: uppercase;
+        margin-top: 6px;
+      }
+      .tee.amber {
+        background: #f2b544;
+      }
+      .tee.amber .neck {
+        background: #c9871f;
+        box-shadow: inset 0 -1px 0 #a06813;
+      }
+      .tee.amber .design .big {
+        color: #0c0c0e;
+      }
+      .tee.amber .design .small {
+        color: rgba(12, 12, 14, 0.6);
+      }
+      .tee.paper {
+        background: #f4efe6;
+      }
+      .tee.paper .neck {
+        background: #e2dcce;
+      }
+      .tee.paper .design .big {
+        color: #0c0c0e;
+      }
+      .tee.paper .design .small {
+        color: #6b6457;
+      }
+
+      /* manifest preview */
+      .manifest-stage {
+        flex: 1;
+        padding: 18px 22px;
+      }
+      .manifest {
+        background: var(--ink-900);
+        border: 1px solid var(--ink-700);
+        border-radius: 8px;
+        padding: 16px 18px;
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        line-height: 1.7;
+        color: var(--text);
+        overflow-x: auto;
+      }
+      .manifest .kw {
+        color: var(--accent);
+      }
+      .manifest .str {
+        color: var(--paper-dim);
+      }
+      .manifest .num-lit {
+        color: var(--signal-400);
+      }
+      .manifest .com {
+        color: var(--text-dim);
+      }
+
+      /* footer */
+      footer.kitfoot {
+        border-top: 1px solid var(--ink-700);
+        padding: 28px 0 56px;
+        margin-top: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        color: var(--text-dim);
+        text-transform: uppercase;
+      }
+      footer.kitfoot b {
+        color: var(--text);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska Brand Collateral">
+    <div class="wrap">
+      <div class="topbar">
+        <div>
+          <span class="live"></span><b>Sveska</b> · Brand Collateral · v1.0 · OG · social · print ·
+          merch
+        </div>
+        <div><b>2026.05.16</b></div>
+      </div>
+
+      <header class="hero">
+        <div>
+          <h1>The brand,<br /><span class="amb">in every format.</span></h1>
+          <p>
+            OG and Twitter share cards, the studio business card, an email signature, app-icon tile
+            set, a few stickers, and the social profile chrome. Everything sized to spec; everything
+            uses only <span class="mono">tokens.css</span>.
+          </p>
+        </div>
+        <div class="stamp">
+          <div class="row"><b>Pieces</b><span class="accent">10</span></div>
+          <div class="row">
+            <span>Formats</span><span>OG · TW · 85×54 · email · icon · merch</span>
+          </div>
+          <div class="row"><span>Tokens used</span><span>11</span></div>
+          <div class="row"><span>Net new color</span><span class="accent">0</span></div>
+        </div>
+      </header>
+
+      <!-- 01 OG card -->
+      <div class="grid">
+        <div class="card col-8" style="min-height: 480px">
+          <div class="num"><span>01</span><b>OG share card · 1200 × 630</b></div>
+          <div class="og-stage">
+            <div class="og">
+              <div class="inner">
+                <div class="brand-row">
+                  <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+                    <path
+                      d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                      fill="#F2B544"
+                    />
+                    <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                    <path
+                      d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                      fill="none"
+                      stroke="#0C0C0E"
+                      stroke-width="5.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  <span class="wm">sveska<span class="studio">.studio</span></span>
+                </div>
+                <div class="title">
+                  The folded page<br /><span class="amb">does not need permission.</span>
+                </div>
+                <div class="sub">
+                  A studio-grade, local-first notebook — your notes outlive the network.
+                </div>
+                <div class="foot-row">
+                  <span><b>sveska.studio</b></span>
+                  <span class="live">v0.1 · sarajevo night</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footnote">
+            <b>OPEN GRAPH · TWITTER LARGE</b>
+            <span>og:image · 1200×630 · png · ≤ 300KB · safe-area 80px</span>
+          </div>
+        </div>
+
+        <!-- 02 Twitter card variant -->
+        <div class="card col-4" style="min-height: 480px">
+          <div class="num"><span>02</span><b>Twitter · light · 2:1</b></div>
+          <div class="tw-stage">
+            <div class="tw">
+              <div class="inner">
+                <div class="brand">
+                  <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <rect
+                      x="0"
+                      y="0"
+                      width="64"
+                      height="64"
+                      rx="14"
+                      fill="#F4EFE6"
+                      stroke="#E2DCCE"
+                    />
+                    <path
+                      d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                      fill="#EDA92E"
+                    />
+                    <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                    <path
+                      d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                      fill="none"
+                      stroke="#15110A"
+                      stroke-width="5.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  <span class="wm">sveska<span class="studio">.studio</span></span>
+                </div>
+                <div class="title">
+                  Prazna sveska.<br /><span class="amb">Najbolji početak.</span>
+                </div>
+                <div class="foot">
+                  <span><b>local-first</b> · no rainbow</span>
+                  <span>sveska.studio</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footnote">
+            <b>TWITTER · LIGHT MIRROR</b>
+            <span>1200×600 · paper ground · amber-700 mark</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Business card -->
+      <div class="grid">
+        <div class="card col-6" style="min-height: 360px">
+          <div class="num"><span>03</span><b>Business card · 85 × 54 mm</b></div>
+          <div class="bc-stage">
+            <div class="bc bc-front">
+              <div class="top">
+                <div>
+                  <div class="name">Miz Anandi</div>
+                  <div class="role">Studio · founder</div>
+                </div>
+                <svg class="mini" viewBox="0 0 64 64" aria-hidden="true">
+                  <rect x="0" y="0" width="64" height="64" rx="12" fill="#161619" />
+                  <path
+                    d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                    fill="#F2B544"
+                  />
+                  <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                  <path
+                    d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                    fill="none"
+                    stroke="#161619"
+                    stroke-width="5.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <div class="bottom">
+                <b
+                  ><a
+                    href="/cdn-cgi/l/email-protection"
+                    class="__cf_email__"
+                    data-cfemail="274a4e5d67545142544c4609545352434e48"
+                    >[email&#160;protected]</a
+                  ></b
+                >
+                <span>sveska.studio</span>
+                <span>sarajevo · brooklyn</span>
+              </div>
+            </div>
+            <div class="bc bc-back">
+              <div class="quote">Prazna sveska.<br />Najbolji početak.</div>
+              <div class="sub">an empty notebook · the best beginning</div>
+              <svg
+                class="deco"
+                viewBox="0 0 24 24"
+                width="22"
+                height="22"
+                fill="none"
+                stroke="#0C0C0E"
+                stroke-width="1.4"
+              >
+                <path d="M7 3h8l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" />
+                <path d="M15 3v4h4" />
+              </svg>
+            </div>
+          </div>
+          <div class="footnote">
+            <b>FRONT · BACK</b>
+            <span>uncoated stock · gold foil mark (amber-500) · 350gsm</span>
+          </div>
+        </div>
+
+        <!-- 04 Email signature -->
+        <div class="card col-6" style="min-height: 360px">
+          <div class="num"><span>04</span><b>Email signature · HTML &amp; plaintext</b></div>
+          <div class="es-stage">
+            <div class="es">
+              <div class="name">Miz Anandi</div>
+              <div class="role">FOUNDER · SVESKA STUDIO</div>
+              <div class="row">
+                <span class="k">email</span
+                ><a
+                  ><span class="__cf_email__" data-cfemail="95f8fcefd5e6e3f0e6fef4bbe6e1e0f1fcfa"
+                    >[email&#160;protected]</span
+                  ></a
+                >
+              </div>
+              <div class="row"><span class="k">site</span><a>sveska.studio</a></div>
+              <div class="row"><span class="k">where</span>sarajevo · brooklyn</div>
+              <div class="divider"></div>
+              <div class="footer">
+                <div class="brand">
+                  <svg viewBox="0 0 64 64" width="18" height="18" aria-hidden="true">
+                    <rect
+                      x="0"
+                      y="0"
+                      width="64"
+                      height="64"
+                      rx="14"
+                      fill="#F4EFE6"
+                      stroke="#E2DCCE"
+                    />
+                    <path
+                      d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                      fill="#EDA92E"
+                    />
+                    <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                    <path
+                      d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                      fill="none"
+                      stroke="#15110A"
+                      stroke-width="5.75"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  sveska<span class="studio">.studio</span>
+                </div>
+                <span class="tag">a studio-grade, local-first notebook</span>
+              </div>
+            </div>
+          </div>
+          <div class="footnote">
+            <b>HTML &middot; INLINE STYLES ONLY</b>
+            <span>tested in Gmail · Apple Mail · Outlook web · 540px max</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05 Stickers / pins -->
+      <div class="grid">
+        <div class="card col-7" style="min-height: 280px">
+          <div class="num"><span>05</span><b>Stickers · 1.5" diameter · die-cut</b></div>
+          <div class="pin-stage">
+            <div class="pin">
+              <div class="small">SVESKA · 01</div>
+              <svg class="mark" viewBox="0 0 64 64" width="40" height="40" aria-hidden="true">
+                <path
+                  d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                  fill="#0C0C0E"
+                />
+                <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#0C0C0E" opacity=".7" />
+                <path
+                  d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                  fill="none"
+                  stroke="#F2B544"
+                  stroke-width="5.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <div class="big">sveska</div>
+              <div class="url">SVESKA.STUDIO</div>
+            </div>
+            <div class="pin alt">
+              <div class="small">SVESKA · 02</div>
+              <svg class="mark" viewBox="0 0 64 64" width="40" height="40" aria-hidden="true">
+                <path
+                  d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                  fill="#F2B544"
+                />
+                <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                <path
+                  d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                  fill="none"
+                  stroke="#0C0C0E"
+                  stroke-width="5.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <div class="big">local-first</div>
+              <div class="url">SVESKA.STUDIO</div>
+            </div>
+            <div class="pin cyan">
+              <div class="small">SVESKA · 03</div>
+              <div
+                class="big"
+                style="font-family: var(--font-display); font-size: 18px; margin-top: 8px"
+              >
+                prazna<br />sveska.
+              </div>
+              <div class="url">NAJBOLJI POČETAK</div>
+            </div>
+          </div>
+          <div class="footnote">
+            <b>3 VARIANTS</b>
+            <span>amber · ink · cyan · all single-color, no halftone</span>
+          </div>
+        </div>
+
+        <!-- 06 App icon set -->
+        <div class="card col-5" style="min-height: 280px">
+          <div class="num"><span>06</span><b>App icon set · 16 → 512</b></div>
+          <div class="ic-stage">
+            <div class="ic-tile s120">
+              <svg viewBox="0 0 64 64" width="54%" height="54%" aria-hidden="true">
+                <path
+                  d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                  fill="#F2B544"
+                />
+                <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                <path
+                  d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                  fill="none"
+                  stroke="#0C0C0E"
+                  stroke-width="5.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 14px; align-items: center">
+              <div class="ic-tile s60">
+                <svg viewBox="0 0 64 64" width="54%" height="54%" aria-hidden="true">
+                  <path
+                    d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                    fill="#F2B544"
+                  />
+                  <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                  <path
+                    d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                    fill="none"
+                    stroke="#0C0C0E"
+                    stroke-width="5.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <div class="ic-tile s40">
+                <svg viewBox="0 0 64 64" width="54%" height="54%" aria-hidden="true">
+                  <path
+                    d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                    fill="#F2B544"
+                  />
+                  <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                  <path
+                    d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                    fill="none"
+                    stroke="#0C0C0E"
+                    stroke-width="5.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <div class="ic-tile s24">
+                <svg viewBox="0 0 64 64" width="55%" height="55%" aria-hidden="true">
+                  <path
+                    d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                    fill="#F2B544"
+                  />
+                </svg>
+              </div>
+              <div class="ic-tile s16">
+                <svg viewBox="0 0 64 64" width="55%" height="55%" aria-hidden="true">
+                  <path
+                    d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                    fill="#F2B544"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="footnote">
+            <b>iOS · ANDROID · DESKTOP · FAVICON</b>
+            <span>16 · 24 · 40 · 60 · 120 · 192 · 512 · maskable · already in brand/</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07 Social profile + manifest -->
+      <div class="grid">
+        <div class="card col-5" style="min-height: 380px; padding: 0">
+          <div class="num"><span>07</span><b>Social profile chrome</b></div>
+          <div class="profile-stage">
+            <div class="profile">
+              <div class="banner">
+                <span class="banner-text">● live · sarajevo night</span>
+              </div>
+              <div class="avatar">
+                <svg viewBox="0 0 64 64" width="52" height="52" aria-hidden="true">
+                  <path
+                    d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                    fill="#F2B544"
+                  />
+                  <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                  <path
+                    d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                    fill="none"
+                    stroke="#0C0C0E"
+                    stroke-width="5.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+              <div class="body">
+                <div class="handle">Sveska<span class="at">@sveska</span></div>
+                <div class="bio">
+                  A studio-grade, local-first notebook. Your notes outlive the network.
+                  <i>Prazna sveska. Najbolji početak.</i>
+                </div>
+                <div class="meta">
+                  <span><b>sveska.studio</b></span>
+                  <span>·</span>
+                  <span class="live">v0.1 shipping</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footnote">
+            <b>X · BLUESKY · GITHUB · MASTODON</b>
+            <span>avatar 400×400 · banner 1500×500 · same brand chord</span>
+          </div>
+        </div>
+
+        <!-- 08 Manifest preview -->
+        <div class="card col-7" style="min-height: 380px; padding: 0">
+          <div class="num"><span>08</span><b>PWA manifest · brand/manifest.json</b></div>
+          <div class="manifest-stage">
+            <div class="manifest">
+              <span class="com">// public/brand/manifest.json — wired in index.html</span>
+              {<br />
+              &nbsp;&nbsp;<span class="kw">"name"</span>:
+              <span class="str">"Sveska — local-first notebook"</span>,<br />
+              &nbsp;&nbsp;<span class="kw">"short_name"</span>:
+              <span class="str">"Sveska"</span>,<br />
+              &nbsp;&nbsp;<span class="kw">"description"</span>:
+              <span class="str"
+                >"A studio-grade, local-first notebook. Your notes outlive the network."</span
+              >,<br />
+              &nbsp;&nbsp;<span class="kw">"start_url"</span>:
+              <span class="str">"/?source=pwa"</span>,<br />
+              &nbsp;&nbsp;<span class="kw">"display"</span>:
+              <span class="str">"standalone"</span>,<br />
+              &nbsp;&nbsp;<span class="kw">"background_color"</span>:
+              <span class="str">"#0C0C0E"</span>,<br />
+              &nbsp;&nbsp;<span class="kw">"theme_color"</span>:
+              <span class="str">"#F2B544"</span>,<br />
+              &nbsp;&nbsp;<span class="kw">"lang"</span>: <span class="str">"en"</span>,
+              <span class="kw">"dir"</span>: <span class="str">"ltr"</span>,<br />
+              &nbsp;&nbsp;<span class="kw">"share_target"</span>: {
+              <span class="com">/* M3.7 · Web Share Target */</span><br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">"action"</span>:
+              <span class="str">"/share-into-sveska"</span>,<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">"method"</span>:
+              <span class="str">"POST"</span>, <span class="kw">"enctype"</span>:
+              <span class="str">"multipart/form-data"</span>,<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">"params"</span>: {
+              <span class="kw">"title"</span>: <span class="str">"title"</span>,
+              <span class="kw">"text"</span>: <span class="str">"text"</span>,
+              <span class="kw">"url"</span>: <span class="str">"url"</span> }<br />
+              &nbsp;&nbsp;},<br />
+              &nbsp;&nbsp;<span class="kw">"shortcuts"</span>: [<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;{ <span class="kw">"name"</span>:
+              <span class="str">"New note"</span>, <span class="kw">"url"</span>:
+              <span class="str">"/?new=1"</span> },<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;{ <span class="kw">"name"</span>:
+              <span class="str">"Quick capture"</span>, <span class="kw">"url"</span>:
+              <span class="str">"/?capture=1"</span> }<br />
+              &nbsp;&nbsp;],<br />
+              &nbsp;&nbsp;<span class="kw">"icons"</span>: [<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;{ <span class="kw">"src"</span>:
+              <span class="str">"icons/icon-192.png"</span>, <span class="kw">"sizes"</span>:
+              <span class="str">"192x192"</span> },<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;{ <span class="kw">"src"</span>:
+              <span class="str">"icons/icon-512.png"</span>, <span class="kw">"sizes"</span>:
+              <span class="str">"512x512"</span> },<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;{ <span class="kw">"src"</span>:
+              <span class="str">"icons/maskable-512.png"</span>, <span class="kw">"purpose"</span>:
+              <span class="str">"maskable"</span> }<br />
+              &nbsp;&nbsp;]<br />
+              }
+            </div>
+          </div>
+          <div class="footnote">
+            <b>SHIPS WITH HANDOFF/</b>
+            <span>brand/manifest.json · honored by Workbox-generated SW</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09 Merch -->
+      <div class="grid">
+        <div class="card col-12" style="min-height: 280px">
+          <div class="num"><span>09</span><b>Merch · single-color, no halftone</b></div>
+          <div class="tee-stage">
+            <div class="tee">
+              <div class="neck"></div>
+              <div class="design">
+                <div class="big">sveska</div>
+                <div class="small">studio · local-first</div>
+              </div>
+            </div>
+            <div class="tee amber">
+              <div class="neck"></div>
+              <div class="design">
+                <div class="big">prazna<br />sveska.</div>
+                <div class="small">NAJBOLJI POČETAK</div>
+              </div>
+            </div>
+            <div class="tee paper">
+              <div class="neck"></div>
+              <div class="design">
+                <div class="big">no rainbow</div>
+                <div class="small">ONE AMBER · ONE SIGNAL</div>
+              </div>
+            </div>
+          </div>
+          <div class="footnote">
+            <b>3 SHIRTS · 1 PHILOSOPHY</b>
+            <span>ink-900 · amber-500 · paper · single-screen print · cotton 220gsm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 Lockup safe-area rules -->
+      <div class="grid">
+        <div class="card col-12 paper" style="min-height: 200px; padding: 0">
+          <div class="num"><span>10</span><b>Lockup safe area &amp; clearspace</b></div>
+          <div
+            style="
+              flex: 1;
+              padding: 36px 40px;
+              display: grid;
+              grid-template-columns: 1fr 1fr 1fr;
+              gap: 32px;
+              align-items: center;
+            "
+          >
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <div
+                class="mono"
+                style="
+                  font-size: 10.5px;
+                  letter-spacing: 0.1em;
+                  color: #6b6457;
+                  text-transform: uppercase;
+                "
+              >
+                CLEARSPACE
+              </div>
+              <div class="display" style="font-size: 24px; color: #15110a">
+                ≥ 0.5 × mark height on every side.
+              </div>
+              <div class="mono" style="font-size: 12px; color: #6b6457; line-height: 1.55">
+                Never crowd. Never overlap with text. The mark wants room to breathe.
+              </div>
+            </div>
+
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+              "
+            >
+              <svg viewBox="0 0 280 200" width="100%" style="max-width: 260px" aria-hidden="true">
+                <defs>
+                  <pattern id="bcgrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M20 0H0V20" fill="none" stroke="#E2DCCE" stroke-width="1" />
+                  </pattern>
+                </defs>
+                <rect x="0" y="0" width="280" height="200" fill="url(#bcgrid)" />
+                <rect
+                  x="60"
+                  y="40"
+                  width="160"
+                  height="120"
+                  fill="none"
+                  stroke="#C9871F"
+                  stroke-width="1"
+                  stroke-dasharray="4 3"
+                />
+                <g transform="translate(100 70)">
+                  <rect x="0" y="0" width="64" height="64" rx="14" fill="#F4EFE6" />
+                  <path
+                    d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                    fill="#EDA92E"
+                  />
+                  <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+                  <path
+                    d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                    fill="none"
+                    stroke="#15110A"
+                    stroke-width="5.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </g>
+                <text
+                  x="180"
+                  y="40"
+                  font-family="JetBrains Mono"
+                  font-size="10"
+                  fill="#C9871F"
+                  letter-spacing="1"
+                >
+                  0.5×
+                </text>
+                <text
+                  x="180"
+                  y="170"
+                  font-family="JetBrains Mono"
+                  font-size="10"
+                  fill="#C9871F"
+                  letter-spacing="1"
+                >
+                  SAFE
+                </text>
+              </svg>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <div
+                class="mono"
+                style="
+                  font-size: 10.5px;
+                  letter-spacing: 0.1em;
+                  color: #6b6457;
+                  text-transform: uppercase;
+                "
+              >
+                MIN SIZE
+              </div>
+              <div class="display" style="font-size: 24px; color: #15110a">
+                Mark 16 px · lockup 120 px.
+              </div>
+              <div class="mono" style="font-size: 12px; color: #6b6457; line-height: 1.55">
+                Below either, drop to the favicon outline. The wordmark is outlined in the SVG —
+                never re-typeset.
+              </div>
+            </div>
+          </div>
+          <div class="footnote">
+            <b>PAPER VARIANT &middot; FOR DOCS &amp; INVOICES</b>
+            <span>BRAND.md §1 · sveska-logo-light.svg</span>
+          </div>
+        </div>
+      </div>
+
+      <footer class="kitfoot">
+        <span><b>Sveska</b> · Brand Collateral · v1.0 · 10 pieces</span>
+        <span>sveska.studio</span>
+        <span>Sarajevo Night · 2026.05.16</span>
+      </footer>
+    </div>
+
+    <script
+      data-cfasync="false"
+      src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+    ></script>
+  </body>
+</html>

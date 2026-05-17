@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sveska — Keyboard Cheatsheet · v1.0</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+
+    <style>
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        color-scheme: dark;
+      }
+      body {
+        background: #e9e2d2;
+        color: var(--text);
+        font-family: var(--font-ui);
+        font-size: 14px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+        padding: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      /* preview chrome — hidden on print */
+      .preview-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        background: #0c0c0e;
+        color: #f4efe6;
+        border-bottom: 1px solid #222228;
+        padding: 10px 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+      }
+      .preview-bar .live {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #f2b544;
+        box-shadow: 0 0 0 3px color-mix(in oklab, #f2b544 22%, transparent);
+      }
+      .preview-bar b {
+        color: #f2b544;
+        font-weight: 500;
+      }
+      .preview-bar .meta {
+        color: #b8b2a6;
+        text-transform: uppercase;
+      }
+      .preview-bar .meta span {
+        color: #f4efe6;
+      }
+      .preview-bar .actions {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+      }
+      .preview-bar .actions button {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        height: 28px;
+        padding: 0 12px;
+        border-radius: 6px;
+        background: #222228;
+        color: #f4efe6;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.04em;
+      }
+      .preview-bar .actions button.primary {
+        background: #f2b544;
+        color: #0c0c0e;
+        font-weight: 600;
+      }
+
+      body {
+        padding-top: 64px;
+      }
+      @media print {
+        .preview-bar {
+          display: none;
+        }
+        body {
+          padding: 0;
+          background: #0c0c0e;
+        }
+      }
+
+      /* sheet */
+      .sheet {
+        width: 210mm;
+        min-height: 297mm;
+        padding: 18mm 16mm 14mm;
+        background: #0c0c0e;
+        color: #f4efe6;
+        box-shadow: 0 24px 60px rgba(20, 17, 10, 0.35);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+      @media print {
+        .sheet {
+          box-shadow: none;
+          margin: 0;
+          padding: 16mm 14mm;
+        }
+      }
+
+      /* header */
+      .sh-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 18mm;
+        padding-bottom: 7mm;
+        border-bottom: 0.5pt solid #222228;
+        margin-bottom: 7mm;
+      }
+      .sh-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sh-brand svg {
+        width: 34px;
+        height: 34px;
+      }
+      .sh-brand .wm {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.022em;
+        color: #f4efe6;
+        line-height: 1;
+      }
+      .sh-brand .wm .studio {
+        font-family: 'JetBrains Mono', monospace;
+        color: #f2b544;
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .sh-title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: -0.025em;
+        color: #f4efe6;
+        line-height: 1;
+        margin: 5px 0 0;
+      }
+      .sh-title .amb {
+        color: #f2b544;
+      }
+      .sh-meta {
+        text-align: right;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.08em;
+        color: #b8b2a6;
+        text-transform: uppercase;
+        line-height: 1.7;
+      }
+      .sh-meta b {
+        color: #f4efe6;
+        font-weight: 500;
+      }
+      .sh-meta .live {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: #f2b544;
+      }
+      .sh-meta .live::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: #f2b544;
+      }
+
+      /* legend strip */
+      .legend {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 4mm 5mm;
+        margin-bottom: 6mm;
+        background: #161619;
+        border-radius: 6px;
+        border: 0.5pt solid #222228;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        color: #b8b2a6;
+        letter-spacing: 0.04em;
+      }
+      .legend .lbl {
+        color: #f2b544;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .legend .item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .legend .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+      }
+      .legend .dot.acc {
+        background: #f2b544;
+      }
+      .legend .dot.ai {
+        background: #4fd6c4;
+      }
+      .legend .dot.ok {
+        background: #6fcf7f;
+      }
+      .legend .dot.dan {
+        background: #e5604d;
+      }
+
+      /* columns */
+      .cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10mm;
+        flex: 1;
+      }
+      .group {
+        margin-bottom: 6mm;
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .group .gh {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 2.5mm;
+        padding-bottom: 2mm;
+        border-bottom: 0.5pt solid #222228;
+      }
+      .group .gh .num {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #b8b2a6;
+      }
+      .group .gh .num b {
+        color: #f2b544;
+        font-weight: 500;
+        margin-right: 6px;
+      }
+      .group .gh h3 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: -0.012em;
+        color: #f4efe6;
+      }
+      .group .gh .count {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        color: #b8b2a6;
+        letter-spacing: 0.04em;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 1.6mm 0;
+        font-family: var(--font-ui);
+        font-size: 10.5pt;
+        color: #f4efe6;
+      }
+      .row + .row {
+        border-top: 0.25pt solid #222228;
+      }
+      .row .label {
+        flex: 1;
+        min-width: 0;
+      }
+      .row .hint {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 8.5pt;
+        color: #b8b2a6;
+        letter-spacing: 0.02em;
+        margin-left: 6px;
+      }
+      .row .keys {
+        display: inline-flex;
+        gap: 3px;
+        flex-shrink: 0;
+      }
+
+      /* keycaps */
+      .k {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9pt;
+        font-weight: 500;
+        padding: 1.5mm 2mm;
+        border-radius: 2.5pt;
+        background: #222228;
+        color: #f4efe6;
+        box-shadow:
+          inset 0 -0.5pt 0 rgba(0, 0, 0, 0.35),
+          0 0.5pt 0 rgba(255, 255, 255, 0.04);
+        letter-spacing: 0.02em;
+        min-width: 5mm;
+        text-align: center;
+        line-height: 1;
+      }
+      .k.accent {
+        background: #f2b544;
+        color: #0c0c0e;
+      }
+      .k.ai {
+        background: #4fd6c4;
+        color: #0c0c0e;
+      }
+      .k.danger {
+        background: #e5604d;
+        color: #f4efe6;
+      }
+      .k.wide {
+        padding-left: 3mm;
+        padding-right: 3mm;
+      }
+
+      .row .v {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9pt;
+        color: #b8b2a6;
+      }
+
+      /* highlight rows */
+      .row.starred {
+        background: color-mix(in oklab, #f2b544 6%, transparent);
+        padding-left: 3mm;
+        padding-right: 3mm;
+        margin-left: -3mm;
+        margin-right: -3mm;
+        border-radius: 2pt;
+      }
+      .row.starred .label {
+        color: #f4efe6;
+      }
+      .row.starred::before {
+        content: '★';
+        color: #f2b544;
+        margin-right: 6px;
+        font-size: 9pt;
+      }
+
+      /* footer */
+      .sh-foot {
+        margin-top: 5mm;
+        padding-top: 4mm;
+        border-top: 0.5pt solid #222228;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8mm;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 8.5pt;
+        color: #b8b2a6;
+        letter-spacing: 0.04em;
+      }
+      .sh-foot b {
+        color: #f4efe6;
+        font-weight: 500;
+      }
+      .sh-foot .amb {
+        color: #f2b544;
+      }
+      .sh-foot .end {
+        text-align: right;
+      }
+      .sh-foot .mid {
+        text-align: center;
+      }
+
+      .pull-quote {
+        margin-top: 4mm;
+        padding: 4mm 5mm;
+        border-left: 2pt solid #f2b544;
+        background: color-mix(in oklab, #f2b544 6%, transparent);
+        border-radius: 0 4pt 4pt 0;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 12.5pt;
+        letter-spacing: -0.012em;
+        color: #f4efe6;
+        line-height: 1.3;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 10mm;
+      }
+      .pull-quote .src {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 8.5pt;
+        color: #b8b2a6;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-weight: 400;
+      }
+    </style>
+  </head>
+  <body data-screen-label="Sveska Keyboard Cheatsheet">
+    <!-- preview chrome -->
+    <div class="preview-bar">
+      <span class="live"></span>
+      <b>Sveska</b>
+      <span class="meta">KEYBOARD CHEATSHEET · <span>v1.0</span></span>
+      <span class="meta">· A4 portrait · <span>fits on one page</span></span>
+      <div class="actions">
+        <button onclick="window.print()" class="primary">Print &middot; ⌘P</button>
+      </div>
+    </div>
+
+    <div class="sheet">
+      <!-- HEADER -->
+      <div class="sh-head">
+        <div>
+          <div class="sh-brand">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+              <rect x="0" y="0" width="64" height="64" rx="14" fill="#0C0C0E" />
+              <path
+                d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z"
+                fill="#F2B544"
+              />
+              <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F" />
+              <path
+                d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25"
+                fill="none"
+                stroke="#0C0C0E"
+                stroke-width="5.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span class="wm">sveska<span class="studio">.studio</span></span>
+          </div>
+          <div class="sh-title">Every action <span class="amb">is a keystroke.</span></div>
+        </div>
+        <div class="sh-meta">
+          <span class="live">v0.1 · sarajevo night</span><br />
+          <b>54</b> shortcuts<br />
+          <b>10</b> groups<br />
+          one A4 · keyboard-first<br />
+          <b>2026.05.16</b>
+        </div>
+      </div>
+
+      <!-- LEGEND -->
+      <div class="legend">
+        <span class="lbl">LEGEND</span>
+        <span class="item"><span class="dot acc"></span>amber · primary action</span>
+        <span class="item"><span class="dot ai"></span>cyan · AI / live</span>
+        <span class="item"><span class="dot ok"></span>safe / saved</span>
+        <span class="item"><span class="dot dan"></span>destructive</span>
+        <span class="item" style="margin-left: auto">★ memorize these first</span>
+      </div>
+
+      <!-- COLUMNS -->
+      <div class="cols">
+        <!-- LEFT COLUMN -->
+        <div>
+          <!-- 01 ESSENTIALS -->
+          <div class="group">
+            <div class="gh">
+              <span class="num"><b>01</b>essentials</span>
+              <h3>Memorize these first.</h3>
+              <span class="count">6</span>
+            </div>
+            <div class="row starred">
+              <span class="label">New note</span
+              ><span class="keys"
+                ><span class="k accent">⌘</span><span class="k accent">N</span></span
+              >
+            </div>
+            <div class="row starred">
+              <span class="label">Save snapshot</span
+              ><span class="keys"
+                ><span class="k accent">⌘</span><span class="k accent">S</span></span
+              >
+            </div>
+            <div class="row starred">
+              <span class="label">Command palette</span
+              ><span class="keys"
+                ><span class="k accent">⌘</span><span class="k accent">K</span></span
+              >
+            </div>
+            <div class="row starred">
+              <span class="label">Preferences</span
+              ><span class="keys"
+                ><span class="k accent">⌘</span><span class="k accent">,</span></span
+              >
+            </div>
+            <div class="row starred">
+              <span class="label">Focus mode</span
+              ><span class="keys"><span class="k">Alt</span><span class="k">F</span></span>
+            </div>
+            <div class="row starred">
+              <span class="label">Slash menu in editor</span
+              ><span class="keys"><span class="k">/</span></span>
+            </div>
+          </div>
+
+          <!-- 02 FILE -->
+          <div class="group">
+            <div class="gh">
+              <span class="num"><b>02</b>file &amp; export</span>
+              <h3>In, out, and saved.</h3>
+              <span class="count">8</span>
+            </div>
+            <div class="row">
+              <span class="label">New note · template</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⇧</span><span class="k">N</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Quick capture → inbox</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⇧</span><span class="k">I</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Save as .txt</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">S</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Save NAMED snapshot</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⇧</span><span class="k">S</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Import file…</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">O</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Export menu</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">E</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Print / PDF</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">P</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Clear note <span class="hint">requires confirm</span></span
+              ><span class="keys"
+                ><span class="k danger">Ctrl</span><span class="k danger">Del</span></span
+              >
+            </div>
+          </div>
+
+          <!-- 03 NAVIGATION -->
+          <div class="group">
+            <div class="gh">
+              <span class="num"><b>03</b>navigation</span>
+              <h3>Move through the notebook.</h3>
+              <span class="count">7</span>
+            </div>
+            <div class="row">
+              <span class="label">Find in note</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">F</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Find &amp; replace</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⌥</span><span class="k">F</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Fuzzy-search all notes</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⇧</span><span class="k">F</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Switch tab N</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">1</span><span class="v">…</span
+                ><span class="k">9</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Next / previous tab</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⇧</span><span class="k">]</span
+                ><span class="v">·</span><span class="k">[</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Close tab <span class="hint">undo 10s</span></span
+              ><span class="keys"><span class="k">⌘</span><span class="k">W</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Go to glossary</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">G</span></span>
+            </div>
+          </div>
+
+          <!-- 04 EDITOR -->
+          <div class="group">
+            <div class="gh">
+              <span class="num"><b>04</b>editor</span>
+              <h3>Marks on the page.</h3>
+              <span class="count">7</span>
+            </div>
+            <div class="row">
+              <span class="label">Bold</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">B</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Italic</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">I</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Heading 1 / 2 / 3</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⌥</span><span class="k">1</span
+                ><span class="v">…</span><span class="k">3</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Code · inline</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">`</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Checklist item</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⇧</span><span class="k">L</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Toggle checked</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">↵</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Indent / outdent</span
+              ><span class="keys"
+                ><span class="k">Tab</span><span class="v">·</span><span class="k">⇧</span
+                ><span class="k">Tab</span></span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+          <!-- 05 AI -->
+          <div class="group">
+            <div class="gh">
+              <span class="num"><b>05</b>AI · slash</span>
+              <h3>The capability, not the coupling.</h3>
+              <span class="count">8</span>
+            </div>
+            <div class="row">
+              <span class="label">Open slash menu</span
+              ><span class="keys"><span class="k ai">/</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Run /improve</span
+              ><span class="keys"
+                ><span class="k">/</span><span class="k">i</span><span class="k">m</span
+                ><span class="k">p</span><span class="k">↵</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Run on selection</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">↵</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Accept diff</span
+              ><span class="keys"
+                ><span class="k accent">⌘</span><span class="k accent">↵</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Reject diff</span
+              ><span class="keys"><span class="k danger">esc</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Cancel stream</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">.</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Retry / regenerate</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">R</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Auto-suggest <span class="hint">selection ≥ 12w</span></span
+              ><span class="keys"><span class="k">Alt</span><span class="k">hold</span></span>
+            </div>
+          </div>
+
+          <!-- 06 TAGS & PIN -->
+          <div class="group">
+            <div class="gh">
+              <span class="num"><b>06</b>tags · pin · move</span>
+              <h3>Organize without leaving keys.</h3>
+              <span class="count">5</span>
+            </div>
+            <div class="row">
+              <span class="label">Tag picker</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">T</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Pin / unpin note</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⇧</span><span class="k">P</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Rename note title</span
+              ><span class="keys"><span class="k">F2</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Move to inbox</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⇧</span><span class="k">M</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Send to trash</span
+              ><span class="keys"
+                ><span class="k danger">⌘</span><span class="k danger">⌫</span></span
+              >
+            </div>
+          </div>
+
+          <!-- 07 HISTORY -->
+          <div class="group">
+            <div class="gh">
+              <span class="num"><b>07</b>history · version</span>
+              <h3>The local time machine.</h3>
+              <span class="count">4</span>
+            </div>
+            <div class="row">
+              <span class="label">Open version history</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">H</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Restore selected version</span
+              ><span class="keys"
+                ><span class="k accent">⌘</span><span class="k accent">⇧</span
+                ><span class="k accent">R</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Diff vs current</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">D</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Undo / redo</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">Z</span><span class="v">·</span
+                ><span class="k">⇧</span><span class="k">Z</span></span
+              >
+            </div>
+          </div>
+
+          <!-- 08 VIEW -->
+          <div class="group">
+            <div class="gh">
+              <span class="num"><b>08</b>view · mode</span>
+              <h3>Show the page the way you write.</h3>
+              <span class="count">6</span>
+            </div>
+            <div class="row">
+              <span class="label">Toggle sidebar</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">\</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Focus mode</span
+              ><span class="keys"><span class="k">Alt</span><span class="k">F</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Typewriter mode</span
+              ><span class="keys"><span class="k">Alt</span><span class="k">T</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Text ↔ canvas</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⇧</span><span class="k">C</span></span
+              >
+            </div>
+            <div class="row">
+              <span class="label">Statistics modal</span
+              ><span class="keys"><span class="k">⌘</span><span class="k">/</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Theme · dark / light / system</span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">⇧</span><span class="k">T</span></span
+              >
+            </div>
+          </div>
+
+          <!-- 09 PALETTE -->
+          <div class="group">
+            <div class="gh">
+              <span class="num"><b>09</b>inside the palette</span>
+              <h3>Once it's open.</h3>
+              <span class="count">4</span>
+            </div>
+            <div class="row">
+              <span class="label">Navigate up / down</span
+              ><span class="keys"><span class="k">↑</span><span class="k">↓</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Open selected</span
+              ><span class="keys"><span class="k accent">↵</span></span>
+            </div>
+            <div class="row">
+              <span class="label">Close palette</span
+              ><span class="keys"><span class="k">esc</span></span>
+            </div>
+            <div class="row">
+              <span class="label"
+                >Jump to category <span class="hint">AI / notes / actions</span></span
+              ><span class="keys"
+                ><span class="k">⌘</span><span class="k">1</span><span class="v">…</span
+                ><span class="k">3</span></span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- pull quote -->
+      <div class="pull-quote">
+        <span>Prazna sveska.<br /><span style="color: #f2b544">Najbolji početak.</span></span>
+        <span class="src">SVESKA.STUDIO · BOSNIAN · "AN EMPTY NOTEBOOK · THE BEST BEGINNING"</span>
+      </div>
+
+      <!-- footer -->
+      <div class="sh-foot">
+        <div>
+          <b>Sveska</b> · keyboard cheatsheet · v1.0<br />
+          print at 100% · A4 portrait
+        </div>
+        <div class="mid">
+          <span class="amb">●</span> works offline · no key in the browser<br />
+          every action ↑ is reachable without a mouse
+        </div>
+        <div class="end">
+          <b>sveska.studio</b> · 2026<br />
+          sarajevo night · inked paper
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
