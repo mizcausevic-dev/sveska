@@ -136,7 +136,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 
 ### M4 — AI layer (secure)
 
-- ☐ T4.1 Edge function `/api/ai`: key in env, rate-limited, streamed. Threat-model documented.
+- ✅ T4.1 Edge function `/api/ai`: key in env, rate-limited, streamed. Threat-model documented.
 - ☐ T4.2 Slash AI: `/improve`, `/summarize`, `/continue`, `/rewrite`, "Copy as LinkedIn post". Graceful no-key degradation.
 - ☐ T4.3 Notes → image (Concise / Detailed visualization render). **AC:** zero key in client bundle (grep gate in CI).
 
@@ -172,7 +172,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 | #   | Decision         | Owner      | Notes                                                                                                         |
 | --- | ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
 | 1   | Canvas vendor    | ✅ DECIDED | Excalidraw (MIT), vendored + pinned, lazy-loaded behind CanvasProvider. tldraw dropped — no license exposure. |
-| 2   | Edge host        | Miz        | Cloudflare Workers vs Vercel Edge (both connectors viable).                                                   |
+| 2   | Edge host        | ✅ DECIDED | **Netlify Edge Functions** (2026-05-17). Same origin keeps CSP clean; existing deploy pipeline; no new auth.  |
 | 3   | Sync (post-M6)   | Miz        | Only if E2E-encrypted.                                                                                        |
 | 4   | Analytics vendor | Miz        | Cookieless/self-host; consent-gated.                                                                          |
 

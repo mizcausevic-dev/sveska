@@ -7,16 +7,18 @@
 
 ## In progress
 
-- [ ] **M3 close — tag `v0.3.0-m3` + release notes**
-  - **AC**: tag pushed, release notes summarise T3.1–T3.7, both CLAUDE.md copies have all M3 ticks.
+- [ ] **T4.2 — Slash AI commands (`/improve`, `/summarize`, `/continue`, `/rewrite`, copy-as-linkedin)**
+  - **Why**: with the T4.1 proxy live, surface user-facing AI flows. Each command runs a curated system prompt against the active note's body and streams the result (token-by-token) into a side pane or replaces a selection in place.
+  - **AC**: typing `/` in the editor surfaces an `ai` group in the slash popover; selecting `/improve` (and friends) streams tokens visibly; unconfigured proxy degrades to "AI offline" toast instead of crashing; "Copy as LinkedIn post" sits in the command palette + writes the result to the clipboard.
+  - **Don't**: bundle a prompts-edit UI in this ticket — the catalog is hard-coded; user-editable prompts land in M6 if scope allows.
 
 ## Next up (sequential, top-down)
 
-- [ ] T3.4 — Templates (incl. meeting-notes) + snippet manager + prompt library
-- [ ] T3.5 — Typewriter mode + typing sounds (key / space / enter, volume)
-- [ ] T3.6 — Paper textures · writing timer · word-count goal · find & replace
-- [ ] T3.7 — Import .txt/.md · Web Share target · share-via-URL hash · PDF export
-- [ ] **M3 close** — tag `v0.3.0-m3`, release notes
+- [ ] T4.3 — Notes → image (Concise / Detailed visualization render). **AC**: zero key in client bundle (grep gate in CI).
+- [ ] **M4 close** — tag `v0.4.0-m4`, release notes
+- [ ] **M5** — Canvas (Excalidraw vendored, lazy, behind CanvasProvider seam)
+- [ ] **M6** — Glossary engine · content surface · lead-gen · pricing
+- [ ] **M7** — Hardening (Playwright offline + perf budget CI + a11y audit + security review)
 
 ## Recently done (this branch only)
 
@@ -44,6 +46,9 @@
 - ✅ T3.5 — Typewriter scroll hook (active line centered ~40% from top) + typing sounds hook (WebAudio synth click, 25ms throttle, pitch per key: 520Hz Enter / 360Hz Space / 440Hz default) · Prefs rows with conditional volume slider · 3 new persisted editor prefs (typewriter / sounds / soundVolume, both toggles default OFF) · 6 unit tests + browser preview verified
 - ✅ T3.6 — Paper textures (dotted/graph/linen/grain, CSS-only, no assets) + Pomodoro-style writing timer (auto-pauses on 60s idle) + word-count goal progress bar in SaveIndicator + Ctrl+F find/replace bar with match counter and case-sensitive toggle · 2 new persisted editor prefs (paper / wordGoal) · 12 unit tests + browser preview verified
 - ✅ T3.7 — Import .txt/.md (file picker + drag-drop on rail) · Web Share target → inbox · share-via-URL `#note=<base64url>` (pack + parse + auto-open on load + "Copy share link" palette command) · lazy `.pdf` export (jsPDF dynamic import; 223 KB into separate chunks, not initial bundle) · check-bundle.mjs updated to only count initial-load chunks · 8 unit tests + browser preview verified
+- ✅ **M3 ship** — tagged [v0.3.0-m3](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.3.0-m3), GitHub release with per-ticket bullets
+- ✅ M4 edge-host decision — **Netlify Edge Functions** (over CF Workers / Vercel Edge). Same origin, single deploy pipeline.
+- ✅ T4.1 — `netlify/edge-functions/ai.ts` streaming Anthropic `/v1/messages` proxy (per-IP token bucket, same-origin guard, schema gate, key in `Deno.env`) · `netlify.toml` `[[edge_functions]]` route at `/api/ai` · `src/ai/aiClient.ts` SSE consumer (yields text deltas, maps to `AIError` kinds) · threat model + secret docs in `src/ai/README.md` · 6 unit tests
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

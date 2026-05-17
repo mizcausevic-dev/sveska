@@ -26,7 +26,15 @@
   status = 301
   force = true
 
+# T4.1 — AI proxy edge function. Lives in netlify/edge-functions/ai.ts.
+# Secret: `netlify env:set ANTHROPIC_API_KEY <key>` (production only).
+# Without the secret the function 503s and the client degrades silently.
+[[edge_functions]]
+  function = "ai"
+  path = "/api/ai"
+
 # SPA fallback — every unmatched path returns index.html.
+# Must come AFTER the edge_functions block so /api/ai doesn't fall through.
 [[redirects]]
   from = "/*"
   to = "/index.html"

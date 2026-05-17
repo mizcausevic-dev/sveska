@@ -44,6 +44,7 @@
 - **jsdom's Blob lacks both `.text()` and `.arrayBuffer()`**: tests that read export Blobs must use a FileReader-based helper (`fr.readAsText(blob)`). See `src/__tests__/export.test.tsx#blobText` for the pattern — markdown.test.tsx reused it after I burned 5 min discovering arrayBuffer also missing.
 - **Markdown bundle = +56KB gzip (T3.2)**: markdown-it (~45KB) + dompurify (~11KB) live in the main bundle. Total JS gzip jumped 104→160 KB; still under the 180 KB budget but tight. If M3 closes near budget, lazy-load `@/markdown/render` behind `import()` so plain-text users don't pay for the parser.
 - **check-bundle counts only initial-load chunks (T3.7)**: jsPDF is ~125KB gzip (plus html2canvas ~47KB + es helpers ~50KB = 223KB total). `scripts/check-bundle.mjs` parses dist/index.html and only sums assets it references, so `import('jspdf')` chunks don't count against the 180KB budget. Apply the same pattern for any future heavy vendor (Excalidraw at M5, anything M4 brings).
+- **Edge functions are NOT lint-checked by SPA tsconfig (T4.1)**: `netlify/edge-functions/` uses Deno (imports from `https://edge.netlify.com`) and is bundled by Netlify, not Vite. Added to ESLint ignores; type-checking happens via `netlify deploy --build` / `netlify dev`. Review function files in-PR carefully since the lint gate doesn't cover them.
 
 ## File map (where things live)
 
@@ -75,12 +76,13 @@
 | T3.5 (2026-05-17)    | 175   | 164.17 KB | 6.09 KB  | +typewriter scroll + WebAudio synth clicks     |
 | T3.6 (2026-05-17)    | 187   | 165.84 KB | 6.48 KB  | +paper / timer / word-goal / find&replace      |
 | T3.7 (2026-05-17)    | 195   | 167.31 KB | 6.48 KB  | +import / share / hash / lazy PDF (M3 close)   |
+| T4.1 (2026-05-17)    | 201   | 167.31 KB | 6.48 KB  | +edge AI proxy + SSE client (no client growth) |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 
 ## Open decisions (parking lot)
 
-- **Edge host** (M4): Cloudflare Workers vs Vercel Edge. Both connectors available. Decide before M4 starts.
+- ~~**Edge host** (M4): Cloudflare Workers vs Vercel Edge~~ — **DECIDED 2026-05-17: Netlify Edge Functions**. Same origin (CSP `default-src 'self'` stays clean), single deploy pipeline (already wired), no new secrets / domains / CORS. Deno runtime; ~50ms cold start. Decision rationale in M4.T4.1 commit.
 - **Analytics vendor** (M6.3): cookieless / self-host. Consent gate already wired.
 - **OpenDyslexic font** (M1.6): need to vendor. Currently not in `public/brand/fonts/`.
 - **Lighthouse PWA score** on prod: not yet validated (CLI doesn't run Lighthouse). User to verify in Chrome DevTools.

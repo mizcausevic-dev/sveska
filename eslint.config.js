@@ -6,7 +6,20 @@ import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 
 export default tseslint.config(
-  { ignores: ['dist', 'node_modules', 'coverage', 'public/brand', '_tmp_final'] },
+  {
+    ignores: [
+      'dist',
+      'node_modules',
+      'coverage',
+      'public/brand',
+      '_tmp_final',
+      // T4.1 — Netlify Edge Functions run in Deno and import from
+      // https://edge.netlify.com. They're bundled by Netlify, not by Vite,
+      // and intentionally aren't part of the SPA TS project. Lint is skipped
+      // here; the function file is small + reviewed in-PR.
+      'netlify/edge-functions',
+    ],
+  },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [js.configs.recommended, ...tseslint.configs.recommendedTypeChecked, prettier],
