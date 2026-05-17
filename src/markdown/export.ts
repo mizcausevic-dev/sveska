@@ -1,5 +1,6 @@
 import { type NoteAST } from './ast';
 import { renderMd } from './render';
+import { autoLinkGlossary } from '@/platform/glossary';
 
 /**
  * One AST → three formats. Adding a format = one switch arm + one extension
@@ -46,7 +47,11 @@ function bodyFor(ast: NoteAST, format: ExportFormat): string {
       // For md-mode notes we render markdown into the export. Text-mode notes
       // still use the <pre> path so whitespace + monospace are preserved.
       if (ast.mode === 'md') {
-        return htmlTemplate(ast, renderMd(normalized), { prose: true });
+        // T6.1 — auto-link glossary terms inline (first occurrence per term,
+        // skipping code/anchor blocks). The function is a no-op in non-DOM
+        // environments, so this is safe for any caller.
+        const linked = autoLinkGlossary(renderMd(normalized));
+        return htmlTemplate(ast, linked, { prose: true });
       }
       return htmlTemplate(ast, escapeHtml(normalized), { prose: false });
   }

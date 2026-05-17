@@ -18,6 +18,10 @@ export default tseslint.config(
       // and intentionally aren't part of the SPA TS project. Lint is skipped
       // here; the function file is small + reviewed in-PR.
       'netlify/edge-functions',
+      // T6.1 — one-off Node script that runs Playwright in a browser context;
+      // intentionally uses `document` inside `page.waitForFunction`. Not part
+      // of the SPA project, no need to lint.
+      'scripts/capture-mocks.mjs',
     ],
   },
   {
