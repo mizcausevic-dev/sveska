@@ -1,0 +1,1851 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sveska — Design System v1.0</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="brand/tokens.css" />
+    <link rel="stylesheet" href="brand/system.css" />
+  </head>
+  <body data-screen-label="Sveska Design System">
+    <div class="wrap">
+      <!-- ───── Topbar ───── -->
+      <div class="topbar">
+        <div class="lhs">
+          <span class="live" aria-hidden="true"></span>
+          <b>sveska</b>
+          <span>Design System · v1.0</span>
+          <span>Inked Paper · Sarajevo Night</span>
+        </div>
+        <div class="rhs">
+          <span>sveska.studio</span>
+          <span>Dark-first</span>
+          <span>2026.05.16</span>
+        </div>
+      </div>
+
+      <!-- ───── Hero ───── -->
+      <header class="hero">
+        <div>
+          <h1>Prazna sveska.<br /><span class="amb">Najbolji početak.</span></h1>
+          <p class="lead">
+            A studio-grade, local-first notepad. The system below extracts every value directly from
+            <span class="mono">tokens.css</span> and <span class="mono">BRAND.md</span> — no
+            inventions, no rainbow. One sharp accent. One signal color. One folded page.
+          </p>
+        </div>
+        <div class="stamp">
+          <div class="row"><b>System</b><span class="accent">●</span></div>
+          <div class="row"><span>Colors</span><span>11</span></div>
+          <div class="row"><span>Fonts</span><span>3 + 2 opt.</span></div>
+          <div class="row"><span>Components</span><span>10</span></div>
+          <div class="row"><span>Themes</span><span>Dark · Light</span></div>
+        </div>
+      </header>
+
+      <!-- ───── 01-04 Lockups ───── -->
+      <div class="grid">
+        <!-- 01 Primary lockup, dark -->
+        <div class="card col-8 flush">
+          <div style="padding: 28px 32px 0">
+            <div class="num"><span>01</span><b>Primary Lockup · Dark</b></div>
+          </div>
+          <div class="lockup-host">
+            <img
+              class="full"
+              src="brand/sveska-logo-dark.svg"
+              alt="sveska.studio logo on dark"
+              style="max-width: 560px"
+            />
+          </div>
+          <div class="footnote" style="padding: 0 32px 24px">
+            <b>INK-900 GROUND · DEFAULT</b>
+            <span>Clearspace ≥ 0.5 × mark height. Min width 120px.</span>
+          </div>
+        </div>
+
+        <!-- 02 Light application -->
+        <div class="card col-4 flush canvas">
+          <div style="padding: 28px 32px 0">
+            <div class="num"><span>02</span><b>Light Application</b></div>
+          </div>
+          <div class="lockup-host">
+            <img
+              class="full"
+              src="brand/sveska-logo-light.svg"
+              alt="sveska.studio logo on paper"
+              style="max-width: 280px"
+            />
+          </div>
+          <div class="footnote" style="padding: 0 32px 24px">
+            <b>PAPER GROUND</b>
+            <span>Docs · invoices</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- 03 Mark only -->
+        <div
+          class="card col-4"
+          style="align-items: center; justify-content: center; text-align: center"
+        >
+          <div class="num" style="position: absolute; top: 24px; left: 28px; right: 28px">
+            <span>03</span><b>Mark</b>
+          </div>
+          <div class="mark" style="width: 160px; height: 160px; margin: auto">
+            <img
+              src="brand/sveska-mark.svg"
+              alt="Sveska mark"
+              style="width: 100%; height: 100%; display: block"
+            />
+          </div>
+          <div class="footnote" style="position: absolute; bottom: 24px; left: 28px; right: 28px">
+            <b>SOLO</b><span>Favicon · avatar · tile</span>
+          </div>
+        </div>
+
+        <!-- 04 App tile / PWA -->
+        <div class="card col-4 flush deep">
+          <div class="num" style="padding: 24px 28px 0"><span>04</span><b>PWA · App Tile</b></div>
+          <div class="tile-host">
+            <div class="tile">
+              <img src="brand/sveska-mark.svg" alt="Sveska app tile" />
+            </div>
+          </div>
+          <div class="footnote" style="padding: 0 28px 24px">
+            <b>iOS · ANDROID · DESKTOP</b><span>maskable-512</span>
+          </div>
+        </div>
+
+        <!-- 05 Construction / fold detail -->
+        <div class="card col-4" style="align-items: center; justify-content: center">
+          <div class="num" style="position: absolute; top: 24px; left: 28px; right: 28px">
+            <span>05</span><b>Folded Page</b>
+          </div>
+          <svg
+            viewBox="0 0 280 200"
+            style="width: 90%; max-width: 260px; margin: auto"
+            aria-hidden="true"
+          >
+            <defs>
+              <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M20 0H0V20" fill="none" stroke="#222228" stroke-width=".5" />
+              </pattern>
+            </defs>
+            <rect x="0" y="0" width="280" height="200" fill="url(#grid)" />
+            <!-- page outline -->
+            <path
+              d="M40 40 H180 L220 80 V160 A12 12 0 0 1 208 172 H40 A12 12 0 0 1 28 160 V52 A12 12 0 0 1 40 40 Z"
+              fill="#F2B544"
+              stroke="none"
+            />
+            <path d="M180 40 L220 80 H188 A8 8 0 0 1 180 72 Z" fill="#C9871F" />
+            <!-- annotations -->
+            <line
+              x1="180"
+              y1="40"
+              x2="180"
+              y2="20"
+              stroke="#4FD6C4"
+              stroke-width="1"
+              stroke-dasharray="3 3"
+            />
+            <line
+              x1="220"
+              y1="80"
+              x2="240"
+              y2="80"
+              stroke="#4FD6C4"
+              stroke-width="1"
+              stroke-dasharray="3 3"
+            />
+            <text x="184" y="16" font-family="JetBrains Mono" font-size="9" fill="#4FD6C4">
+              fold origin
+            </text>
+            <text x="244" y="84" font-family="JetBrains Mono" font-size="9" fill="#4FD6C4">
+              amber-700
+            </text>
+          </svg>
+          <div class="footnote" style="position: absolute; bottom: 24px; left: 28px; right: 28px">
+            <b>GEOMETRY</b><span>Page · fold · caret</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ───── 06 Color Palette ───── -->
+      <div class="grid">
+        <div class="card col-12">
+          <div class="num"><span>06</span><b>Color · 11 Tokens</b></div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-end;
+              margin: 6px 0 22px;
+              gap: 32px;
+            "
+          >
+            <p style="margin: 0; max-width: 62ch; color: var(--text-dim); font-size: 14.5px">
+              Ink scale for surfaces. Paper for text on dark and ground in light. Amber is the only
+              brand color and only primary action color — three steps for default, hover and
+              pressed. Signal cyan is reserved for AI, live state, and unsaved/pending — never
+              decorative. Danger and OK are functional, not festive.
+            </p>
+            <div class="spec-label">
+              All values reference <span style="color: var(--text)">tokens.css</span>
+            </div>
+          </div>
+
+          <div class="palette-grid">
+            <div class="swatch" style="background: #0c0c0e; color: #f4efe6">
+              <div class="top"><span class="role">Canvas</span><span class="dot"></span></div>
+              <div class="bot">
+                <span class="tag">--ink-900</span><span class="hex">#0C0C0E</span>
+              </div>
+            </div>
+            <div class="swatch" style="background: #161619; color: #f4efe6">
+              <div class="top"><span class="role">Surface</span><span class="dot"></span></div>
+              <div class="bot">
+                <span class="tag">--ink-800</span><span class="hex">#161619</span>
+              </div>
+            </div>
+            <div class="swatch" style="background: #222228; color: #f4efe6">
+              <div class="top">
+                <span class="role">Raised · Border</span><span class="dot"></span>
+              </div>
+              <div class="bot">
+                <span class="tag">--ink-700</span><span class="hex">#222228</span>
+              </div>
+            </div>
+            <div class="swatch" style="background: #f4efe6; color: #15110a; border-color: #e2dcce">
+              <div class="top"><span class="role">Paper</span><span class="dot"></span></div>
+              <div class="bot">
+                <span class="tag">--paper</span><span class="hex">#F4EFE6</span>
+              </div>
+            </div>
+
+            <div class="swatch" style="background: #b8b2a6; color: #15110a">
+              <div class="top"><span class="role">Paper dim</span><span class="dot"></span></div>
+              <div class="bot">
+                <span class="tag">--paper-dim</span><span class="hex">#B8B2A6</span>
+              </div>
+            </div>
+            <div class="swatch" style="background: #f2b544; color: #0c0c0e">
+              <div class="top">
+                <span class="role">Primary · Brand</span><span class="dot"></span>
+              </div>
+              <div class="bot">
+                <span class="tag">--amber-500</span><span class="hex">#F2B544</span>
+              </div>
+            </div>
+            <div class="swatch" style="background: #eda92e; color: #0c0c0e">
+              <div class="top"><span class="role">Hover</span><span class="dot"></span></div>
+              <div class="bot">
+                <span class="tag">--amber-600</span><span class="hex">#EDA92E</span>
+              </div>
+            </div>
+            <div class="swatch" style="background: #c9871f; color: #0c0c0e">
+              <div class="top">
+                <span class="role">Pressed · Fold</span><span class="dot"></span>
+              </div>
+              <div class="bot">
+                <span class="tag">--amber-700</span><span class="hex">#C9871F</span>
+              </div>
+            </div>
+
+            <div class="swatch" style="background: #4fd6c4; color: #0c0c0e">
+              <div class="top">
+                <span class="role">AI · Live · Active</span><span class="dot"></span>
+              </div>
+              <div class="bot">
+                <span class="tag">--signal-400</span><span class="hex">#4FD6C4</span>
+              </div>
+            </div>
+            <div class="swatch" style="background: #e5604d; color: #0c0c0e">
+              <div class="top"><span class="role">Destructive</span><span class="dot"></span></div>
+              <div class="bot">
+                <span class="tag">--danger</span><span class="hex">#E5604D</span>
+              </div>
+            </div>
+            <div class="swatch" style="background: #6fcf7f; color: #0c0c0e">
+              <div class="top"><span class="role">Saved · OK</span><span class="dot"></span></div>
+              <div class="bot"><span class="tag">--ok</span><span class="hex">#6FCF7F</span></div>
+            </div>
+            <div class="swatch" style="background: #fbf8f1; color: #15110a">
+              <div class="top">
+                <span class="role">Light surface</span><span class="dot"></span>
+              </div>
+              <div class="bot">
+                <span class="tag">light · --surface</span><span class="hex">#FBF8F1</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="footnote" style="margin-top: 28px">
+            <b>LIGHT MODE</b>
+            <span
+              >Surfaces invert · amber stays · AI shifts to amber-700 for contrast (per BRAND
+              §2)</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- ───── 07 Typography specimens ───── -->
+      <div class="grid">
+        <div class="card specimen-card bricolage col-4">
+          <div>
+            <div class="num"><span>07 / Type</span><b>Bricolage Grotesque</b></div>
+            <div class="spec-label" style="margin-top: 14px">DISPLAY · 700 · TRACKING −3%</div>
+            <div class="big">Aa</div>
+          </div>
+          <div>
+            <div class="meta-h3">Sveska</div>
+            <div class="charset">
+              Headings · marketing · empty states. Characterful — never generic. Used for the
+              wordmark (outlined in the lockup).
+            </div>
+          </div>
+        </div>
+
+        <div class="card specimen-card satoshi col-4">
+          <div>
+            <div class="num"><span>07 / Type</span><b>Satoshi</b></div>
+            <div class="spec-label" style="margin-top: 14px">UI · 500 · 700</div>
+            <div class="big">Aa</div>
+          </div>
+          <div>
+            <div class="meta-h3">App chrome</div>
+            <div class="charset">
+              Buttons, menus, settings, tabs, modal bodies, status bar slots — every label that is
+              not a heading or code.
+            </div>
+          </div>
+        </div>
+
+        <div class="card specimen-card mono col-4">
+          <div>
+            <div class="num"><span>07 / Type</span><b>JetBrains Mono</b></div>
+            <div class="spec-label" style="margin-top: 14px">EDITOR · MONO · 400 · 500</div>
+            <div class="big">Aa</div>
+          </div>
+          <div>
+            <div class="meta-h3">.studio</div>
+            <div class="charset">
+              Note body (default), timestamps, tokens in this document, the
+              <span style="color: var(--accent)">.studio</span> mark, and every meta/tag chip.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ───── 08 Type Scale ───── -->
+      <div class="grid">
+        <div class="card col-8">
+          <div class="num"><span>08</span><b>Type Scale</b></div>
+          <p style="margin: 4px 0 18px; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            Editorial ramp from 12 px (captions) to 96 px (hero display). Editor default sits at 17
+            px / 1.7 line-height. Bricolage owns ≥ 24 px; Satoshi owns body and UI; mono owns
+            captions and code.
+          </p>
+          <div class="scale-ladder">
+            <div class="row">
+              <span class="px">12 / .75</span>
+              <span
+                class="sample mono"
+                style="
+                  font-size: 12px;
+                  letter-spacing: 0.06em;
+                  text-transform: uppercase;
+                  color: var(--text-dim);
+                "
+                >Caption · meta · status slots</span
+              >
+              <span class="use">--font-mono</span>
+            </div>
+            <div class="row">
+              <span class="px">14 / .875</span>
+              <span class="sample" style="font-size: 14px; font-weight: 500"
+                >UI label · button · menu item</span
+              >
+              <span class="use">Satoshi 500</span>
+            </div>
+            <div class="row">
+              <span class="px">16 / 1</span>
+              <span class="sample" style="font-size: 16px; font-weight: 500"
+                >Body — local-first by default.</span
+              >
+              <span class="use">Satoshi 500</span>
+            </div>
+            <div class="row">
+              <span class="px">17 / 1.0625</span>
+              <span class="sample mono" style="font-size: 17px; line-height: 1.7"
+                >Editor default · JetBrains Mono</span
+              >
+              <span class="use">Editor</span>
+            </div>
+            <div class="row">
+              <span class="px">20 / 1.25</span>
+              <span
+                class="sample"
+                style="font-size: 20px; font-weight: 500; letter-spacing: -0.01em"
+                >Subtitle · note title in list</span
+              >
+              <span class="use">Satoshi 500</span>
+            </div>
+            <div class="row">
+              <span class="px">24 / 1.5</span>
+              <span
+                class="sample"
+                style="font-size: 24px; font-weight: 700; letter-spacing: -0.015em"
+                >Section title · modal head</span
+              >
+              <span class="use">Bricolage 700</span>
+            </div>
+            <div class="row">
+              <span class="px">32 / 2</span>
+              <span class="sample display" style="font-size: 32px">Page heading · empty state</span>
+              <span class="use">Bricolage 700</span>
+            </div>
+            <div class="row">
+              <span class="px">48 / 3</span>
+              <span class="sample display" style="font-size: 48px">Hero · billboard</span>
+              <span class="use">Bricolage 700</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Radii + spacing + shadow -->
+        <div class="card col-4">
+          <div class="num"><span>09</span><b>Radii · Space · Shadow</b></div>
+          <div class="spec-label" style="margin-top: 18px">RADII · 8 · 12 · 20</div>
+          <div class="radii-row">
+            <div class="radii-box" style="border-radius: 8px"><span>sm</span><b>--r-sm</b></div>
+            <div class="radii-box" style="border-radius: 12px"><span>md</span><b>--r-md</b></div>
+            <div class="radii-box" style="border-radius: 20px"><span>lg</span><b>--r-lg</b></div>
+          </div>
+
+          <div class="spec-label" style="margin-top: 22px">
+            SPACE · 4 · 8 · 12 · 16 · 24 · 32 · 48
+          </div>
+          <div class="space-row">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+              <div class="space-bar" style="height: 4px"></div>
+              <span class="mono" style="font-size: 10px; color: var(--text-dim)">4</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+              <div class="space-bar" style="height: 8px"></div>
+              <span class="mono" style="font-size: 10px; color: var(--text-dim)">8</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+              <div class="space-bar" style="height: 12px"></div>
+              <span class="mono" style="font-size: 10px; color: var(--text-dim)">12</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+              <div class="space-bar" style="height: 16px"></div>
+              <span class="mono" style="font-size: 10px; color: var(--text-dim)">16</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+              <div class="space-bar" style="height: 24px"></div>
+              <span class="mono" style="font-size: 10px; color: var(--text-dim)">24</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+              <div class="space-bar" style="height: 32px"></div>
+              <span class="mono" style="font-size: 10px; color: var(--text-dim)">32</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+              <div class="space-bar" style="height: 48px"></div>
+              <span class="mono" style="font-size: 10px; color: var(--text-dim)">48</span>
+            </div>
+          </div>
+
+          <div class="spec-label" style="margin-top: 22px">SHADOW</div>
+          <div
+            style="
+              background: var(--ink-700);
+              height: 54px;
+              border-radius: 10px;
+              margin-top: 10px;
+              box-shadow:
+                0 1px 0 rgba(255, 255, 255, 0.03),
+                0 12px 32px rgba(0, 0, 0, 0.45);
+            "
+          ></div>
+          <div class="footnote" style="margin-top: 10px">
+            <b>--shadow</b><span>Subtle 1px highlight + soft 32px drop</span>
+          </div>
+
+          <div class="spec-label" style="margin-top: 22px">TAP · 44 MIN</div>
+          <div style="display: flex; gap: 6px; margin-top: 8px">
+            <div
+              style="width: 44px; height: 44px; background: var(--amber-500); border-radius: 8px"
+            ></div>
+            <div
+              style="
+                flex: 1;
+                align-self: center;
+                font-family: var(--font-mono);
+                font-size: 11px;
+                color: var(--text-dim);
+              "
+            >
+              All interactive targets ≥ 44×44.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─────────────────────────── COMPONENTS ─────────────────────────── -->
+
+      <!-- Section heading -->
+      <div class="grid">
+        <div class="card col-12 amber" style="min-height: 160px; padding: 32px 36px">
+          <div class="num"><span>10 — 19</span><b>Components</b></div>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-end;
+              margin-top: 18px;
+              gap: 40px;
+              flex-wrap: wrap;
+            "
+          >
+            <div
+              class="display"
+              style="
+                font-size: 48px;
+                line-height: 1;
+                letter-spacing: -0.03em;
+                color: #0c0c0e;
+                max-width: 18ch;
+              "
+            >
+              Ten components. Two themes. One vocabulary.
+            </div>
+            <div
+              class="mono"
+              style="
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: rgba(12, 12, 14, 0.7);
+                max-width: 30ch;
+                text-align: right;
+              "
+            >
+              Each component is shown in dark and light side by side. Tokens, states and behaviour
+              are documented in the footnote of every card.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 10 Button ── -->
+      <div class="grid">
+        <div class="card col-12" style="padding-bottom: 18px">
+          <div class="num"><span>10</span><b>Button — primary · ghost · danger</b></div>
+          <p style="margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            Height 40, radius 10, weight 700, label 14 px. Primary owns the amber. Ghost is the
+            workhorse. Danger inverts on confirm.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card stage-card dark-stage col-6">
+          <div class="stage-head"><span>dark</span><span class="pill">ink-900</span></div>
+          <div class="stage-body">
+            <div class="btn-grid">
+              <div class="col">
+                <button class="btn btn-primary">Save snapshot <span class="kbd">⌘S</span></button>
+                <button class="btn btn-primary" style="background: var(--accent-hover)">
+                  Hover
+                </button>
+                <button class="btn btn-primary" style="background: var(--accent-press)">
+                  Pressed
+                </button>
+                <button class="btn btn-primary" disabled>Disabled</button>
+                <span class="lbl">Primary</span>
+              </div>
+              <div class="col">
+                <button class="btn btn-ghost">Export <span class="kbd">⌥E</span></button>
+                <button class="btn btn-ghost" style="background: var(--raised)">Hover</button>
+                <button
+                  class="btn btn-ghost"
+                  style="box-shadow: inset 0 0 0 1.5px var(--accent); color: var(--accent)"
+                >
+                  Focused
+                </button>
+                <button class="btn btn-ghost" disabled>Disabled</button>
+                <span class="lbl">Ghost</span>
+              </div>
+              <div class="col">
+                <button class="btn btn-danger">Clear note</button>
+                <button class="btn btn-danger" style="background: #e5604d14">Hover</button>
+                <button
+                  class="btn btn-danger"
+                  style="background: #e5604d; color: #0c0c0e; box-shadow: none"
+                >
+                  Confirm
+                </button>
+                <button class="btn btn-danger" disabled>Disabled</button>
+                <span class="lbl">Danger</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>FOCUS</b><span>2 px amber ring · skips :hover</span>
+          </div>
+        </div>
+
+        <div class="card stage-card light-stage col-6">
+          <div class="stage-head"><span>light</span><span class="pill">paper</span></div>
+          <div class="stage-body">
+            <div class="btn-grid">
+              <div class="col">
+                <button class="btn btn-primary">Save snapshot <span class="kbd">⌘S</span></button>
+                <button class="btn btn-primary" style="background: var(--accent-hover)">
+                  Hover
+                </button>
+                <button class="btn btn-primary" style="background: var(--accent-press)">
+                  Pressed
+                </button>
+                <button class="btn btn-primary" disabled>Disabled</button>
+                <span class="lbl">Primary</span>
+              </div>
+              <div class="col">
+                <button class="btn btn-ghost">Export <span class="kbd">⌥E</span></button>
+                <button class="btn btn-ghost" style="background: var(--raised)">Hover</button>
+                <button
+                  class="btn btn-ghost"
+                  style="
+                    box-shadow: inset 0 0 0 1.5px var(--accent-hover);
+                    color: var(--accent-hover);
+                  "
+                >
+                  Focused
+                </button>
+                <button class="btn btn-ghost" disabled>Disabled</button>
+                <span class="lbl">Ghost</span>
+              </div>
+              <div class="col">
+                <button class="btn btn-danger">Clear note</button>
+                <button class="btn btn-danger" style="background: #e5604d14">Hover</button>
+                <button
+                  class="btn btn-danger"
+                  style="background: #e5604d; color: #f4efe6; box-shadow: none"
+                >
+                  Confirm
+                </button>
+                <button class="btn btn-danger" disabled>Disabled</button>
+                <span class="lbl">Danger</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>AMBER</b><span>--amber-600 base · -700 hover/pressed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 11 Tab strip ── -->
+      <div class="grid">
+        <div class="card col-12" style="padding-bottom: 18px">
+          <div class="num"><span>11</span><b>Tab strip — multi-note</b></div>
+          <p style="margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            Session-restored tabs. Active tab carries the amber rule. Cyan dot = unsaved. Plus
+            button opens a new note.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card stage-card dark-stage col-6">
+          <div class="stage-head">
+            <span>dark</span><span class="pill">3 tabs · 1 unsaved</span>
+          </div>
+          <div
+            class="stage-body"
+            style="flex-direction: column; align-items: stretch; padding: 32px 24px 36px"
+          >
+            <div class="tabs">
+              <button class="tab active">
+                <span class="dot"></span><span>weekend.md</span
+                ><svg
+                  class="x"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+              <button class="tab dirty">
+                <span class="dot"></span><span>imports of Selimović</span
+                ><svg
+                  class="x"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+              <button class="tab">
+                <span class="dot"></span><span>v0.1 ship list</span
+                ><svg
+                  class="x"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+              <button class="tab-add" aria-label="New tab">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
+            </div>
+            <div
+              style="
+                height: 140px;
+                background: var(--bg);
+                border-radius: 0 0 10px 10px;
+                box-shadow:
+                  inset 1px 0 0 var(--border-soft),
+                  inset -1px 0 0 var(--border-soft),
+                  inset 0 -1px 0 var(--border-soft);
+                padding: 20px;
+                font-family: var(--font-mono);
+                font-size: 13px;
+                color: var(--text-dim);
+              "
+            >
+              <span style="color: var(--text-dim)"># weekend.md</span><br />
+              - draft the studio post<br />
+              - read Selimović, chapter 3<br />
+              <span
+                style="
+                  background: color-mix(in oklab, var(--accent) 18%, transparent);
+                  color: var(--text);
+                  padding: 0 2px;
+                "
+                >- sveska v0.1 ship list</span
+              >
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>STATES</b><span>active · idle · dirty (cyan dot) · close-on-hover</span>
+          </div>
+        </div>
+
+        <div class="card stage-card light-stage col-6">
+          <div class="stage-head">
+            <span>light</span><span class="pill">3 tabs · 1 unsaved</span>
+          </div>
+          <div
+            class="stage-body"
+            style="flex-direction: column; align-items: stretch; padding: 32px 24px 36px"
+          >
+            <div class="tabs">
+              <button class="tab active">
+                <span class="dot"></span><span>weekend.md</span
+                ><svg
+                  class="x"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+              <button class="tab dirty">
+                <span class="dot"></span><span>imports of Selimović</span
+                ><svg
+                  class="x"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+              <button class="tab">
+                <span class="dot"></span><span>v0.1 ship list</span
+                ><svg
+                  class="x"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+              <button class="tab-add" aria-label="New tab">
+                <svg
+                  viewBox="0 0 24 24"
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+              </button>
+            </div>
+            <div
+              style="
+                height: 140px;
+                background: var(--bg);
+                border-radius: 0 0 10px 10px;
+                box-shadow:
+                  inset 1px 0 0 var(--border-soft),
+                  inset -1px 0 0 var(--border-soft),
+                  inset 0 -1px 0 var(--border-soft);
+                padding: 20px;
+                font-family: var(--font-mono);
+                font-size: 13px;
+                color: var(--text-dim);
+              "
+            >
+              <span>and the network does not need to be there.</span>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>SIGNAL · LIGHT</b><span>Dirty dot shifts to amber-700 in light</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 12 Toolbar with snapshot dot ── -->
+      <div class="grid">
+        <div class="card col-12" style="padding-bottom: 18px">
+          <div class="num"><span>12</span><b>Toolbar — with snapshot dot</b></div>
+          <p style="margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            The snapshot pulse is the system's heartbeat — pending = pulse, saved = solid, empty =
+            grey. Cyan in dark, amber-700 in light.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card stage-card dark-stage col-6">
+          <div class="stage-head">
+            <span>dark · pending</span><span class="pill">snapshot live</span>
+          </div>
+          <div class="stage-body" style="flex-direction: column; gap: 14px">
+            <div class="toolbar" role="toolbar">
+              <button class="tb-btn" aria-label="New">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+              </button>
+              <button class="tb-btn active" aria-label="Bold">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 5h6a4 4 0 1 1 0 8H7zM7 13h7a4 4 0 1 1 0 8H7z" />
+                </svg>
+              </button>
+              <button class="tb-btn" aria-label="Italic">
+                <svg viewBox="0 0 24 24"><path d="M14 5h4M10 19h4M15 5l-4 14" /></svg>
+              </button>
+              <button class="tb-btn" aria-label="Checklist">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6l2 2 4-4M4 13l2 2 4-4M4 20l2 2 4-4M14 7h7M14 14h7M14 21h7" />
+                </svg>
+              </button>
+              <span class="tb-sep"></span>
+              <span class="tb-title"
+                ><span class="dim">weekend</span>.md<span class="dim"> · edited 2m ago</span></span
+              >
+              <button class="tb-snap" aria-label="Save snapshot">
+                <span class="snap-dot"></span><span>snapshot · 14:02</span>
+              </button>
+            </div>
+            <div class="toolbar" role="toolbar">
+              <button class="tb-btn" aria-label="New">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+              </button>
+              <button class="tb-btn" aria-label="Bold">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 5h6a4 4 0 1 1 0 8H7zM7 13h7a4 4 0 1 1 0 8H7z" />
+                </svg>
+              </button>
+              <button class="tb-btn" aria-label="Italic">
+                <svg viewBox="0 0 24 24"><path d="M14 5h4M10 19h4M15 5l-4 14" /></svg>
+              </button>
+              <button class="tb-btn" aria-label="Checklist">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6l2 2 4-4M4 13l2 2 4-4M4 20l2 2 4-4M14 7h7M14 14h7M14 21h7" />
+                </svg>
+              </button>
+              <span class="tb-sep"></span>
+              <span class="tb-title"><span class="dim">untitled · empty</span></span>
+              <button class="tb-snap" style="opacity: 0.55">
+                <span class="snap-dot" style="background: #444; box-shadow: none"></span
+                ><span>no snapshot</span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>SIGNAL-400</b><span>Dot pulses · prefers-reduced-motion honored</span>
+          </div>
+        </div>
+
+        <div class="card stage-card light-stage col-6">
+          <div class="stage-head">
+            <span>light · pending</span><span class="pill">snapshot live</span>
+          </div>
+          <div class="stage-body" style="flex-direction: column; gap: 14px">
+            <div class="toolbar" role="toolbar">
+              <button class="tb-btn" aria-label="New">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+              </button>
+              <button class="tb-btn active" aria-label="Bold">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 5h6a4 4 0 1 1 0 8H7zM7 13h7a4 4 0 1 1 0 8H7z" />
+                </svg>
+              </button>
+              <button class="tb-btn" aria-label="Italic">
+                <svg viewBox="0 0 24 24"><path d="M14 5h4M10 19h4M15 5l-4 14" /></svg>
+              </button>
+              <button class="tb-btn" aria-label="Checklist">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6l2 2 4-4M4 13l2 2 4-4M4 20l2 2 4-4M14 7h7M14 14h7M14 21h7" />
+                </svg>
+              </button>
+              <span class="tb-sep"></span>
+              <span class="tb-title"
+                ><span class="dim">weekend</span>.md<span class="dim"> · edited 2m ago</span></span
+              >
+              <button class="tb-snap" aria-label="Save snapshot">
+                <span class="snap-dot"></span><span>snapshot · 14:02</span>
+              </button>
+            </div>
+            <div class="toolbar" role="toolbar">
+              <button class="tb-btn" aria-label="New">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+              </button>
+              <button class="tb-btn" aria-label="Bold">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 5h6a4 4 0 1 1 0 8H7zM7 13h7a4 4 0 1 1 0 8H7z" />
+                </svg>
+              </button>
+              <button class="tb-btn" aria-label="Italic">
+                <svg viewBox="0 0 24 24"><path d="M14 5h4M10 19h4M15 5l-4 14" /></svg>
+              </button>
+              <button class="tb-btn" aria-label="Checklist">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6l2 2 4-4M4 13l2 2 4-4M4 20l2 2 4-4M14 7h7M14 14h7M14 21h7" />
+                </svg>
+              </button>
+              <span class="tb-sep"></span>
+              <span class="tb-title"><span class="dim">untitled · empty</span></span>
+              <button class="tb-snap" style="opacity: 0.55">
+                <span class="snap-dot" style="background: #c7c0b0; box-shadow: none"></span
+                ><span>no snapshot</span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>AMBER-700</b><span>AI/live color shifts in light for contrast</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 13 Modal ── -->
+      <div class="grid">
+        <div class="card col-12" style="padding-bottom: 18px">
+          <div class="num"><span>13</span><b>Modal — statistics (M1.4)</b></div>
+          <p style="margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            Modals do one thing. Eyebrow in amber tells you the surface, Bricolage owns the head,
+            body in Satoshi, footer pinned right.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card stage-card dark-stage col-6">
+          <div class="stage-head"><span>dark · statistics</span><span class="pill">⌘/</span></div>
+          <div class="stage-body" style="align-items: flex-start; padding: 36px 28px">
+            <div class="modal">
+              <div class="modal-head">
+                <span class="eyebrow">Statistics · weekend.md</span>
+                <h3>312 words. 14 minutes to read.</h3>
+              </div>
+              <div class="modal-body">
+                Counted at 14:02 — the current snapshot. Resets on <kbd>Ctrl</kbd>+<kbd>Del</kbd>.
+                <div class="modal-stats">
+                  <div class="cell">
+                    <div class="v">312</div>
+                    <div class="k">words</div>
+                  </div>
+                  <div class="cell">
+                    <div class="v">1,841</div>
+                    <div class="k">characters</div>
+                  </div>
+                  <div class="cell">
+                    <div class="v">38</div>
+                    <div class="k">lines</div>
+                  </div>
+                  <div class="cell">
+                    <div class="v">7</div>
+                    <div class="k">paragraphs</div>
+                  </div>
+                  <div class="cell">
+                    <div class="v">208</div>
+                    <div class="k">unique</div>
+                  </div>
+                  <div class="cell">
+                    <div class="v">14m</div>
+                    <div class="k">reading</div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-ghost">Close <span class="kbd">esc</span></button>
+                <button class="btn btn-primary">Copy summary</button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>SHADOW</b><span>0 24px 60px @ .55 · 14 px radius</span>
+          </div>
+        </div>
+
+        <div class="card stage-card light-stage col-6">
+          <div class="stage-head">
+            <span>light · destructive confirm</span><span class="pill">⌫</span>
+          </div>
+          <div class="stage-body" style="align-items: flex-start; padding: 36px 28px">
+            <div class="modal">
+              <div class="modal-head">
+                <span class="eyebrow" style="color: #e5604d">Clear note · cannot be undone</span>
+                <h3>Empty <i>weekend.md</i>?</h3>
+              </div>
+              <div class="modal-body">
+                A snapshot was saved 2 minutes ago. You can restore it from the toolbar dot
+                afterwards. Type <kbd>delete</kbd> to confirm.
+              </div>
+              <div class="modal-foot">
+                <button class="btn btn-ghost">Cancel <span class="kbd">esc</span></button>
+                <button
+                  class="btn btn-danger"
+                  style="background: #e5604d; color: #f4efe6; box-shadow: none"
+                >
+                  Clear note
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>DANGER</b><span>Eyebrow in --danger · button confirms on second tap</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 14 Command palette ── -->
+      <div class="grid">
+        <div class="card col-12" style="padding-bottom: 18px">
+          <div class="num"><span>14</span><b>Command palette — ⌘K</b></div>
+          <p style="margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            Search across AI commands, notes, and actions. Selected row carries a soft amber wash;
+            the icon tile flips solid amber.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card stage-card dark-stage col-6">
+          <div class="stage-head"><span>dark · query "imp"</span><span class="pill">⌘K</span></div>
+          <div class="stage-body" style="align-items: flex-start; padding: 28px 24px">
+            <div class="cpalette">
+              <div class="cp-input">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M20 20l-3.5-3.5" />
+                </svg>
+                <input value="imp" aria-label="Command" readonly />
+                <span class="esc">ESC</span>
+              </div>
+              <div class="cp-section-label">AI commands</div>
+              <div class="cp-item ai sel">
+                <span class="ic"
+                  ><svg viewBox="0 0 24 24">
+                    <path
+                      d="M12 2l2.3 5.3L20 9.5l-4.5 3.8L17 19l-5-3-5 3 1.5-5.7L4 9.5l5.7-2.2z"
+                    /></svg
+                ></span>
+                <span class="label"
+                  >/improve <span class="hint">— tighten this paragraph</span></span
+                >
+                <span class="keys"><span>↵</span></span>
+              </div>
+              <div class="cp-item ai">
+                <span class="ic"
+                  ><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h16" /></svg
+                ></span>
+                <span class="label">/summarize <span class="hint">— note → 3 bullets</span></span>
+              </div>
+              <div class="cp-section-label">Notes</div>
+              <div class="cp-item">
+                <span class="ic"
+                  ><svg viewBox="0 0 24 24">
+                    <path d="M6 3h9l3 3v15H6z" />
+                    <path d="M15 3v3h3" /></svg
+                ></span>
+                <span class="label">Open · <b>imports of Selimović</b></span>
+                <span class="keys"><span>⌘</span><span>1</span></span>
+              </div>
+              <div class="cp-section-label">Actions</div>
+              <div class="cp-item">
+                <span class="ic"
+                  ><svg viewBox="0 0 24 24"><path d="M12 3v12M6 9l6 6 6-6M4 21h16" /></svg
+                ></span>
+                <span class="label">Import .md / .txt …</span>
+                <span class="keys"><span>⌘</span><span>I</span></span>
+              </div>
+              <div class="cp-foot">
+                <span>4 results</span>
+                <span class="keys">
+                  <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+                  <span><kbd>↵</kbd> run</span>
+                  <span><kbd>esc</kbd> close</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>AI ROWS</b><span>Cyan icon tile · differentiates from local actions</span>
+          </div>
+        </div>
+
+        <div class="card stage-card light-stage col-6">
+          <div class="stage-head"><span>light · query "imp"</span><span class="pill">⌘K</span></div>
+          <div class="stage-body" style="align-items: flex-start; padding: 28px 24px">
+            <div class="cpalette">
+              <div class="cp-input">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M20 20l-3.5-3.5" />
+                </svg>
+                <input value="imp" aria-label="Command" readonly />
+                <span class="esc">ESC</span>
+              </div>
+              <div class="cp-section-label">AI commands</div>
+              <div class="cp-item ai sel">
+                <span class="ic"
+                  ><svg viewBox="0 0 24 24">
+                    <path
+                      d="M12 2l2.3 5.3L20 9.5l-4.5 3.8L17 19l-5-3-5 3 1.5-5.7L4 9.5l5.7-2.2z"
+                    /></svg
+                ></span>
+                <span class="label"
+                  >/improve <span class="hint">— tighten this paragraph</span></span
+                >
+                <span class="keys"><span>↵</span></span>
+              </div>
+              <div class="cp-item ai">
+                <span class="ic"
+                  ><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h16" /></svg
+                ></span>
+                <span class="label">/summarize <span class="hint">— note → 3 bullets</span></span>
+              </div>
+              <div class="cp-section-label">Notes</div>
+              <div class="cp-item">
+                <span class="ic"
+                  ><svg viewBox="0 0 24 24">
+                    <path d="M6 3h9l3 3v15H6z" />
+                    <path d="M15 3v3h3" /></svg
+                ></span>
+                <span class="label">Open · <b>imports of Selimović</b></span>
+                <span class="keys"><span>⌘</span><span>1</span></span>
+              </div>
+              <div class="cp-section-label">Actions</div>
+              <div class="cp-item">
+                <span class="ic"
+                  ><svg viewBox="0 0 24 24"><path d="M12 3v12M6 9l6 6 6-6M4 21h16" /></svg
+                ></span>
+                <span class="label">Import .md / .txt …</span>
+                <span class="keys"><span>⌘</span><span>I</span></span>
+              </div>
+              <div class="cp-foot">
+                <span>4 results</span>
+                <span class="keys">
+                  <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+                  <span><kbd>↵</kbd> run</span>
+                  <span><kbd>esc</kbd> close</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>AI ROWS · LIGHT</b><span>AI tint shifts to amber-700 wash</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 15 Checklist ── -->
+      <div class="grid">
+        <div class="card col-12" style="padding-bottom: 18px">
+          <div class="num"><span>15</span><b>Checklist — nested · M3.3</b></div>
+          <p style="margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            Indents nest visually with a 1 px guide line. Done rows strike through and dim. Tags are
+            mono pills; AI tags use cyan.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card stage-card dark-stage col-6">
+          <div class="stage-head">
+            <span>dark · weekend.md</span><span class="pill">3 / 7 done</span>
+          </div>
+          <div class="stage-body" style="align-items: flex-start; padding: 28px 24px">
+            <div class="checklist">
+              <div class="check-row done">
+                <span class="grip"
+                  ><svg viewBox="0 0 6 16">
+                    <circle cx="2" cy="3" r="1" />
+                    <circle cx="2" cy="8" r="1" />
+                    <circle cx="2" cy="13" r="1" />
+                    <circle cx="5" cy="3" r="1" />
+                    <circle cx="5" cy="8" r="1" />
+                    <circle cx="5" cy="13" r="1" /></svg
+                ></span>
+                <span class="check-box on"></span>
+                <span class="text">Draft the studio post</span>
+                <span class="tag">writing</span>
+              </div>
+              <div class="check-row parent">
+                <span class="grip"
+                  ><svg viewBox="0 0 6 16">
+                    <circle cx="2" cy="3" r="1" />
+                    <circle cx="2" cy="8" r="1" />
+                    <circle cx="2" cy="13" r="1" />
+                    <circle cx="5" cy="3" r="1" />
+                    <circle cx="5" cy="8" r="1" />
+                    <circle cx="5" cy="13" r="1" /></svg
+                ></span>
+                <span class="check-box"></span>
+                <span class="text">Ship sveska v0.1</span>
+                <span class="tag">M0–M1</span>
+              </div>
+              <div class="check-row nest-1 done">
+                <span class="check-box on"></span>
+                <span class="text">Wire Vite + Dexie + Workbox</span>
+              </div>
+              <div class="check-row nest-1">
+                <span class="check-box"></span>
+                <span class="text">Textarea + debounced 400ms autosave</span>
+                <span class="tag">M1.1</span>
+              </div>
+              <div class="check-row nest-1">
+                <span class="check-box"></span>
+                <span class="text">Snapshot dot + restore</span>
+                <span class="tag ai">AI · plan</span>
+              </div>
+              <div class="check-row">
+                <span class="grip"
+                  ><svg viewBox="0 0 6 16">
+                    <circle cx="2" cy="3" r="1" />
+                    <circle cx="2" cy="8" r="1" />
+                    <circle cx="2" cy="13" r="1" />
+                    <circle cx="5" cy="3" r="1" />
+                    <circle cx="5" cy="8" r="1" />
+                    <circle cx="5" cy="13" r="1" /></svg
+                ></span>
+                <span class="check-box"></span>
+                <span class="text">Read Selimović, chapter 3</span>
+                <span class="tag">reading</span>
+              </div>
+              <div class="check-row done">
+                <span class="check-box on"></span>
+                <span class="text">Pour the rakija</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>NESTING</b><span>2 levels visible · drag-handle on hover · 1 px guide</span>
+          </div>
+        </div>
+
+        <div class="card stage-card light-stage col-6">
+          <div class="stage-head">
+            <span>light · weekend.md</span><span class="pill">3 / 7 done</span>
+          </div>
+          <div class="stage-body" style="align-items: flex-start; padding: 28px 24px">
+            <div class="checklist">
+              <div class="check-row done">
+                <span class="check-box on"></span><span class="text">Draft the studio post</span
+                ><span class="tag">writing</span>
+              </div>
+              <div class="check-row parent">
+                <span class="check-box"></span><span class="text">Ship sveska v0.1</span
+                ><span class="tag">M0–M1</span>
+              </div>
+              <div class="check-row nest-1 done">
+                <span class="check-box on"></span
+                ><span class="text">Wire Vite + Dexie + Workbox</span>
+              </div>
+              <div class="check-row nest-1">
+                <span class="check-box"></span
+                ><span class="text">Textarea + debounced 400ms autosave</span
+                ><span class="tag">M1.1</span>
+              </div>
+              <div class="check-row nest-1">
+                <span class="check-box"></span><span class="text">Snapshot dot + restore</span
+                ><span class="tag ai">AI · plan</span>
+              </div>
+              <div class="check-row">
+                <span class="check-box"></span><span class="text">Read Selimović, chapter 3</span
+                ><span class="tag">reading</span>
+              </div>
+              <div class="check-row done">
+                <span class="check-box on"></span><span class="text">Pour the rakija</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>TYPE</b><span>Checklist body always JetBrains Mono · 14 px</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 16 Note card ── -->
+      <div class="grid">
+        <div class="card col-12" style="padding-bottom: 18px">
+          <div class="num"><span>16</span><b>Note card — recent · pinned · live</b></div>
+          <p style="margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            Used in the recents rail, search results, and templates picker. Title in Bricolage, body
+            preview in mono, tags pinned along the bottom. Cyan ring = an AI command is currently
+            running on this note.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card stage-card dark-stage col-6">
+          <div class="stage-head">
+            <span>dark · pinned · live · idle</span><span class="pill">recents</span>
+          </div>
+          <div
+            class="stage-body"
+            style="gap: 14px; flex-wrap: wrap; align-items: flex-start; padding: 28px 24px"
+          >
+            <div class="notecard">
+              <div class="nc-head">
+                <h4 class="nc-title">imports of Selimović</h4>
+                <span class="pin" aria-label="Pinned"
+                  ><svg viewBox="0 0 24 24">
+                    <path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3.5L6 20l1.5-6.5L3 9l6-1z" /></svg
+                ></span>
+              </div>
+              <div class="nc-body">
+                "Death and the Dervish" — the way memory is staged as a procedure. Move the
+                chapter-3 notes here; cross-reference with the studio post draft. Add a glossary
+                entry for "sevdah".
+              </div>
+              <div class="nc-foot">
+                <span class="tags"
+                  ><span class="t amber">pinned</span><span class="t">reading</span></span
+                >
+                <span>3m · 1.2 kb</span>
+              </div>
+            </div>
+            <div class="notecard live">
+              <div class="nc-head">
+                <h4 class="nc-title">v0.1 ship list</h4>
+              </div>
+              <div class="nc-body">
+                M0 — scaffold + PWA · M1 — core editor · M2 — multi-note · M3 — power UX · M4 — AI
+                (secure) · M5 — canvas · M6 — platform · M7 — harden.
+              </div>
+              <div class="nc-foot">
+                <span class="tags"><span class="t">ship</span><span class="t">v0.1</span></span>
+                <span class="live-flag"><span class="d"></span>/improve</span>
+              </div>
+            </div>
+            <div class="notecard">
+              <div class="nc-head">
+                <h4 class="nc-title">weekend.md</h4>
+              </div>
+              <div class="nc-body">
+                Draft the studio post · read Selimović, chapter 3 · ship list final pass · pour the
+                rakija.
+              </div>
+              <div class="nc-foot">
+                <span class="tags"><span class="t">draft</span></span>
+                <span>14:02 · 2.4 kb</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>HOVER</b><span>Border → amber · lift 2 px</span>
+          </div>
+        </div>
+
+        <div class="card stage-card light-stage col-6">
+          <div class="stage-head">
+            <span>light · same set</span><span class="pill">recents</span>
+          </div>
+          <div
+            class="stage-body"
+            style="gap: 14px; flex-wrap: wrap; align-items: flex-start; padding: 28px 24px"
+          >
+            <div class="notecard">
+              <div class="nc-head">
+                <h4 class="nc-title">imports of Selimović</h4>
+                <span class="pin"
+                  ><svg viewBox="0 0 24 24">
+                    <path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3.5L6 20l1.5-6.5L3 9l6-1z" /></svg
+                ></span>
+              </div>
+              <div class="nc-body">
+                "Death and the Dervish" — the way memory is staged as a procedure. Move the
+                chapter-3 notes here.
+              </div>
+              <div class="nc-foot">
+                <span class="tags"
+                  ><span class="t amber">pinned</span><span class="t">reading</span></span
+                ><span>3m · 1.2 kb</span>
+              </div>
+            </div>
+            <div class="notecard live">
+              <div class="nc-head"><h4 class="nc-title">v0.1 ship list</h4></div>
+              <div class="nc-body">
+                M0 scaffold · M1 editor · M2 multi-note · M3 power UX · M4 AI · M5 canvas · M6
+                platform · M7 harden.
+              </div>
+              <div class="nc-foot">
+                <span class="tags"><span class="t">ship</span></span
+                ><span class="live-flag"><span class="d"></span>/improve</span>
+              </div>
+            </div>
+            <div class="notecard">
+              <div class="nc-head"><h4 class="nc-title">weekend.md</h4></div>
+              <div class="nc-body">
+                Draft the studio post · read Selimović, chapter 3 · ship list final pass.
+              </div>
+              <div class="nc-foot">
+                <span class="tags"><span class="t">draft</span></span
+                ><span>14:02 · 2.4 kb</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>LIVE</b><span>Ring + flag shift to amber-700 in light</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 17 Preference row ── -->
+      <div class="grid">
+        <div class="card col-12" style="padding-bottom: 18px">
+          <div class="num"><span>17</span><b>Preference row — slider · toggle · segmented</b></div>
+          <p style="margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            From the prefs panel (M1.6). Each row is name + hint on the left, control on the right.
+            Slider thumb has a 4 px amber halo, toggle slides amber on activate.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card stage-card dark-stage col-6">
+          <div class="stage-head">
+            <span>dark · settings · editor</span><span class="pill">⌘,</span>
+          </div>
+          <div class="stage-body" style="align-items: stretch; padding: 32px 36px">
+            <div class="pref-list">
+              <div class="pref-row">
+                <div>
+                  <div class="name">Editor font size</div>
+                  <div class="hint">17 px · default · scales note body</div>
+                </div>
+                <div class="pref-slider">
+                  <div class="track">
+                    <div class="fill" style="width: 42%"></div>
+                    <div class="thumb" style="left: 42%"></div>
+                  </div>
+                  <div class="num">17 px</div>
+                </div>
+              </div>
+              <div class="pref-row">
+                <div>
+                  <div class="name">Line height</div>
+                  <div class="hint">1.7 · paper rhythm</div>
+                </div>
+                <div class="pref-slider">
+                  <div class="track">
+                    <div class="fill" style="width: 64%"></div>
+                    <div class="thumb" style="left: 64%"></div>
+                  </div>
+                  <div class="num">1.7</div>
+                </div>
+              </div>
+              <div class="pref-row">
+                <div>
+                  <div class="name">Font family</div>
+                  <div class="hint">Editor preset</div>
+                </div>
+                <div class="segmented">
+                  <button class="on">mono</button>
+                  <button>ui</button>
+                  <button>serif</button>
+                  <button>dys</button>
+                </div>
+              </div>
+              <div class="pref-row">
+                <div>
+                  <div class="name">Spellcheck</div>
+                  <div class="hint">Native browser dictionary</div>
+                </div>
+                <div class="toggle on"><div class="knob"></div></div>
+              </div>
+              <div class="pref-row">
+                <div>
+                  <div class="name">Tab inserts indent</div>
+                  <div class="hint">Otherwise — focus next field</div>
+                </div>
+                <div class="toggle"><div class="knob"></div></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>THUMB</b><span>4 px amber halo · 16 px paper core</span>
+          </div>
+        </div>
+
+        <div class="card stage-card light-stage col-6">
+          <div class="stage-head">
+            <span>light · settings · editor</span><span class="pill">⌘,</span>
+          </div>
+          <div class="stage-body" style="align-items: stretch; padding: 32px 36px">
+            <div class="pref-list">
+              <div class="pref-row">
+                <div>
+                  <div class="name">Editor font size</div>
+                  <div class="hint">17 px · default</div>
+                </div>
+                <div class="pref-slider">
+                  <div class="track">
+                    <div class="fill" style="width: 42%"></div>
+                    <div class="thumb" style="left: 42%"></div>
+                  </div>
+                  <div class="num">17 px</div>
+                </div>
+              </div>
+              <div class="pref-row">
+                <div>
+                  <div class="name">Line height</div>
+                  <div class="hint">1.7 · paper rhythm</div>
+                </div>
+                <div class="pref-slider">
+                  <div class="track">
+                    <div class="fill" style="width: 64%"></div>
+                    <div class="thumb" style="left: 64%"></div>
+                  </div>
+                  <div class="num">1.7</div>
+                </div>
+              </div>
+              <div class="pref-row">
+                <div>
+                  <div class="name">Font family</div>
+                  <div class="hint">Editor preset</div>
+                </div>
+                <div class="segmented">
+                  <button class="on">mono</button><button>ui</button><button>serif</button
+                  ><button>dys</button>
+                </div>
+              </div>
+              <div class="pref-row">
+                <div>
+                  <div class="name">Spellcheck</div>
+                  <div class="hint">Native browser dictionary</div>
+                </div>
+                <div class="toggle on"><div class="knob"></div></div>
+              </div>
+              <div class="pref-row">
+                <div>
+                  <div class="name">Tab inserts indent</div>
+                  <div class="hint">Otherwise — focus next field</div>
+                </div>
+                <div class="toggle"><div class="knob"></div></div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>SEGMENTED</b><span>Mono · 11 px · for narrow option groups</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 18 Status bar ── -->
+      <div class="grid">
+        <div class="card col-12" style="padding-bottom: 18px">
+          <div class="num"><span>18</span><b>Status bar — saved · cursor · network</b></div>
+          <p style="margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            Pinned to the bottom of the editor surface. Always mono. Saved (--ok) and live (--ai)
+            are the only colored slots; the rest are dimmed.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card stage-card dark-stage col-6">
+          <div class="stage-head">
+            <span>dark · saved</span><span class="pill">offline OK</span>
+          </div>
+          <div
+            class="stage-body"
+            style="align-items: flex-start; padding: 36px 28px; flex-direction: column; gap: 14px"
+          >
+            <div class="statusbar">
+              <span class="slot saved"><span class="d"></span>Saved · 14:02</span>
+              <span class="sep"></span>
+              <span class="slot">312 words · 14m read</span>
+              <span class="sep"></span>
+              <span class="slot">Ln 38, Col 12</span>
+              <span class="grow"></span>
+              <span class="slot">UTF-8 · LF</span>
+              <span class="sep"></span>
+              <span class="slot accent">●</span>
+              <span class="slot">Offline · local-first</span>
+            </div>
+            <div class="statusbar">
+              <span class="slot live"><span class="d"></span>/improve · streaming</span>
+              <span class="sep"></span>
+              <span class="slot">312 words</span>
+              <span class="grow"></span>
+              <span class="slot" style="color: var(--text)">Ctrl+. cancel</span>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>HEIGHT</b><span>30 px · attached to editor's bottom radius</span>
+          </div>
+        </div>
+
+        <div class="card stage-card light-stage col-6">
+          <div class="stage-head">
+            <span>light · saved</span><span class="pill">offline OK</span>
+          </div>
+          <div
+            class="stage-body"
+            style="align-items: flex-start; padding: 36px 28px; flex-direction: column; gap: 14px"
+          >
+            <div class="statusbar">
+              <span class="slot saved"><span class="d"></span>Saved · 14:02</span>
+              <span class="sep"></span>
+              <span class="slot">312 words · 14m read</span>
+              <span class="sep"></span>
+              <span class="slot">Ln 38, Col 12</span>
+              <span class="grow"></span>
+              <span class="slot">UTF-8 · LF</span>
+              <span class="sep"></span>
+              <span class="slot accent">●</span>
+              <span class="slot">Offline · local-first</span>
+            </div>
+            <div class="statusbar">
+              <span class="slot live"><span class="d"></span>/improve · streaming</span>
+              <span class="sep"></span>
+              <span class="slot">312 words</span>
+              <span class="grow"></span>
+              <span class="slot" style="color: var(--text)">Ctrl+. cancel</span>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>COLORS</b><span>OK = --ok · live = amber-700 in light</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 19 Empty state ── -->
+      <div class="grid">
+        <div class="card col-12" style="padding-bottom: 18px">
+          <div class="num"><span>19</span><b>Empty state — first run</b></div>
+          <p style="margin: 6px 0 0; color: var(--text-dim); font-size: 14px; max-width: 62ch">
+            The voice example from BRAND §4, rendered. Bricolage in 32 px, restrained Bosnian copy,
+            an empty page glyph with the amber dot — the snapshot waiting to happen.
+          </p>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card stage-card dark-stage col-6">
+          <div class="stage-head">
+            <span>dark · zero notes</span><span class="pill">no notebook</span>
+          </div>
+          <div class="stage-body" style="padding: 36px 28px">
+            <div class="empty">
+              <div class="glyph">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 3h8l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" />
+                  <path d="M15 3v4h4" />
+                </svg>
+              </div>
+              <h4>Prazna sveska.<br />Najbolji početak.</h4>
+              <p>
+                An empty notebook. The best beginning. Press
+                <span class="mono" style="color: var(--text)">⌘N</span> for a new note, or paste
+                anything to start.
+              </p>
+              <div class="actions">
+                <button class="btn btn-primary">New note <span class="kbd">⌘N</span></button>
+                <button class="btn btn-ghost">Import .md</button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>VOICE</b><span>Bosnian primary · English support · never chirpy</span>
+          </div>
+        </div>
+
+        <div class="card stage-card light-stage col-6">
+          <div class="stage-head">
+            <span>light · zero notes</span><span class="pill">no notebook</span>
+          </div>
+          <div class="stage-body" style="padding: 36px 28px">
+            <div class="empty">
+              <div class="glyph">
+                <svg viewBox="0 0 24 24">
+                  <path d="M7 3h8l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" />
+                  <path d="M15 3v4h4" />
+                </svg>
+              </div>
+              <h4>Prazna sveska.<br />Najbolji početak.</h4>
+              <p>
+                An empty notebook. The best beginning. Press
+                <span class="mono" style="color: var(--text)">⌘N</span> for a new note, or paste
+                anything to start.
+              </p>
+              <div class="actions">
+                <button class="btn btn-primary">New note <span class="kbd">⌘N</span></button>
+                <button class="btn btn-ghost">Import .md</button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="footnote"
+            style="padding: 12px 18px; border-top: 1px solid var(--border-soft)"
+          >
+            <b>DOT</b><span>Amber dot on glyph = "next snapshot lives here"</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 20 Voice ── -->
+      <div class="grid">
+        <div class="card voice-card col-6">
+          <div class="num"><span>20</span><b>Voice · Do</b></div>
+          <h4><b>WE SOUND LIKE THIS</b></h4>
+          <blockquote><span class="bos">Prazna sveska. Najbolji početak.</span></blockquote>
+          <blockquote>Local-first. No keys in the browser. Ever.</blockquote>
+          <blockquote>Ship the notebook, not the manifesto.</blockquote>
+          <blockquote>The folded page does not need permission to be written on.</blockquote>
+          <div class="footnote">
+            <b>BRAND §4</b><span>Concise, dry, competent. Stoic with a punchline.</span>
+          </div>
+        </div>
+        <div class="card voice-card dont col-6">
+          <div class="num"><span>20</span><b>Voice · Don't</b></div>
+          <h4><b>WE NEVER SOUND LIKE THIS</b></h4>
+          <blockquote>Welcome! Let's get you set up with your account 👋</blockquote>
+          <blockquote>Unlock next-gen AI-powered hyper-productivity.</blockquote>
+          <blockquote>Try saying "hey sveska" — your second brain is here. 🧠</blockquote>
+          <blockquote>Revolutionize your notes with our delightful new experience.</blockquote>
+          <div class="footnote">
+            <b>NEVER</b><span>Onboarding-bot · emoji-driven · slogans</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="kitfoot">
+        <span><b>Sveska</b> · Design System · v1.0</span>
+        <span>sveska.studio</span>
+        <span>Sarajevo Night · 2026</span>
+      </footer>
+    </div>
+  </body>
+</html>

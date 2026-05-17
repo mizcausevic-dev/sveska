@@ -1,814 +1,614 @@
-/* app-shell.jsx — Sveska <AppShell theme mode/> mock.
- * Composes header + tabs + sidebar + editor + statusbar into a single 1440×900
- * frame. mode="focus" hides chrome and widens margins.
- * Consumes TOKENS / FONT / THEME / Icon from design-canvas.jsx (loaded first).
- */
+// AppShell.jsx — composes every system component into the full Sveska desktop view.
+// Props:
+//   theme:  'dark' | 'light'   (sets the scoped --bg/--surface/--accent tokens)
+//   mode:   'default' | 'focus' (focus mode hides sidebar/tabs, widens margins)
+//   activeNote: which note is open (controls editor body)
+// Sized for 1440 × 900 — fits exactly inside a design-canvas artboard.
 
-// ─────────────────────────────────────────────────────────────────
-// AppShell — the full M1+ shell, rendered as a single static state.
-// ─────────────────────────────────────────────────────────────────
-function AppShell({ theme = 'dark', mode = 'default' }) {
-  const t = THEME[theme];
-  const isFocus = mode === 'focus';
+const { useMemo } = React;
 
+const TOKENS = {
+  dark: {
+    '--bg':'#0C0C0E','--surface':'#161619','--raised':'#222228',
+    '--text':'#F4EFE6','--text-dim':'#B8B2A6',
+    '--accent':'#F2B544','--accent-hover':'#EDA92E','--accent-press':'#C9871F',
+    '--ai':'#4FD6C4','--ok':'#6FCF7F','--danger':'#E5604D',
+    '--border-soft':'#222228','--shadow':'0 24px 60px rgba(0,0,0,.55)',
+    '--font-display':'"Bricolage Grotesque",system-ui,sans-serif',
+    '--font-ui':'"Satoshi","Manrope",system-ui,sans-serif',
+    '--font-mono':'"JetBrains Mono",ui-monospace,monospace',
+  },
+  light: {
+    '--bg':'#F4EFE6','--surface':'#FBF8F1','--raised':'#EFEADF',
+    '--text':'#15110A','--text-dim':'#6B6457',
+    '--accent':'#EDA92E','--accent-hover':'#C9871F','--accent-press':'#A06813',
+    '--ai':'#C9871F','--ok':'#6FCF7F','--danger':'#E5604D',
+    '--border-soft':'#E2DCCE','--shadow':'0 24px 60px rgba(20,17,10,.18)',
+    '--font-display':'"Bricolage Grotesque",system-ui,sans-serif',
+    '--font-ui':'"Satoshi","Manrope",system-ui,sans-serif',
+    '--font-mono':'"JetBrains Mono",ui-monospace,monospace',
+  },
+};
+
+// ─── small atoms ───
+const Icon = ({d, w=16, sw=1.75, children}) => (
+  <svg viewBox="0 0 24 24" width={w} height={w} fill="none" stroke="currentColor"
+       strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round">
+    {d ? <path d={d}/> : children}
+  </svg>
+);
+
+const Kbd = ({children}) => (
+  <span style={{
+    fontFamily:'var(--font-mono)', fontSize:10.5, padding:'1px 6px',
+    borderRadius:5, background:'var(--raised)', color:'var(--text-dim)',
+    letterSpacing:'.04em',
+  }}>{children}</span>
+);
+
+// ─── chrome ───
+function WindowBar({theme}) {
   return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        display: 'grid',
-        gridTemplateRows: isFocus ? '1fr' : 'auto auto 1fr auto',
-        gridTemplateColumns: '1fr',
-        background: t.bg,
-        color: t.text,
-        fontFamily: FONT.ui,
-        fontSize: 15,
-        lineHeight: 1.55,
-        overflow: 'hidden',
-        position: 'relative',
-      }}
-    >
-      {!isFocus && <ShellHeader t={t} theme={theme} />}
-      {!isFocus && <TabBar t={t} />}
-      <ShellBody t={t} theme={theme} isFocus={isFocus} />
-      {!isFocus && <StatusBar t={t} />}
-
-      {isFocus && <FocusCornerHint t={t} />}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────
-// Header — brand · search/⌘K · prefs · theme switch
-// ─────────────────────────────────────────────────────────────────
-function ShellHeader({ t, theme }) {
-  return (
-    <header
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '14px 22px',
-        borderBottom: `1px solid ${t.border}`,
-        background: t.surface,
-      }}
-    >
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 14 }}>
-        <BrandMark />
-        <span
-          style={{
-            fontFamily: FONT.display,
-            fontWeight: 700,
-            fontSize: 18,
-            letterSpacing: '-0.01em',
-            color: t.text,
-          }}
-        >
-          Sveska<span style={{ color: t.accent }}>.</span>
-        </span>
-        <span
-          style={{
-            color: t.textDim,
-            fontFamily: FONT.mono,
-            fontSize: 11,
-            letterSpacing: '.08em',
-            textTransform: 'uppercase',
-            marginLeft: 6,
-          }}
-        >
-          studio · local
-        </span>
+    <div style={{
+      height:44, flexShrink:0,
+      background:'var(--bg)',
+      borderBottom:'1px solid var(--border-soft)',
+      display:'flex', alignItems:'center', gap:14, padding:'0 16px',
+    }}>
+      {/* traffic lights */}
+      <div style={{display:'flex', gap:8}}>
+        <span style={{width:12,height:12,borderRadius:999,background:'#ff5f57'}}/>
+        <span style={{width:12,height:12,borderRadius:999,background:'#febc2e'}}/>
+        <span style={{width:12,height:12,borderRadius:999,background:'#28c840'}}/>
       </div>
-
-      <SearchTrigger t={t} />
-
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
-        <IconButton t={t} title="New note (⌘N)" icon="plus" />
-        <IconButton t={t} title="Quick capture" icon="bolt" />
-        <IconButton t={t} title="Preferences (⌃,)" icon="cog" />
-        <ThemeSegmented t={t} active={theme} />
+      <div style={{width:1, height:18, background:'var(--border-soft)'}}/>
+      {/* brand */}
+      <div style={{display:'flex', alignItems:'center', gap:8}}>
+        <div style={{
+          width:22, height:22, borderRadius:5, background:'#0C0C0E',
+          display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0,
+        }}>
+          <SvesPaper size={14}/>
+        </div>
+        <span style={{
+          fontFamily:'var(--font-display)', fontWeight:700, fontSize:14,
+          letterSpacing:'-0.02em', color:'var(--text)',
+        }}>sveska<span style={{
+          fontFamily:'var(--font-mono)', fontSize:12, color:'var(--accent)',
+          fontWeight:500, marginLeft:2,
+        }}>.studio</span></span>
       </div>
-    </header>
-  );
-}
-
-function BrandMark() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 512 512" aria-hidden="true">
-      <defs>
-        <linearGradient id="bm-page" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#F6C155" />
-          <stop offset="1" stopColor="#EDA92E" />
-        </linearGradient>
-      </defs>
-      <rect x="0" y="0" width="512" height="512" rx="116" fill="#0C0C0E" />
-      <path
-        d="M130 96H328L400 168V398A18 18 0 0 1 382 416H130A18 18 0 0 1 112 398V114A18 18 0 0 1 130 96Z"
-        fill="url(#bm-page)"
-      />
-      <path d="M328 96 L400 168 H346 A18 18 0 0 1 328 150 Z" fill="#C9871F" />
-      <path
-        d="M338 196C338 158 306 138 262 138C214 138 182 162 182 200C182 238 216 256 262 262C308 268 342 286 342 326C342 368 308 392 258 392C214 392 180 372 178 332"
-        fill="none"
-        stroke="#0C0C0E"
-        strokeWidth="46"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function SearchTrigger({ t }) {
-  return (
-    <button
-      type="button"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 12,
-        height: 36,
-        padding: '0 14px',
-        minWidth: 420,
-        background: t.bg,
-        border: `1px solid ${t.border}`,
-        borderRadius: 10,
-        color: t.textDim,
-        cursor: 'pointer',
-        fontFamily: FONT.ui,
-        fontSize: 14,
-      }}
-    >
-      <Icon name="search" size={14} />
-      <span style={{ flex: 1, textAlign: 'left' }}>
-        Search notes · run a command · <span style={{ color: t.text }}>type /</span> for AI
-      </span>
-      <Kbd t={t} keys={['⌘', 'K']} />
-    </button>
-  );
-}
-
-function IconButton({ t, icon, title, active }) {
-  return (
-    <button
-      type="button"
-      title={title}
-      aria-label={title}
-      style={{
-        width: 34,
-        height: 34,
-        background: active ? t.raised : 'transparent',
-        border: 0,
-        borderRadius: 8,
-        color: active ? t.accent : t.textDim,
-        cursor: 'pointer',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Icon name={icon} size={16} />
-    </button>
-  );
-}
-
-function ThemeSegmented({ t, active }) {
-  const choices = ['dark', 'light', 'sys'];
-  return (
-    <div
-      role="group"
-      aria-label="Theme"
-      style={{
-        display: 'inline-flex',
-        background: t.bg,
-        border: `1px solid ${t.border}`,
-        borderRadius: 999,
-        padding: 3,
-        fontFamily: FONT.mono,
-        fontSize: 10.5,
-        letterSpacing: '.08em',
-        textTransform: 'uppercase',
-      }}
-    >
-      {choices.map((c) => {
-        const on = c === active;
-        return (
-          <span
-            key={c}
-            style={{
-              padding: '6px 12px',
-              borderRadius: 999,
-              background: on ? t.raised : 'transparent',
-              color: on ? t.accent : t.textDim,
-            }}
-          >
-            {c}
-          </span>
-        );
-      })}
-    </div>
-  );
-}
-
-function Kbd({ t, keys, dim }) {
-  return (
-    <span style={{ display: 'inline-flex', gap: 3 }}>
-      {keys.map((k, i) => (
-        <span
-          key={i}
-          style={{
-            fontFamily: FONT.mono,
-            fontSize: 10.5,
-            padding: '2px 6px',
-            borderRadius: 5,
-            background: t.raised,
-            color: dim ? t.textDim : t.text,
-            lineHeight: 1,
-          }}
-        >
-          {k}
-        </span>
-      ))}
-    </span>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────
-// Tab bar — open notes
-// ─────────────────────────────────────────────────────────────────
-function TabBar({ t }) {
-  const tabs = [
-    { id: 'a', title: 'weekend', ext: '.md', active: true, dirty: true },
-    { id: 'b', title: 'imports of Selimović', ext: '', active: false },
-    { id: 'c', title: 'sveska v0.1 ship list', ext: '.md', active: false },
-    { id: 'd', title: 'untitled', ext: '', active: false, faint: true },
-  ];
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'stretch',
-        height: 38,
-        background: t.bg,
-        borderBottom: `1px solid ${t.border}`,
-        paddingLeft: 8,
-        overflow: 'hidden',
-      }}
-    >
-      {tabs.map((tab) => (
-        <Tab key={tab.id} t={t} {...tab} />
-      ))}
-      <div style={{ flex: 1, borderBottom: `1px solid ${t.border}` }} />
-      <button
-        type="button"
-        title="New tab"
-        style={{
-          width: 38,
-          background: 'transparent',
-          border: 0,
-          color: t.textDim,
-          cursor: 'pointer',
-        }}
-      >
-        <Icon name="plus" size={14} />
+      <div style={{flex:1}}/>
+      {/* command shortcut */}
+      <button style={{
+        appearance:'none', border:0, background:'var(--surface)', cursor:'pointer',
+        height:28, padding:'0 12px 0 10px', borderRadius:8,
+        display:'inline-flex', alignItems:'center', gap:8,
+        boxShadow:'inset 0 0 0 1px var(--border-soft)',
+        color:'var(--text-dim)', fontFamily:'var(--font-ui)', fontSize:12,
+      }}>
+        <Icon><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></Icon>
+        <span>Search or jump…</span>
+        <span style={{
+          fontFamily:'var(--font-mono)', fontSize:10, padding:'1px 5px',
+          borderRadius:4, background:'var(--raised)', marginLeft:18,
+        }}>⌘K</span>
+      </button>
+      <button style={{
+        appearance:'none', border:0, background:'transparent', cursor:'pointer',
+        width:30, height:30, borderRadius:7, color:'var(--text-dim)',
+        display:'inline-flex', alignItems:'center', justifyContent:'center',
+      }}>
+        <Icon d="M12 3v3M12 18v3M5 12H2M22 12h-3M19.07 4.93l-2.12 2.12M7.05 16.95l-2.12 2.12M19.07 19.07l-2.12-2.12M7.05 7.05L4.93 4.93"/>
+      </button>
+      <button style={{
+        appearance:'none', border:0, background:'transparent', cursor:'pointer',
+        width:30, height:30, borderRadius:7, color:'var(--text-dim)',
+        display:'inline-flex', alignItems:'center', justifyContent:'center',
+      }}>
+        <Icon d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
       </button>
     </div>
   );
 }
 
-function Tab({ t, title, ext, active, dirty, faint }) {
+function SvesPaper({size=14}) {
   return (
-    <div
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 8,
-        padding: '0 14px',
-        borderRight: `1px solid ${t.border}`,
-        background: active ? t.surface : 'transparent',
-        borderBottom: active ? `2px solid ${t.accent}` : `1px solid ${t.border}`,
-        color: active ? t.text : t.textDim,
-        fontFamily: FONT.mono,
-        fontSize: 12.5,
-        height: '100%',
-        opacity: faint ? 0.55 : 1,
-        cursor: 'pointer',
-      }}
-    >
-      {dirty && (
-        <span
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: 999,
-            background: t.accent,
-            display: 'inline-block',
-          }}
-        />
-      )}
-      <span>
-        {title}
-        {ext && <span style={{ color: t.textDim }}>{ext}</span>}
-      </span>
-      <span style={{ color: t.textDim, opacity: 0.6, marginLeft: 4 }}>×</span>
+    <svg viewBox="0 0 64 64" width={size} height={size} aria-hidden="true">
+      <path d="M16 12 H40 L50 22 V50 A2 2 0 0 1 48 52 H16 A2 2 0 0 1 14 50 V14 A2 2 0 0 1 16 12 Z" fill="#F2B544"/>
+      <path d="M40 12 L50 22 H42 A2 2 0 0 1 40 20 Z" fill="#C9871F"/>
+      <path d="M42 24.5C42 19.7 38 17 32.5 17C26.5 17 22.5 20 22.5 24.75C22.5 29.5 26.75 31.75 32.5 32.5C38.25 33.25 42.5 35.5 42.5 40.5C42.5 45.75 38.5 48.75 32.25 48.75C26.75 48.75 22.5 46.25 22.25 41.25" fill="none" stroke="#0C0C0E" strokeWidth="5.75" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+function TabStrip({tabs, active, dirty}) {
+  return (
+    <div style={{
+      flexShrink:0, height:36,
+      background:'var(--surface)',
+      borderBottom:'1px solid var(--border-soft)',
+      display:'flex', alignItems:'flex-end', padding:'0 12px',
+      gap:2,
+    }}>
+      {tabs.map((t, i) => (
+        <button key={i} style={{
+          appearance:'none', border:0, cursor:'pointer',
+          height:32,
+          padding:'0 12px',
+          borderRadius:'8px 8px 0 0',
+          background: i===active ? 'var(--bg)' : 'transparent',
+          color: i===active ? 'var(--text)' : 'var(--text-dim)',
+          fontFamily:'var(--font-ui)', fontSize:13, fontWeight:500,
+          display:'inline-flex', alignItems:'center', gap:8,
+          position:'relative',
+          boxShadow: i===active ? 'inset 1px 0 0 var(--border-soft), inset -1px 0 0 var(--border-soft), inset 0 1px 0 var(--border-soft)' : 'none',
+        }}>
+          <span style={{
+            width:6, height:6, borderRadius:999,
+            background: i===active ? 'var(--accent)' : (dirty.includes(i) ? 'var(--ai)' : 'var(--text-dim)'),
+          }}/>
+          <span style={{maxWidth:160, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{t}</span>
+          <Icon d="M6 6l12 12M18 6L6 18" w={12} sw={2}/>
+          {i===active && (
+            <span style={{
+              position:'absolute', left:8, right:8, top:0, height:2,
+              background:'var(--accent)', borderRadius:2,
+            }}/>
+          )}
+        </button>
+      ))}
+      <button style={{
+        appearance:'none', border:0, cursor:'pointer',
+        width:26, height:26, borderRadius:6, margin:'0 4px 4px',
+        background:'transparent', color:'var(--text-dim)',
+        display:'inline-flex', alignItems:'center', justifyContent:'center',
+      }}>
+        <Icon d="M12 5v14M5 12h14" w={14} sw={2}/>
+      </button>
+      <div style={{flex:1}}/>
+      <div style={{
+        display:'inline-flex', alignItems:'center', gap:8,
+        fontFamily:'var(--font-mono)', fontSize:11, color:'var(--text-dim)',
+        padding:'0 8px 8px', letterSpacing:'.04em',
+      }}>
+        <span>3 open · 7 in notebook</span>
+      </div>
     </div>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Body — sidebar + editor (or, in focus mode, just the editor)
-// ─────────────────────────────────────────────────────────────────
-function ShellBody({ t, theme, isFocus }) {
+function Sidebar() {
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: isFocus ? '1fr' : '264px 1fr',
-        overflow: 'hidden',
-        background: t.bg,
-      }}
-    >
-      {!isFocus && <Sidebar t={t} />}
-      <Editor t={t} theme={theme} isFocus={isFocus} />
-    </div>
-  );
-}
+    <aside style={{
+      width:300, flexShrink:0,
+      background:'var(--surface)',
+      borderRight:'1px solid var(--border-soft)',
+      display:'flex', flexDirection:'column',
+      overflow:'hidden',
+    }}>
+      {/* search */}
+      <div style={{padding:'14px 16px 10px'}}>
+        <div style={{
+          display:'flex', alignItems:'center', gap:10,
+          background:'var(--bg)', height:34, borderRadius:9, padding:'0 12px',
+          boxShadow:'inset 0 0 0 1px var(--border-soft)',
+          color:'var(--text-dim)',
+        }}>
+          <Icon w={14}><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></Icon>
+          <span style={{fontFamily:'var(--font-ui)', fontSize:13}}>Search · 23 notes</span>
+          <div style={{flex:1}}/>
+          <Kbd>⌘F</Kbd>
+        </div>
+      </div>
 
-// ─────────────────────────────────────────────────────────────────
-// Sidebar — favorites · tags · recent
-// ─────────────────────────────────────────────────────────────────
-function Sidebar({ t }) {
-  return (
-    <aside
-      style={{
-        borderRight: `1px solid ${t.border}`,
-        background: t.surface,
-        padding: '18px 14px',
-        overflowY: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 22,
-      }}
-    >
-      <SidebarGroup t={t} label="Pinned">
-        <SidebarItem t={t} icon="pin" label="weekend.md" meta="2m" active />
-        <SidebarItem t={t} icon="pin" label="imports of Selimović" meta="1d" />
-      </SidebarGroup>
+      <SidebarHeader>FILTERS</SidebarHeader>
+      <div style={{padding:'4px 12px 12px', display:'flex', flexDirection:'column', gap:2}}>
+        <Filter label="All notes" count={23} active/>
+        <Filter label="Pinned" count={3} dot="amber"/>
+        <Filter label="Inbox" count={2} dot="signal"/>
+        <Filter label="Trash" count={5}/>
+      </div>
 
-      <SidebarGroup t={t} label="Recent">
-        <SidebarItem t={t} icon="file" label="sveska v0.1 ship list" meta="3h" />
-        <SidebarItem t={t} icon="file" label="meeting · Tue 14:00" meta="yesterday" />
-        <SidebarItem t={t} icon="file" label="draft — studio post" meta="2d" />
-        <SidebarItem t={t} icon="file" label="ai notes — /improve" meta="4d" />
-        <SidebarItem t={t} icon="file" label="2026-Q2 themes" meta="1w" />
-      </SidebarGroup>
+      <SidebarHeader>TAGS</SidebarHeader>
+      <div style={{padding:'4px 16px 14px', display:'flex', flexWrap:'wrap', gap:6}}>
+        {[['writing',6],['reading',3],['ship',2],['sevdah',1],['studio',4]].map(([t,n])=>(
+          <span key={t} style={{
+            fontFamily:'var(--font-mono)', fontSize:11, padding:'3px 9px',
+            borderRadius:6, background:'var(--raised)', color:'var(--text-dim)',
+            display:'inline-flex', gap:6,
+          }}>{t}<span style={{opacity:.55}}>{n}</span></span>
+        ))}
+      </div>
 
-      <SidebarGroup t={t} label="Tags">
-        <TagRow t={t} name="studio" count={12} dot={t.accent} />
-        <TagRow t={t} name="reading" count={7} dot={t.ai} />
-        <TagRow t={t} name="meeting" count={4} dot={t.textDim} />
-        <TagRow t={t} name="ship" count={3} dot={t.accent} />
-      </SidebarGroup>
+      <SidebarHeader>RECENTS</SidebarHeader>
+      <div style={{padding:'4px 12px', display:'flex', flexDirection:'column', gap:8, overflow:'hidden'}}>
+        <RecentItem title="imports of Selimović" body='"Death and the Dervish" — memory staged as procedure…' tags={['pinned','reading']} meta="3m" pinned/>
+        <RecentItem title="v0.1 ship list" body="M0 scaffold · M1 editor · M2 multi-note · M3 power UX…" tags={['ship']} meta="/improve" live/>
+        <RecentItem title="weekend.md" body="Draft the studio post · read Selimović · ship list…" tags={['draft']} meta="14:02" active/>
+        <RecentItem title="sevdah — glossary" body="A specifically Bosnian variety of melancholia…" tags={['sevdah']} meta="yesterday"/>
+      </div>
 
-      <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <SidebarItem t={t} icon="bolt" label="Inbox · 2 unread" meta="" subdued />
-        <SidebarItem t={t} icon="check" label="All notes" meta="38" subdued />
+      <div style={{flex:1}}/>
+      <div style={{
+        borderTop:'1px solid var(--border-soft)',
+        padding:'10px 14px',
+        display:'flex', alignItems:'center', gap:10,
+      }}>
+        <button style={{
+          appearance:'none', border:0, cursor:'pointer',
+          flex:1, height:32, borderRadius:8, padding:'0 12px',
+          background:'transparent', color:'var(--text)',
+          boxShadow:'inset 0 0 0 1px var(--border-soft)',
+          fontFamily:'var(--font-ui)', fontSize:13, fontWeight:500,
+          display:'inline-flex', alignItems:'center', gap:8, justifyContent:'center',
+        }}>
+          <Icon d="M12 5v14M5 12h14" w={13} sw={2}/>
+          New note
+          <Kbd>⌘N</Kbd>
+        </button>
+        <button style={{
+          appearance:'none', border:0, cursor:'pointer',
+          width:32, height:32, borderRadius:8,
+          background:'transparent', color:'var(--text-dim)',
+          display:'inline-flex', alignItems:'center', justifyContent:'center',
+        }}>
+          <Icon d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" sw={1.5}/>
+        </button>
       </div>
     </aside>
   );
 }
 
-function SidebarGroup({ t, label, children }) {
+function SidebarHeader({children}) {
+  return <div style={{
+    fontFamily:'var(--font-mono)', fontSize:10.5, letterSpacing:'.12em',
+    textTransform:'uppercase', color:'var(--text-dim)',
+    padding:'14px 18px 4px',
+  }}>{children}</div>;
+}
+
+function Filter({label, count, active, dot}) {
   return (
-    <div>
-      <div
-        style={{
-          fontFamily: FONT.mono,
-          fontSize: 10.5,
-          letterSpacing: '.12em',
-          textTransform: 'uppercase',
-          color: t.textDim,
-          padding: '0 6px 8px',
-        }}
-      >
-        {label}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>{children}</div>
-    </div>
+    <button style={{
+      appearance:'none', border:0, cursor:'pointer',
+      display:'flex', alignItems:'center', gap:10,
+      padding:'7px 10px', borderRadius:7,
+      background: active ? 'color-mix(in oklab, var(--accent) 14%, transparent)' : 'transparent',
+      color: 'var(--text)',
+      fontFamily:'var(--font-ui)', fontSize:13, fontWeight:500, textAlign:'left',
+    }}>
+      <span style={{
+        width:6, height:6, borderRadius:999,
+        background: dot==='amber' ? 'var(--accent)'
+                  : dot==='signal' ? 'var(--ai)'
+                  : active ? 'var(--accent)'
+                  : 'transparent',
+        boxShadow: dot==='signal' ? '0 0 0 2px color-mix(in oklab, var(--ai) 22%, transparent)' : 'none',
+        outline: !dot && !active ? '1px solid var(--border-soft)' : 'none',
+      }}/>
+      <span style={{flex:1}}>{label}</span>
+      <span style={{
+        fontFamily:'var(--font-mono)', fontSize:11, color:'var(--text-dim)',
+      }}>{count}</span>
+    </button>
   );
 }
 
-function SidebarItem({ t, icon, label, meta, active, subdued }) {
+function RecentItem({title, body, tags=[], meta, pinned, live, active}) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        padding: '7px 10px',
-        borderRadius: 8,
-        background: active ? 'color-mix(in oklab, ' + t.accent + ' 14%, transparent)' : 'transparent',
-        color: active ? t.text : subdued ? t.textDim : t.text,
-        cursor: 'pointer',
-        fontSize: 13.5,
-        position: 'relative',
-      }}
-    >
-      <span style={{ color: active ? t.accent : t.textDim, display: 'inline-flex' }}>
-        <Icon name={icon} size={13} />
-      </span>
-      <span
-        style={{
-          flex: 1,
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        }}
-      >
-        {label}
-      </span>
-      {meta && (
-        <span
-          style={{
-            fontFamily: FONT.mono,
-            fontSize: 10.5,
-            color: t.textDim,
-            letterSpacing: '.04em',
-          }}
-        >
+    <div style={{
+      padding:'10px 12px', borderRadius:9,
+      background: active ? 'var(--bg)' : 'transparent',
+      boxShadow: active ? 'inset 0 0 0 1px var(--border-soft)'
+               : live   ? 'inset 0 0 0 1px var(--ai)'
+               : 'none',
+      cursor:'pointer',
+      display:'flex', flexDirection:'column', gap:5,
+    }}>
+      <div style={{display:'flex', alignItems:'flex-start', gap:6}}>
+        <div style={{
+          flex:1, fontFamily:'var(--font-display)', fontWeight:700, fontSize:14.5,
+          letterSpacing:'-0.012em', color:'var(--text)', lineHeight:1.2,
+        }}>{title}</div>
+        {pinned && <Icon d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3.5L6 20l1.5-6.5L3 9l6-1z" w={12} sw={1.5}/>}
+      </div>
+      <div style={{
+        fontFamily:'var(--font-mono)', fontSize:11.5, color:'var(--text-dim)',
+        lineHeight:1.45, overflow:'hidden', display:'-webkit-box',
+        WebkitLineClamp:1, WebkitBoxOrient:'vertical',
+      }}>{body}</div>
+      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+        <div style={{display:'flex', gap:4}}>
+          {tags.map(t => (
+            <span key={t} style={{
+              fontFamily:'var(--font-mono)', fontSize:10, padding:'1px 6px',
+              borderRadius:4, background:'var(--raised)', color:'var(--text-dim)',
+            }}>{t}</span>
+          ))}
+        </div>
+        <span style={{
+          fontFamily:'var(--font-mono)', fontSize:10, color: live ? 'var(--ai)' : 'var(--text-dim)',
+          letterSpacing:'.04em', display:'inline-flex', alignItems:'center', gap:5,
+        }}>
+          {live && <span style={{
+            width:5, height:5, borderRadius:999, background:'var(--ai)',
+          }}/>}
           {meta}
         </span>
-      )}
-    </div>
-  );
-}
-
-function TagRow({ t, name, count, dot }) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-        padding: '6px 10px',
-        borderRadius: 8,
-        color: t.text,
-        fontSize: 13.5,
-        cursor: 'pointer',
-      }}
-    >
-      <span
-        style={{
-          width: 8,
-          height: 8,
-          borderRadius: 999,
-          background: dot,
-          display: 'inline-block',
-        }}
-      />
-      <span style={{ flex: 1 }}>#{name}</span>
-      <span style={{ fontFamily: FONT.mono, fontSize: 10.5, color: t.textDim }}>{count}</span>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────
-// Editor — gutter + lines + caret. focus mode widens margins.
-// ─────────────────────────────────────────────────────────────────
-const SAMPLE_LINES = [
-  ['# ', 'weekend', { dim: '.md' }],
-  [''],
-  ['Local-first means the app keeps working when the network does not.'],
-  ['Notes live in IndexedDB, the canvas renders offline, and keys never travel'],
-  ['through the browser. The folded page does not need permission to be written on.'],
-  [''],
-  ['## ', 'ship list'],
-  [''],
-  [{ list: '- ' }, 'draft the studio post'],
-  [{ list: '- ' }, 'read ', { italic: 'Death and the Dervish' }, ' — chapter 3'],
-  [{ list: '- ' }, 'sveska v0.1 — ', { mono: 'M0 ✓ M1 in flight' }],
-  [{ list: '- ' }, 'reply to the procurement note', { caret: true }],
-  [''],
-  ['> A studio is the discipline of finishing the things you started.'],
-  [''],
-  ['### ', 'tomorrow'],
-  [''],
-  [{ list: '- [ ] ' }, 'commit T1.4 — statistics modal'],
-  [{ list: '- [x] ' }, 'merge T0.3 — shell + routing'],
-];
-
-function Editor({ t, theme, isFocus }) {
-  const editorBg = t.bg;
-  const margin = isFocus ? 200 : 64;
-  const lineHeight = 28;
-  return (
-    <div
-      style={{
-        background: editorBg,
-        overflow: 'hidden',
-        position: 'relative',
-        padding: isFocus ? '64px 0' : '24px 0 0',
-      }}
-    >
-      {!isFocus && <EditorToolbar t={t} />}
-      <div
-        style={{
-          padding: `${isFocus ? 0 : 22}px ${margin}px 0`,
-          display: 'grid',
-          gridTemplateColumns: '44px 1fr',
-          columnGap: 14,
-          fontFamily: FONT.mono,
-          fontSize: 16,
-          lineHeight: `${lineHeight}px`,
-          color: t.text,
-          maxWidth: isFocus ? 880 : 'none',
-          margin: isFocus ? '0 auto' : 0,
-        }}
-      >
-        {SAMPLE_LINES.map((line, i) => (
-          <EditorLine key={i} t={t} lineno={i + 1} tokens={line} />
-        ))}
       </div>
-
-      {!isFocus && <WordCountGoal t={t} />}
     </div>
   );
 }
 
-function EditorToolbar({ t }) {
+function Toolbar() {
   return (
-    <div
-      style={{
-        margin: '0 64px 6px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 6,
-        padding: 8,
-        borderRadius: 12,
-        background: t.surface,
-        boxShadow: `inset 0 0 0 1px ${t.border}`,
-        maxWidth: 720,
-      }}
-    >
-      <ToolbarBtn t={t} icon="plus" label="New" />
-      <ToolbarBtn t={t} icon="bold" active />
-      <ToolbarBtn t={t} icon="italic" />
-      <ToolbarBtn t={t} icon="check" />
-      <ToolbarBtn t={t} icon="link" />
-      <span style={{ width: 1, height: 18, background: t.border, margin: '0 4px' }} />
-      <span
-        style={{
-          flex: 1,
-          fontFamily: FONT.mono,
-          fontSize: 12.5,
-          color: t.text,
-          padding: '0 8px',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        <span style={{ color: t.textDim }}>weekend</span>.md
-        <span style={{ color: t.textDim }}> · edited 2m ago</span>
-      </span>
-      <SnapButton t={t} />
+    <div style={{
+      flexShrink:0, height:56,
+      borderBottom:'1px solid var(--border-soft)',
+      display:'flex', alignItems:'center', gap:6, padding:'0 24px',
+      background:'var(--bg)',
+    }}>
+      <TbBtn d="M12 5v14M5 12h14"/>
+      <TbBtn d="M19 12H5M12 19l-7-7 7-7"/>
+      <TbBtn d="M5 12h14M12 5l7 7-7 7"/>
+      <div style={{width:1, height:18, background:'var(--border-soft)', margin:'0 6px'}}/>
+      <TbBtn d="M7 5h6a4 4 0 1 1 0 8H7zM7 13h7a4 4 0 1 1 0 8H7z" active/>
+      <TbBtn d="M14 5h4M10 19h4M15 5l-4 14"/>
+      <TbBtn d="M5 9h14M5 15h14M9 4l-2 16M17 4l-2 16"/>
+      <TbBtn d="M4 6l2 2 4-4M4 13l2 2 4-4M4 20l2 2 4-4M14 7h7M14 14h7M14 21h7"/>
+      <TbBtn d="M16 4h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 4h6v4H9z"/>
+      <div style={{width:1, height:18, background:'var(--border-soft)', margin:'0 6px'}}/>
+      <TbBtn d="M9 18l6-6-6-6"/>
+      <span style={{
+        flex:1, fontFamily:'var(--font-mono)', fontSize:12.5,
+        color:'var(--text)', padding:'0 14px',
+        overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap',
+      }}><span style={{color:'var(--text-dim)'}}>weekend</span>.md<span style={{color:'var(--text-dim)'}}> · edited 2m ago · 312 words</span></span>
+
+      <button style={{
+        appearance:'none', border:0, cursor:'pointer',
+        height:32, padding:'0 12px 0 10px', borderRadius:8,
+        background:'transparent', color:'var(--text-dim)',
+        fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:'.04em',
+        display:'inline-flex', alignItems:'center', gap:8,
+      }}>
+        <span style={{position:'relative', width:8, height:8}}>
+          <span style={{
+            position:'absolute', inset:0, borderRadius:999, background:'var(--ai)',
+            boxShadow:'0 0 0 3px color-mix(in oklab, var(--ai) 22%, transparent)',
+          }}/>
+        </span>
+        <span>snapshot · 14:02</span>
+      </button>
+
+      <button style={{
+        appearance:'none', border:0, cursor:'pointer',
+        height:32, padding:'0 14px', borderRadius:8,
+        background:'transparent', color:'var(--text)',
+        boxShadow:'inset 0 0 0 1px var(--border-soft)',
+        fontFamily:'var(--font-ui)', fontWeight:700, fontSize:13,
+        display:'inline-flex', alignItems:'center', gap:8,
+      }}>
+        Share
+        <Icon d="M12 5v14M5 12l7-7 7 7" w={13} sw={2}/>
+      </button>
+
+      <button style={{
+        appearance:'none', border:0, cursor:'pointer',
+        height:32, padding:'0 14px', borderRadius:8,
+        background:'var(--accent)', color:'#0C0C0E',
+        fontFamily:'var(--font-ui)', fontWeight:700, fontSize:13,
+        display:'inline-flex', alignItems:'center', gap:8,
+        letterSpacing:'-0.005em',
+      }}>
+        Save snapshot
+        <Kbd>⌘S</Kbd>
+      </button>
     </div>
   );
 }
 
-function ToolbarBtn({ t, icon, active }) {
+function TbBtn({d, active}) {
   return (
-    <button
-      type="button"
-      style={{
-        width: 34,
-        height: 34,
-        background: active ? t.raised : 'transparent',
-        border: 0,
-        borderRadius: 8,
-        color: active ? t.accent : t.textDim,
-        cursor: 'pointer',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Icon name={icon} size={16} />
+    <button style={{
+      appearance:'none', border:0, background: active?'var(--raised)':'transparent',
+      cursor:'pointer', width:34, height:34, borderRadius:8,
+      color: active ? 'var(--accent)' : 'var(--text-dim)',
+      display:'inline-flex', alignItems:'center', justifyContent:'center',
+    }}>
+      <Icon d={d} w={16} sw={1.75}/>
     </button>
   );
 }
 
-function SnapButton({ t }) {
-  return (
-    <button
-      type="button"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 8,
-        padding: '6px 12px 6px 10px',
-        borderRadius: 8,
-        background: 'transparent',
-        color: t.textDim,
-        fontFamily: FONT.mono,
-        fontSize: 11,
-        border: 0,
-        cursor: 'pointer',
-      }}
-    >
-      <span
-        style={{
-          position: 'relative',
-          width: 8,
-          height: 8,
-          borderRadius: 999,
-          background: t.snapDot,
-          boxShadow: `0 0 0 3px color-mix(in oklab, ${t.snapDot} 22%, transparent)`,
-          display: 'inline-block',
-        }}
-      >
-        <span
-          data-sveska-anim
-          style={{
-            content: '""',
-            position: 'absolute',
-            inset: -6,
-            borderRadius: 999,
-            border: `1px solid ${t.snapDot}`,
-            opacity: 0.35,
-            animation: 'sveska-pulse 2.4s ease-out infinite',
-          }}
-        />
-      </span>
-      <span>snapshot · 14:02</span>
-    </button>
+function EditorBody({focus}) {
+  // The visible "note". A mix of prose, list, and one streaming AI suggestion block.
+  const lineNo = (n) => (
+    <span style={{
+      width:32, textAlign:'right', color:'var(--text-dim)',
+      opacity:.55, paddingRight:14, userSelect:'none',
+      fontVariantNumeric:'tabular-nums',
+    }}>{n}</span>
   );
-}
-
-function EditorLine({ t, lineno, tokens }) {
-  return (
-    <>
-      <span
-        style={{
-          color: t.textDim,
-          opacity: 0.55,
-          textAlign: 'right',
-          fontSize: 12,
-          alignSelf: 'baseline',
-          paddingTop: 5,
-          userSelect: 'none',
-        }}
-      >
-        {lineno}
-      </span>
-      <span style={{ color: t.text, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-        {tokens.map((seg, i) => {
-          if (typeof seg === 'string') return <span key={i}>{seg}</span>;
-          if (seg.dim) return <span key={i} style={{ color: t.textDim }}>{seg.dim}</span>;
-          if (seg.italic) return <span key={i} style={{ fontStyle: 'italic', color: t.text }}>{seg.italic}</span>;
-          if (seg.mono) return <span key={i} style={{ color: t.accent }}>{seg.mono}</span>;
-          if (seg.list) return <span key={i} style={{ color: t.accent }}>{seg.list}</span>;
-          if (seg.caret) return (
-            <span
-              key={i}
-              data-sveska-anim
-              style={{
-                display: 'inline-block',
-                width: 2,
-                height: 18,
-                background: t.accent,
-                verticalAlign: '-3px',
-                marginLeft: 1,
-                animation: 'sveska-caret 1.1s steps(1) infinite',
-              }}
-            />
-          );
-          return null;
-        })}
-      </span>
-    </>
+  const line = (n, body, opts={}) => (
+    <div key={n} style={{
+      display:'flex', alignItems:'flex-start',
+      background: opts.live ? 'color-mix(in oklab, var(--ai) 10%, transparent)' : 'transparent',
+      borderLeft: opts.live ? '2px solid var(--ai)' : '2px solid transparent',
+      padding:'1px 0',
+    }}>
+      {lineNo(n)}
+      <div style={{flex:1, paddingLeft:14}}>{body}</div>
+    </div>
   );
-}
-
-// ─────────────────────────────────────────────────────────────────
-// Status bar — mono row at the bottom
-// ─────────────────────────────────────────────────────────────────
-function StatusBar({ t }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '8px 22px',
-        borderTop: `1px solid ${t.border}`,
-        background: t.surface,
-        color: t.textDim,
-        fontFamily: FONT.mono,
-        fontSize: 11,
-        letterSpacing: '.04em',
-        textTransform: 'uppercase',
-      }}
-    >
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 18 }}>
-        <span style={{ color: t.ai }}>● local · offline-ok</span>
-        <span>312 words · 1,847 chars · 19 lines</span>
-        <span>md mode</span>
+    <div style={{
+      flex:1, overflow:'hidden',
+      background:'var(--bg)', color:'var(--text)',
+      fontFamily:'var(--font-mono)', fontSize:15.5, lineHeight:1.75,
+      padding:`28px ${focus?160:64}px 32px`,
+      display:'flex', flexDirection:'column',
+    }}>
+      <div style={{maxWidth: focus? 760 : 880, margin:focus?'0 auto':'0', width:'100%'}}>
+        {line(1, <span><span style={{color:'var(--accent)'}}># weekend.md</span></span>)}
+        {line(2, <span style={{color:'var(--text-dim)'}}>{'<!-- snapshot 14:02 · 312 words -->'}</span>)}
+        {line(3, <span>&nbsp;</span>)}
+        {line(4, <span>The folded page does not need permission to be written on. Local-first means the app keeps working when the network does not.</span>)}
+        {line(5, <span>&nbsp;</span>)}
+        {line(6, <span style={{color:'var(--accent)'}}>## todo · ship v0.1</span>)}
+        {line(7, <span><Box on/> draft the studio post <Tag>writing</Tag></span>)}
+        {line(8, <span><Box/> ship sveska v0.1 <Tag>M0–M1</Tag></span>)}
+        {line(9, <span style={{paddingLeft:24}}><Box on/> wire vite + dexie + workbox</span>)}
+        {line(10, <span style={{paddingLeft:24}}><Box/> textarea + 400ms autosave <Tag>M1.1</Tag></span>)}
+        {line(11, <span style={{paddingLeft:24, position:'relative'}}>
+          <Box/> snapshot dot + restore <Tag ai>AI · plan</Tag>
+        </span>, {live:true})}
+        {line(12, <span><Box/> read Selimović, chapter 3 <Tag>reading</Tag></span>)}
+        {line(13, <span><Box on/> pour the rakija</span>)}
+        {line(14, <span>&nbsp;</span>)}
+        {line(15, <span style={{color:'var(--accent)'}}>## notes from selimović</span>)}
+        {line(16, <span>&nbsp;</span>)}
+        {line(17, <span><span style={{color:'var(--ai)'}}>"</span>Death and the Dervish<span style={{color:'var(--ai)'}}>"</span> — the way memory is staged as procedure.<span style={{borderLeft:'2px solid var(--accent)', marginLeft:4, height:'1.4em', display:'inline-block', verticalAlign:'middle', animation:'sveska-caret 1.1s steps(1) infinite'}}/></span>)}
       </div>
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 14 }}>
-        <span>UTF-8 · LF</span>
-        <span>Ln 12 · Col 36</span>
-        <Kbd t={t} keys={['⌘', 'K']} dim /> <span>command</span>
+
+      {/* selection bubble — /improve in-flight */}
+      <div style={{
+        position:'absolute', left: focus?260:340, top:330,
+        display:'flex', gap:6, alignItems:'center',
+        background:'var(--surface)', border:'1px solid var(--ai)',
+        borderRadius:10, padding:'6px 10px 6px 8px',
+        boxShadow:'var(--shadow)',
+        fontFamily:'var(--font-mono)', fontSize:11.5, letterSpacing:'.04em',
+        color:'var(--text)',
+      }}>
+        <span style={{width:7, height:7, borderRadius:999, background:'var(--ai)',
+          boxShadow:'0 0 0 3px color-mix(in oklab, var(--ai) 22%, transparent)'}}/>
+        <span style={{color:'var(--ai)'}}>/improve</span>
+        <span style={{color:'var(--text-dim)'}}>· streaming · 1.4 s</span>
+        <span style={{width:1, height:14, background:'var(--border-soft)', margin:'0 2px'}}/>
+        <span style={{color:'var(--text-dim)'}}>esc cancel</span>
+      </div>
+
+      <style>{`@keyframes sveska-caret { 50% { opacity: 0 } }`}</style>
+    </div>
+  );
+}
+
+function Box({on}) {
+  return (
+    <span style={{
+      display:'inline-block', verticalAlign:'-3px',
+      width:15, height:15, borderRadius:4,
+      border: on?'1.5px solid var(--accent)':'1.5px solid var(--text-dim)',
+      background: on?'var(--accent)':'transparent',
+      marginRight:8, position:'relative',
+    }}>
+      {on && <span style={{
+        position:'absolute', left:3, top:1,
+        width:7, height:4,
+        borderLeft:'2px solid #0C0C0E', borderBottom:'2px solid #0C0C0E',
+        transform:'rotate(-45deg)',
+      }}/>}
+    </span>
+  );
+}
+
+function Tag({children, ai}) {
+  return (
+    <span style={{
+      fontFamily:'var(--font-mono)', fontSize:10.5,
+      padding:'1px 6px', borderRadius:4, marginLeft:6,
+      background: ai ? 'color-mix(in oklab, var(--ai) 16%, transparent)' : 'var(--raised)',
+      color: ai ? 'var(--ai)' : 'var(--text-dim)',
+      verticalAlign:'2px',
+    }}>{children}</span>
+  );
+}
+
+function StatusBar({focus}) {
+  return (
+    <div style={{
+      flexShrink:0, height:30,
+      background:'var(--surface)',
+      borderTop:'1px solid var(--border-soft)',
+      display:'flex', alignItems:'center',
+      fontFamily:'var(--font-mono)', fontSize:11, color:'var(--text-dim)',
+      letterSpacing:'.04em', padding:'0 16px',
+    }}>
+      <span style={{display:'inline-flex', gap:6, alignItems:'center', padding:'0 10px 0 0', color:'var(--ok)'}}>
+        <span style={{width:6, height:6, borderRadius:999, background:'var(--ok)'}}/>
+        Saved · 14:02
+      </span>
+      <Sep/>
+      <Slot>312 words · 14m read</Slot>
+      <Sep/>
+      <Slot>Ln 38, Col 12</Slot>
+      <Sep/>
+      <Slot>spaces: 2</Slot>
+      <div style={{flex:1}}/>
+      <Slot style={{color:'var(--ai)'}}><span style={{width:6, height:6, borderRadius:999, background:'var(--ai)', boxShadow:'0 0 0 2px color-mix(in oklab, var(--ai) 22%, transparent)'}}/> /improve · streaming</Slot>
+      <Sep/>
+      <Slot>UTF-8 · LF</Slot>
+      <Sep/>
+      <Slot>markdown</Slot>
+      <Sep/>
+      <Slot style={{color:'var(--accent)'}}>● Offline · local-first</Slot>
+    </div>
+  );
+}
+function Sep() { return <span style={{width:1, height:14, background:'var(--border-soft)', margin:'0 4px'}}/>; }
+function Slot({children, style}) {
+  return <span style={{display:'inline-flex', alignItems:'center', gap:6, padding:'0 10px', ...style}}>{children}</span>;
+}
+
+// ─── Whole shell ───
+function AppShell({theme='dark', mode='default'}) {
+  const tokens = TOKENS[theme];
+  const styleVars = useMemo(()=>Object.fromEntries(Object.entries(tokens)), [theme]);
+  const focus = mode === 'focus';
+  return (
+    <div style={{
+      ...styleVars,
+      width:'100%', height:'100%',
+      background:'var(--bg)', color:'var(--text)',
+      fontFamily:'var(--font-ui)',
+      display:'flex', flexDirection:'column',
+      overflow:'hidden',
+      position:'relative',
+    }}>
+      <WindowBar theme={theme}/>
+      {!focus && <TabStrip
+        tabs={['weekend.md','imports of Selimović','v0.1 ship list']}
+        active={0}
+        dirty={[1]}
+      />}
+      <div style={{flex:1, display:'flex', overflow:'hidden'}}>
+        {!focus && <Sidebar/>}
+        <main style={{flex:1, display:'flex', flexDirection:'column', overflow:'hidden', position:'relative'}}>
+          {!focus && <Toolbar/>}
+          {focus && (
+            <div style={{
+              position:'absolute', top:18, right:24, zIndex:2,
+              display:'flex', alignItems:'center', gap:10,
+              fontFamily:'var(--font-mono)', fontSize:11, letterSpacing:'.04em',
+              color:'var(--text-dim)',
+            }}>
+              <span style={{position:'relative', width:7, height:7}}>
+                <span style={{position:'absolute', inset:0, borderRadius:999, background:'var(--ai)',
+                  boxShadow:'0 0 0 3px color-mix(in oklab, var(--ai) 22%, transparent)'}}/>
+              </span>
+              snapshot · 14:02
+              <span style={{width:1, height:14, background:'var(--border-soft)'}}/>
+              focus · Alt+F to exit
+            </div>
+          )}
+          <EditorBody focus={focus}/>
+          <StatusBar focus={focus}/>
+        </main>
       </div>
     </div>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────
-// Focus mode hint — small ⎋ corner card with snapshot dot
-// ─────────────────────────────────────────────────────────────────
-function FocusCornerHint({ t }) {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: 24,
-        right: 24,
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 10,
-        padding: '8px 12px 8px 10px',
-        borderRadius: 999,
-        background: t.surface,
-        border: `1px solid ${t.border}`,
-        color: t.textDim,
-        fontFamily: FONT.mono,
-        fontSize: 11,
-        letterSpacing: '.06em',
-        textTransform: 'uppercase',
-      }}
-    >
-      <span
-        style={{
-          width: 8,
-          height: 8,
-          borderRadius: 999,
-          background: t.snapDot,
-          display: 'inline-block',
-        }}
-      />
-      <span>focus · </span>
-      <Kbd t={t} keys={['⌥', 'F']} dim />
-      <span>to exit</span>
-    </div>
-  );
-}
-
-// Word-count goal — floating bottom-right card with progress arc-ish
-function WordCountGoal({ t }) {
-  const goal = 500;
-  const have = 312;
-  const pct = have / goal;
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        right: 28,
-        bottom: 44,
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 12,
-        padding: '10px 14px',
-        background: t.surface,
-        border: `1px solid ${t.border}`,
-        borderRadius: 12,
-        color: t.text,
-        fontFamily: FONT.mono,
-        fontSize: 11,
-        letterSpacing: '.06em',
-      }}
-    >
-      <span style={{ position: 'relative', width: 24, height: 24 }}>
-        <svg width="24" height="24" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" fill="none" stroke={t.border} strokeWidth="2" />
-          <circle
-            cx="12"
-            cy="12"
-            r="10"
-            fill="none"
-            stroke={t.accent}
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeDasharray={`${2 * Math.PI * 10}`}
-            strokeDashoffset={`${2 * Math.PI * 10 * (1 - pct)}`}
-            transform="rotate(-90 12 12)"
-          />
-        </svg>
-      </span>
-      <span style={{ textTransform: 'uppercase' }}>
-        <span style={{ color: t.text }}>{have}</span>
-        <span style={{ color: t.textDim }}> / {goal} words</span>
-      </span>
-    </div>
-  );
-}
+Object.assign(window, { AppShell, SVESKA_TOKENS: TOKENS });

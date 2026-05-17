@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sveska — Settings</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="brand/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: #f0eee9;
+      }
+      body {
+        font-family: 'Satoshi', system-ui, sans-serif;
+      }
+    </style>
+
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel" src="design-canvas.jsx"></script>
+    <script type="text/babel" src="app-shell.jsx"></script>
+    <script type="text/babel" src="settings.jsx"></script>
+    <script type="text/babel">
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(
+        <DesignCanvas projectTitle="Sveska — Settings" initialZoom={0.42}>
+          <DCSection
+            id="dark"
+            title="Settings · dark default"
+            subtitle="Two-pane layout — nav rail left, preference rows right. Each row is name + hint + control, on hairline separators. Five panels: Editor, Appearance, AI, Data, Keyboard."
+          >
+            <DCArtboard id="s-editor" label="① Editor" width={1440} height={900}>
+              <SettingsShell theme="dark" sectionId="editor" />
+            </DCArtboard>
+
+            <DCArtboard id="s-appearance" label="② Appearance" width={1440} height={900}>
+              <SettingsShell theme="dark" sectionId="appearance" />
+            </DCArtboard>
+
+            <DCArtboard id="s-ai" label="③ AI · proxy" width={1440} height={900}>
+              <SettingsShell theme="dark" sectionId="ai" />
+            </DCArtboard>
+
+            <DCArtboard id="s-data" label="④ Data · backup" width={1440} height={900}>
+              <SettingsShell theme="dark" sectionId="data" />
+            </DCArtboard>
+
+            <DCArtboard id="s-keyboard" label="⑤ Keyboard shortcuts" width={1440} height={900}>
+              <SettingsShell theme="dark" sectionId="keyboard" />
+            </DCArtboard>
+          </DCSection>
+
+          <DCSection
+            id="light"
+            title="Light mirror"
+            subtitle="Surfaces invert; the amber accent stays. AI cyan shifts to amber-700."
+          >
+            <DCArtboard id="s-editor-light" label="⑥ Editor · light" width={1440} height={900}>
+              <SettingsShell theme="light" sectionId="editor" />
+            </DCArtboard>
+
+            <DCArtboard id="s-ai-light" label="⑦ AI · light" width={1440} height={900}>
+              <SettingsShell theme="light" sectionId="ai" />
+            </DCArtboard>
+          </DCSection>
+        </DesignCanvas>,
+      );
+    </script>
+  </body>
+</html>
