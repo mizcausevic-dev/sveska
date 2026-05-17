@@ -7,14 +7,13 @@
 
 ## In progress
 
-- [ ] **T2.4 — Tags, pinned notes, saved filters, recent-notes rail, favorites bar**
-  - **Why**: organize past notes. Tags + pins both already exist as schema fields on the `notes` row (CLAUDE.md §4) — wire them through the UI. Recent-notes rail = a small left sidebar listing the last 8 notes by updatedAt; favorites bar = pinned notes pinned at the top of that rail.
-  - **AC**: per-note tag chips with add/remove · pin toggle in tab context menu · saved-filter dropdown (Untagged · Pinned · Tag = X) · sidebar shows pinned section + recent section · keyboard reachable.
-  - **Don't**: build a tag _picker UI_ yet — just chip add/remove inline. Templates ship at T3.4.
+- [ ] **T2.5 — Fuzzy search across notes (title + body) + quick-capture inbox**
+  - **Why**: scale beyond 5–10 notes — need fast multi-field search. Inbox is a one-line quick-capture (Ctrl+Shift+K-ish) that drops a row into the `inbox` Dexie table without leaving the editor.
+  - **AC**: `Ctrl+P` opens a fuzzy modal that searches title + body of all non-deleted notes; under 50ms for 1k notes; Enter opens the selected note in a tab. Inbox modal lives alongside; a small badge in the rail shows unprocessed count.
+  - **Don't**: pull `fuse.js` if a hand-rolled scorer can hit 50ms. The corpus is small (1k notes × ~5KB bodies = 5MB max). Bigram + substring scoring is enough.
 
 ## Next up (sequential, top-down)
 
-- [ ] T2.5 — Fuzzy search across notes (title + body) + quick-capture inbox · **AC**: 1k notes, search < 50ms
 - [ ] **M2 close** — tag `v0.2.0-m2`, release notes
 
 ## Recently done (this branch only)
@@ -32,6 +31,7 @@
 - ✅ T2.1 — Multi-note tabs + session restore + "open previous session" pref + inline rename + dirty dot
 - ✅ T2.2 — Version history modal · pure LCS line diff · side-by-side panes · restore writes back to active note · empty-state · 16 unit tests
 - ✅ T2.3 — Crash-safe draft shadow per note (`prefs.draft.<noteId>`) · written on every keystroke · cleared on debounced save · recovery banner with Keep / Discard on stale shadow · 10 unit tests
+- ✅ T2.4 — Per-note tag chips · pin toggle · NotesRail sidebar with Pinned/Recent sections · saved-filter dropdown (All/Pinned/Untagged/#tag) · collapsible rail · 12 unit tests + browser preview verified
 - ✅ Domain — `sveska.studio` canonical + 4 alias 301 redirects, CI/CD wired
 - ✅ Design package absorbed — Claude Code Design files in `docs/design-mocks/` + `docs/landing/`
 

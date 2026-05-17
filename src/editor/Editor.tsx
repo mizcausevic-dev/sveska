@@ -15,6 +15,7 @@ import { download, exportAs } from '@/markdown/export';
 import { ClearConfirmHost } from './ClearConfirm';
 import { confirmClear } from './clearConfirmStore';
 import { TabBar } from './TabBar';
+import { TagsBar } from './TagsBar';
 import { VersionsModalHost } from './VersionsModal';
 import { DraftRecoveryBanner } from './DraftRecoveryBanner';
 import { useDraftRecovery } from './draftRecoveryStore';
@@ -156,6 +157,7 @@ export function Editor(): React.JSX.Element {
   return (
     <section className="editor" aria-busy={!hydrated}>
       <TabBar tabs={tabs} activeTabId={activeTabId} notesById={notesById} activeBody={body} />
+      {activeNote && <TagsBar note={activeNote} />}
       <div className="editor-actions">
         <SnapshotToolbar snapshots={snapshots} onAfterRestore={setBody} />
         <div className="editor-actions-secondary">

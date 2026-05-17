@@ -75,6 +75,39 @@ export async function softDeleteNote(id: string): Promise<void> {
   await db().notes.update(id, { deletedAt: Date.now() });
 }
 
+/**
+ * Replace a note's tag list (M2.T2.4). Tags are trimmed, lowercased, deduped,
+ * and stripped of empties. The single source of truth for tag normalization
+ * lives here so the UI never has to second-guess case/whitespace.
+ */
+export function normalizeTags(input: readonly string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of input) {
+    const t = raw.trim().toLowerCase();
+    if (!t) continue;
+    if (seen.has(t)) continue;
+    seen.add(t);
+    out.push(t);
+  }
+  return out;
+}
+
+export async function updateNoteTags(id: string, tags: readonly string[]): Promise<void> {
+  await db().notes.update(id, { tags: normalizeTags(tags), updatedAt: Date.now() });
+}
+
+/** Toggle / set the pinned flag (M2.T2.4). Indexed as 0/1 (Dexie can't index booleans). */
+export async function setNotePinned(id: string, pinned: boolean): Promise<void> {
+  await db().notes.update(id, { pinned: pinned ? 1 : 0, updatedAt: Date.now() });
+}
+
+/** All pinned non-deleted notes, newest-first. M2.T2.4 favorites bar. */
+export async function listPinnedNotes(): Promise<Note[]> {
+  const all = await db().notes.where('pinned').equals(1).toArray();
+  return all.filter((n) => n.deletedAt === null).sort((a, b) => b.updatedAt - a.updatedAt);
+}
+
 /** Migrate any legacy localStorage["note"] into a first note, then clear the key. */
 export async function migrateLegacyLocalStorage(): Promise<void> {
   if (typeof localStorage === 'undefined') return;

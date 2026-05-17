@@ -1,8 +1,10 @@
 import { type ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { ThemeSwitch } from '@/ui/ThemeSwitch';
 import { openPrefs } from '@/ui/prefsModalStore';
 import { useUIStore } from '@/notes/uiStore';
+import { NotesRail } from '@/editor/NotesRail';
+import { useNotesRail } from '@/notes/notesRailStore';
 
 interface LayoutProps {
   children: ReactNode;
@@ -11,8 +13,15 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps): React.JSX.Element {
   const focus = useUIStore((s) => s.focus);
   const toggleFocus = useUIStore((s) => s.toggleFocus);
+  const railOpen = useNotesRail((s) => s.open);
+  const location = useLocation();
+  // Show the rail only on the editor route + only outside focus mode.
+  const showRail = !focus && location.pathname === '/';
+  const shellMod = `${focus ? ' app-shell--focus' : ''}${
+    showRail ? (railOpen ? ' app-shell--rail-open' : ' app-shell--rail-collapsed') : ''
+  }`;
   return (
-    <div className={`app-shell${focus ? ' app-shell--focus' : ''}`} data-testid="app-shell">
+    <div className={`app-shell${shellMod}`} data-testid="app-shell">
       {focus && (
         <button
           type="button"
@@ -48,9 +57,12 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
           <ThemeSwitch />
         </nav>
       </header>
-      <main className="app-main" id="main">
-        {children}
-      </main>
+      <div className="app-body">
+        {showRail && <NotesRail />}
+        <main className="app-main" id="main">
+          {children}
+        </main>
+      </div>
       <footer className="app-footer">
         <span>
           Sveska · local-first · v0.0.0 · <a href="/glossary">glossary</a>
