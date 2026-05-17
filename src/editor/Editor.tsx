@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { type Note } from '@/notes/db';
 import { getOrCreateActiveNote, migrateLegacyLocalStorage } from '@/notes/noteRepo';
 import { useAutosave, type SaveState } from './useAutosave';
 import { useSnapshots } from './useSnapshots';
 import { SnapshotToolbar } from './SnapshotToolbar';
+import { ExportMenu } from './ExportMenu';
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -15,9 +17,10 @@ const STATE_LABEL: Record<SaveState, string> = {
 };
 
 export function Editor(): React.JSX.Element {
-  const [noteId, setNoteId] = useState<string | null>(null);
+  const [note, setNote] = useState<Note | null>(null);
   const [body, setBody] = useState('');
   const [hydrated, setHydrated] = useState(false);
+  const noteId = note?.id ?? null;
 
   useEffect(() => {
     let cancelled = false;
@@ -27,10 +30,10 @@ export function Editor(): React.JSX.Element {
       } catch (err) {
         console.warn('[sveska] legacy localStorage migration skipped:', err);
       }
-      const note = await getOrCreateActiveNote();
+      const n = await getOrCreateActiveNote();
       if (cancelled) return;
-      setNoteId(note.id);
-      setBody(note.body);
+      setNote(n);
+      setBody(n.body);
       setHydrated(true);
     })();
     return () => {
@@ -43,7 +46,10 @@ export function Editor(): React.JSX.Element {
 
   return (
     <section className="editor" aria-busy={!hydrated}>
-      <SnapshotToolbar snapshots={snapshots} onAfterRestore={setBody} />
+      <div className="editor-actions">
+        <SnapshotToolbar snapshots={snapshots} onAfterRestore={setBody} />
+        <ExportMenu note={note} body={body} />
+      </div>
       <textarea
         className="editor-input"
         value={body}

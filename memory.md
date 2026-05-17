@@ -54,6 +54,7 @@
 | M0 ship (2026-05-16) | 3     | 89.81 KB | 2.53 KB  | scaffold only |
 | T1.1 (2026-05-16)    | 8     | 90.67 KB | 2.81 KB  | +editor       |
 | T1.2 (2026-05-16)    | 17    | 91.29 KB | 3.15 KB  | +snapshots    |
+| T1.3 (2026-05-17)    | 28    | 93.21 KB | 3.15 KB  | +export       |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 
