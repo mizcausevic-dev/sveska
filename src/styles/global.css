@@ -2702,3 +2702,208 @@ input[type='range'] {
 .cta-dismiss:hover {
   color: var(--danger);
 }
+
+/* T6.4 — Pricing page */
+.pricing-page {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.pricing-head {
+  margin: 0 0 32px;
+  text-align: center;
+}
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0 0 32px;
+}
+@media (max-width: 880px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+  padding: 22px 22px 26px;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+}
+.pricing-card--pro {
+  border-color: color-mix(in oklab, var(--accent) 50%, var(--border-soft));
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent) 20%, transparent);
+}
+.pricing-card h2 {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--text);
+}
+.pricing-amount {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+.pricing-summary {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.55;
+}
+.pricing-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text);
+  flex: 1;
+}
+.pricing-list li {
+  padding-left: 18px;
+  position: relative;
+}
+.pricing-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--ok);
+  font-weight: 700;
+}
+.pricing-cta {
+  align-self: flex-start;
+}
+.pricing-cta-secondary {
+  align-self: flex-start;
+  margin-top: 10px;
+  font-size: 12px;
+}
+.pricing-leadgen {
+  margin: 0 0 12px;
+}
+.pricing-footnote {
+  margin: 32px 0 0;
+  padding-top: 18px;
+  border-top: 1px dashed var(--border-soft);
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.55;
+}
+
+/* T6.4 — Funnel dashboard */
+.funnel-page {
+  max-width: 880px;
+  margin: 0 auto;
+}
+.funnel-head {
+  margin: 0 0 24px;
+}
+.funnel-target {
+  margin: 0 0 28px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+}
+.funnel-target h2 {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+.funnel-target-line {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+.funnel-target-bar {
+  display: block;
+  width: 100%;
+  height: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 6px 0;
+}
+.funnel-target-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 200ms ease;
+}
+.funnel-target-meta {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+
+.funnel-stages h2,
+.funnel-recent h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin: 24px 0 12px;
+}
+.funnel-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.funnel-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 60px;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  font-size: 13px;
+}
+.funnel-bar {
+  display: block;
+  height: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.funnel-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.funnel-count {
+  text-align: right;
+  color: var(--text-dim);
+}
+.funnel-empty {
+  margin: 10px 0 0;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px dashed var(--border-soft);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+.funnel-events {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.funnel-events li {
+  padding: 4px 0;
+}
+.funnel-payload {
+  color: var(--accent);
+}

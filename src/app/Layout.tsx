@@ -48,6 +48,7 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
           <NavLink to="/blog">Blog</NavLink>
           <NavLink to="/changelog">Changelog</NavLink>
           <NavLink to="/glossary">Glossary</NavLink>
+          <NavLink to="/pricing">Pricing</NavLink>
           <button
             type="button"
             onClick={openPrefs}

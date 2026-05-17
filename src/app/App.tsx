@@ -1,12 +1,21 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Layout } from './Layout';
 import { Home } from '@/routes/Home';
-import { Glossary } from '@/routes/Glossary';
-import { Changelog } from '@/routes/Changelog';
-import { BlogIndex } from '@/routes/BlogIndex';
-import { BlogPost } from '@/routes/BlogPost';
-import { ShareTarget } from '@/routes/ShareTarget';
 import { NotFound } from '@/routes/NotFound';
+
+// Platform routes are lazy — the editor is the critical path; /glossary,
+// /blog, /changelog, /pricing, /funnel only load when navigated to. Keeps
+// the initial bundle under the 180 KB CLAUDE.md §0 budget.
+const Glossary = lazy(() => import('@/routes/Glossary').then((m) => ({ default: m.Glossary })));
+const Changelog = lazy(() => import('@/routes/Changelog').then((m) => ({ default: m.Changelog })));
+const BlogIndex = lazy(() => import('@/routes/BlogIndex').then((m) => ({ default: m.BlogIndex })));
+const BlogPost = lazy(() => import('@/routes/BlogPost').then((m) => ({ default: m.BlogPost })));
+const Pricing = lazy(() => import('@/routes/Pricing').then((m) => ({ default: m.Pricing })));
+const Funnel = lazy(() => import('@/routes/Funnel').then((m) => ({ default: m.Funnel })));
+const ShareTarget = lazy(() =>
+  import('@/routes/ShareTarget').then((m) => ({ default: m.ShareTarget })),
+);
 import { PrefsModalHost } from '@/ui/PrefsModal';
 import { ShortcutsModalHost } from '@/ui/ShortcutsModal';
 import { SearchModalHost } from '@/ui/SearchModal';
@@ -53,15 +62,25 @@ export function App(): React.JSX.Element {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/glossary" element={<Glossary />} />
-          <Route path="/changelog" element={<Changelog />} />
-          <Route path="/blog" element={<BlogIndex />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
-          <Route path="/share-target" element={<ShareTarget />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense
+          fallback={
+            <div className="route-loading" aria-busy>
+              Loading…
+            </div>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/glossary" element={<Glossary />} />
+            <Route path="/changelog" element={<Changelog />} />
+            <Route path="/blog" element={<BlogIndex />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/funnel" element={<Funnel />} />
+            <Route path="/share-target" element={<ShareTarget />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </Layout>
       <KeyBindings />
       <PrefsModalHost />
