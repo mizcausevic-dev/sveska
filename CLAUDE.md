@@ -112,8 +112,8 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 - ✅ T1.2 Snapshots: save/restore/clear point-in-time copy + dot indicator in toolbar.
 - ✅ T1.3 Export `.txt` / `.md` / `.html` (shared export module).
 - ✅ T1.4 Statistics modal: words, chars, lines, paragraphs, reading time, unique words.
-- ☐ T1.5 Focus mode (`Alt+F`): hide chrome, widen margins.
-- ☐ T1.6 Preferences: font size slider, line height, font family (Satoshi/mono/serif/dyslexic), spellcheck, tab-indent, focus margin.
+- ✅ T1.5 Focus mode (`Alt+F`): hide chrome, widen margins.
+- ✅ T1.6 Preferences: font size slider, line height, font family (Satoshi/mono/serif/dyslexic), spellcheck, tab-indent, focus margin.
 - ✅ T1.7 Shortcuts: `Ctrl+S` save txt, `Alt+C` copy, `Ctrl+Del` clear, `Ctrl+,` prefs, `Alt+F` focus. **AC:** full parity with reference app, offline-capable.
 
 ### M2 — Multi-note + persistence depth
@@ -147,10 +147,10 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 
 ### M6 — Platform & monetization (Kinetic Gain doctrine)
 
-- ☐ T6.1 Glossary engine (auto-link terms in notes/exports; standalone SEO `/glossary`).
-- ☐ T6.2 Content surface: marketing/landing, changelog, MDX blog; "Export to blog/MDX" from a note.
-- ☐ T6.3 Lead-gen funnel: email capture, ad/affiliate placement slots in shell + HTML export footer, CTA system.
-- ☐ T6.4 Pricing/upgrade scaffold (free local / Pro sync+AI). Instrumentation → MRR funnel dashboard. **AC:** funnel events firing; pricing page live; path to ROI ≥ $15K/mo documented.
+- ✅ T6.1 Glossary engine (auto-link terms in notes/exports; standalone SEO `/glossary`).
+- ✅ T6.2 Content surface: marketing/landing, changelog, MDX blog; "Export to blog/MDX" from a note.
+- ✅ T6.3 Lead-gen funnel: email capture, ad/affiliate placement slots in shell + HTML export footer, CTA system.
+- ✅ T6.4 Pricing/upgrade scaffold (free local / Pro sync+AI). Instrumentation → MRR funnel dashboard. **AC:** funnel events firing; pricing page live; path to ROI ≥ $15K/mo documented.
 
 ### M7 — Hardening
 

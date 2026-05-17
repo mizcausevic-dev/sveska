@@ -107,7 +107,7 @@
     <rect x="492" y="766" width="138" height="44" rx="9" class="surfDone"/><text x="504" y="784" class="ms">✓ M3</text><text x="504" y="800" class="sm">Power UX</text>
     <rect x="640" y="766" width="138" height="44" rx="9" class="surfDone"/><text x="652" y="784" class="ms">✓ M4</text><text x="652" y="800" class="sm">AI (secure)</text>
     <rect x="788" y="766" width="138" height="44" rx="9" class="surfDone"/><text x="800" y="784" class="ms">✓ M5</text><text x="800" y="800" class="sm">Canvas</text>
-    <rect x="936" y="766" width="138" height="44" rx="9" class="surf"/><text x="948" y="784" class="ms">M6</text><text x="948" y="800" class="sm">Platform/$$</text>
+    <rect x="936" y="766" width="138" height="44" rx="9" class="surfDone"/><text x="948" y="784" class="ms">✓ M6</text><text x="948" y="800" class="sm">Platform/$$</text>
     <rect x="1084" y="766" width="108" height="44" rx="9" class="surf"/><text x="1096" y="784" class="ms">M7</text><text x="1096" y="800" class="sm">Harden</text>
   </g>
 </svg>

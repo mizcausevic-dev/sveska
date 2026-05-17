@@ -83,6 +83,10 @@
 | T4.2 (2026-05-17)    | 209   | 169.52 KB | 6.68 KB  | +slash AI commands + result pane + toast       |
 | T4.3 (2026-05-17)    | 217   | 171.34 KB | 6.68 KB  | +Notes → image (canvas OG cards, M4 close)     |
 | T5.1 (2026-05-17)    | 224   | 172.49 KB | 6.75 KB  | +Excalidraw canvas (lazy 2.6 MB, M5 close)     |
+| T6.1 (2026-05-17)    | 237   | 176.78 KB | 7.04 KB  | +glossary engine (20 terms + autolink)         |
+| T6.2 (2026-05-17)    | 242   | 178.09 KB | 7.23 KB  | +changelog/blog routes + MDX export            |
+| T6.3 (2026-05-17)    | 248   | 179.35 KB | 7.44 KB  | +leadgen + email capture + CTA slot            |
+| T6.4 (2026-05-17)    | 254   | 177.81 KB | 7.90 KB  | +/pricing + /funnel; lazy platform routes      |
 
 Budget: 180 KB JS gzip pre-canvas/AI.
 

@@ -10,8 +10,8 @@
 </p>
 
 [![PWA](https://img.shields.io/badge/PWA-installable-F2B544?style=flat-square)](https://sveska.studio)
-[![M5](https://img.shields.io/badge/milestone-M5_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.5.0-m5)
-[![Tests](https://img.shields.io/badge/tests-224_passing-7AD29C?style=flat-square)](#milestone-status)
+[![M6](https://img.shields.io/badge/milestone-M6_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.6.0-m6)
+[![Tests](https://img.shields.io/badge/tests-254_passing-7AD29C?style=flat-square)](#milestone-status)
 [![License](https://img.shields.io/badge/license-MIT-0C0C0E?style=flat-square)](LICENSE)
 
 Multi-note tabs, Markdown + checklist modes, command palette, fuzzy search across notes,
@@ -39,24 +39,26 @@ from day one.
 
 <sub>Source mockups in <a href="docs/design-mocks/"><code>docs/design-mocks/</code></a>; rendered to PNGs by <a href="scripts/capture-mocks.mjs"><code>scripts/capture-mocks.mjs</code></a> (Playwright + Chromium headless).</sub>
 
-## Features (live as of M5)
+## Features (live as of M6)
 
-| Layer       | What's shipped                                                                                                  |
-| ----------- | --------------------------------------------------------------------------------------------------------------- |
-| Editor      | Native textarea · autosave (400 ms debounce + flush on blur/visibility) · crash-safe draft shadow               |
-| Modes       | TXT · MD (split preview, DOMPurify XSS gate) · CHK (click-toggle, drag-reorder, indent levels, hide done)       |
-| Navigation  | Multi-note tabs · session restore · NotesRail (pinned / recent / saved filters / tags)                          |
-| Discovery   | `Ctrl+K` command palette (fuzzy) · inline slash commands · `Ctrl+P` fuzzy search across all notes (<50 ms / 1k) |
-| Capture     | Inbox (`Ctrl+Shift+K`) · Web Share Target → inbox · import .txt / .md (file picker + drag-drop)                 |
-| Snapshots   | Per-note version history with side-by-side LCS diff + Restore                                                   |
-| Writing     | Typewriter mode · WebAudio typing clicks · paper textures · writing-session timer · word goal · `Ctrl+F` find   |
-| Templates   | 5 built-in note templates · user templates · snippet typeahead (`;date`, `;todo`, `;hr`)                        |
-| Export      | `.txt` / `.md` / `.html` (prose for md) · share-via-URL hash · `.pdf` (lazy jsPDF)                              |
-| AI          | Streaming Anthropic proxy on Netlify Edge · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy |
-| AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                |
-| Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                  |
-| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored                                                   |
-| Persistence | Dexie (IndexedDB) — 8 tables, soft-delete, legacy-localStorage import on first run                              |
+| Layer       | What's shipped                                                                                                   |
+| ----------- | ---------------------------------------------------------------------------------------------------------------- |
+| Editor      | Native textarea · autosave (400 ms debounce + flush on blur/visibility) · crash-safe draft shadow                |
+| Modes       | TXT · MD (split preview, DOMPurify XSS gate) · CHK (click-toggle, drag-reorder, indent levels, hide done)        |
+| Navigation  | Multi-note tabs · session restore · NotesRail (pinned / recent / saved filters / tags)                           |
+| Discovery   | `Ctrl+K` command palette (fuzzy) · inline slash commands · `Ctrl+P` fuzzy search across all notes (<50 ms / 1k)  |
+| Capture     | Inbox (`Ctrl+Shift+K`) · Web Share Target → inbox · import .txt / .md (file picker + drag-drop)                  |
+| Snapshots   | Per-note version history with side-by-side LCS diff + Restore                                                    |
+| Writing     | Typewriter mode · WebAudio typing clicks · paper textures · writing-session timer · word goal · `Ctrl+F` find    |
+| Templates   | 5 built-in note templates · user templates · snippet typeahead (`;date`, `;todo`, `;hr`)                         |
+| Export      | `.txt` / `.md` / `.html` (prose for md) · share-via-URL hash · `.pdf` (lazy jsPDF)                               |
+| AI          | Streaming Anthropic proxy on Netlify Edge · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy  |
+| AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                 |
+| Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                   |
+| Platform    | `/glossary` (20-term auto-linker) · `/blog` + `/changelog` (Markdown content) · `/pricing` · `/funnel` dashboard |
+| Lead-gen    | Email capture · CTA slots · MDX export with frontmatter · HTML-export footer back-links                          |
+| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored                                                    |
+| Persistence | Dexie (IndexedDB) — 8 tables, soft-delete, legacy-localStorage import on first run                               |
 
 ## Stack (locked at M0)
 
@@ -68,7 +70,7 @@ from day one.
 | Markdown    | `markdown-it` + DOMPurify                                                                       |
 | PWA         | `vite-plugin-pwa` (Workbox, `registerType: 'autoUpdate'`)                                       |
 | Router      | `react-router-dom` v6                                                                           |
-| Tests       | Vitest + Testing Library + `fake-indexeddb` (224 tests, 100% pass)                              |
+| Tests       | Vitest + Testing Library + `fake-indexeddb` (254 tests, 100% pass)                              |
 | Lint/format | ESLint 9 (flat config, typed) + Prettier 3                                                      |
 | Pre-commit  | Husky 9 + lint-staged                                                                           |
 | Edge        | **Netlify Edge Functions** (Deno) — same-origin AI proxy at `/api/ai`                           |
@@ -81,7 +83,7 @@ pnpm install
 pnpm dev            # http://localhost:5173
 pnpm build          # builds, generates sitemap, runs key-leak + bundle-budget gates
 pnpm preview        # serves the built bundle
-pnpm test           # Vitest + Testing Library (224 tests)
+pnpm test           # Vitest + Testing Library (254 tests)
 pnpm typecheck
 pnpm lint
 ```
@@ -120,13 +122,14 @@ CLAUDE.md §5. Hard, enforced now (not deferred):
 `scripts/check-bundle.mjs` parses `dist/index.html` and only counts assets it directly
 references, so `import()` chunks (jsPDF, html2canvas) don't count against the budget.
 
-| Surface           | Gzip      | Loaded                                |
-| ----------------- | --------- | ------------------------------------- |
-| Initial JS        | 172.49 KB | every page load                       |
-| Initial CSS       | 6.75 KB   | every page load                       |
-| Lazy `.pdf` chunk | ~223 KB   | first `.pdf` export click only        |
-| Lazy canvas chunk | ~2.6 MB   | first canvas open (Excalidraw + deps) |
-| **Budget**        | 180 KB    | initial JS — under by 7.5 KB          |
+| Surface              | Gzip      | Loaded                                         |
+| -------------------- | --------- | ---------------------------------------------- |
+| Initial JS           | 177.81 KB | every page load (editor + Home only)           |
+| Initial CSS          | 7.90 KB   | every page load                                |
+| Lazy platform routes | ~25 KB    | per route — glossary / blog / pricing / funnel |
+| Lazy `.pdf` chunk    | ~223 KB   | first `.pdf` export click only                 |
+| Lazy canvas chunk    | ~2.6 MB   | first canvas open (Excalidraw + deps)          |
+| **Budget**           | 180 KB    | initial JS — under by 2.19 KB                  |
 
 ## Milestone status
 
@@ -138,7 +141,7 @@ references, so `import()` chunks (jsPDF, html2canvas) don't count against the bu
 | **M3** | Command palette · MD/checklist modes · templates · typewriter · paper · find/replace · import/share/PDF | ✅ [v0.3.0-m3](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.3.0-m3) |
 | **M4** | AI proxy (Netlify Edge) · slash AI commands · Notes → image                                             | ✅ [v0.4.0-m4](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.4.0-m4) |
 | **M5** | Canvas (Excalidraw, vendored + lazy + behind seam)                                                      | ✅ [v0.5.0-m5](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.5.0-m5) |
-| M6     | Platform & monetisation (glossary engine, lead-gen, pricing)                                            | ☐                                                                                |
+| **M6** | Platform & monetisation (glossary engine, blog, lead-gen, pricing)                                      | ✅ [v0.6.0-m6](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.6.0-m6) |
 | M7     | Hardening (Playwright offline, perf CI, a11y, security)                                                 | ☐                                                                                |
 
 ## Architecture
