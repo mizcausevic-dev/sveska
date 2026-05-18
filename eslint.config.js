@@ -24,6 +24,10 @@ export default tseslint.config(
       // intentionally uses `document` inside `page.waitForFunction`. Not part
       // of the SPA project, no need to lint.
       'scripts/capture-mocks.mjs',
+      // One-off static kill-switch deploy folder for the legacy
+      // sveska.studio Netlify origin (post-CF migration SW cleanup).
+      // Pure browser JS, no module system — never part of the SPA build.
+      '_kill-switch',
     ],
   },
   {
