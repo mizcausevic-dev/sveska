@@ -11,7 +11,6 @@ _None._ Migration + post-M7 platform work are settled. Next moves are deferred i
 
 ## Next up
 
-- [ ] **CF custom domain attach** (deferred) — would require switching `sveska.studio` nameservers from Hostinger to Cloudflare. Currently shipping with `sveska.pages.dev` canonical + Hostinger URL forwarder (301). Revisit when traffic justifies the change.
 - [ ] Post-M7 — Lighthouse PWA report on prod, Pro-tier sync design (E2E-encrypted per §5.5), analytics vendor pick (parking lot row 4)
 
 ## Recently done (this branch only)
@@ -64,6 +63,7 @@ _None._ Migration + post-M7 platform work are settled. Next moves are deferred i
 - ✅ **M7 ship** — tagged [v0.7.0-m7](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.7.0-m7), Netlify deploy hit credit cap (`JSONHTTPError: Forbidden`)
 - ✅ **Netlify → Cloudflare Pages migration** (2026-05-17) — ported `netlify/edge-functions/ai.ts` → `functions/api/ai.ts` (Deno → Workers runtime; `Deno.env` → `env.X` param; `context.ip` → `cf-connecting-ip` header), `netlify.toml` headers/redirects → `public/_headers` + `public/_redirects`. CI pivoted to CF Pages git integration (no `wrangler-action`, no CF API token in GH secrets — CF reads git pushes directly); `deploy.yml` renamed to CI and runs only typecheck/lint/test/build gates. `tsconfig.functions.json` added for `@cloudflare/workers-types`. Netlify configs deleted. Live at `sveska.pages.dev`.
 - ✅ **Post-migration polish** (2026-05-17) — canonical URL flipped to `sveska.pages.dev` across README/index.html/sitemap/robots/GH repo homepage. Hostinger 301 redirect set up `sveska.studio → sveska.pages.dev` (works on both IPv4 + IPv6 after deleting the leftover AAAA record via Kodee). Stale `sveska.kineticgain.com` + `notepad.kineticgain.com` aliases deleted. Mobile responsive sweep across 2 commits: snap-btn nowrap + header flex-wrap + MD-preview stacking + nav-secondary hidden on small viewports + tighter rail max-height. Pixel 6 pre-editor chrome reduced from 82% → 70% of viewport.
+- ✅ **CF nameserver migration — sveska.studio attached as real custom domain** (2026-05-18) — Done end-to-end via API in one go: added zone (`POST /zones`), flipped Hostinger registrar NS (`PUT /portfolio/.../nameservers`), polled CF until zone went `active` (3 min), attached `sveska.studio` + `www.sveska.studio` to Pages project (`POST /pages/projects/sveska/domains`), created the two required CNAMEs in the new CF zone (CF Pages attach doesn't auto-create them), Google CA SSL provisioned in <60s, created Page Rule for www→apex 301 redirect, deleted orphaned Hostinger forwarder + DNS record. Flipped canonical back to `sveska.studio` in index.html/sitemap/robots/README/GH repo homepage. Only user-side step was generating + saving the CF API token to `~/.cf_token`. CF zone id: `de6f658b84872c8c07e2f62264120f73`. NS: `brenda.ns.cloudflare.com` + `ken.ns.cloudflare.com`.
 
 ## After M1
 

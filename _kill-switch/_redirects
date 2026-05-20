@@ -1,4 +1,0 @@
-# Legacy sveska.studio kill-switch: every deep link (/glossary, /pricing,
-# /blog/whatever, etc.) hits the same index.html which preserves the path
-# in the redirect via location.replace.
-/*    /index.html    200
