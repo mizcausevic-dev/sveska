@@ -4,10 +4,11 @@
 import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-// Canonical = sveska.pages.dev (effective post-Netlify→CF Pages migration,
-// 2026-05-17). The branded sveska.studio is reserved for future custom-domain
-// attach; it currently 301s here via Hostinger registrar-level redirect.
-const BASE = 'https://sveska.pages.dev';
+// Canonical = sveska.studio (restored 2026-05-18 after the CF nameserver
+// migration completed). The domain serves CF Pages directly via CF zone
+// + custom-domain attach. sveska.pages.dev still works as an alias but
+// the branded URL is the public face of the project.
+const BASE = 'https://sveska.studio';
 const TODAY = new Date().toISOString().slice(0, 10);
 
 const routes = [

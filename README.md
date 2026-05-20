@@ -1,20 +1,18 @@
 # Sveska
 
 > **Sveska** /ˈsvɛska/ — _Bosnian: notebook, exercise book._
-> A studio-grade, **local-first, offline-first** notepad PWA at [sveska.pages.dev](https://sveska.pages.dev).
+> A studio-grade, **local-first, offline-first** notepad PWA at [sveska.studio](https://sveska.studio).
 
 <p align="center">
-  <a href="https://sveska.pages.dev">
+  <a href="https://sveska.studio">
     <img src="docs/hero.svg" alt="Sveska — local-first notepad with Markdown split-pane preview, checklist tracking, and AI assistance" width="100%">
   </a>
 </p>
 
-[![PWA](https://img.shields.io/badge/PWA-installable-F2B544?style=flat-square)](https://sveska.pages.dev)
+[![PWA](https://img.shields.io/badge/PWA-installable-F2B544?style=flat-square)](https://sveska.studio)
 [![M7](https://img.shields.io/badge/milestone-M7_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.7.0-m7)
 [![Tests](https://img.shields.io/badge/tests-260_passing-7AD29C?style=flat-square)](#milestone-status)
 [![License](https://img.shields.io/badge/license-MIT-0C0C0E?style=flat-square)](LICENSE)
-
-> The branded `sveska.studio` URL is the long-term home; it currently 301s here. Migration to a fully attached custom domain is deferred (would require switching nameservers to Cloudflare — kept on Hostinger for now).
 
 Multi-note tabs, Markdown + checklist modes, command palette, fuzzy search across notes,
 streaming AI assistance, OG-card image export — all local. No account, no telemetry until
