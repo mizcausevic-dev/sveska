@@ -540,15 +540,35 @@ button:disabled {
  * M1.T1.3 + T1.4 — action row (snapshot · stats · export)
  * Two clusters on one line at desktop; collapse to two rows under 720px.
  * ────────────────────────────────────────────────────────── */
+/* Flex-wrap row of equal-height pills. Was a 1fr/auto grid, which squeezed
+ * the snapshot panel (forcing "NO SNAPSHOT YET" to wrap to 3 lines) and left
+ * the secondary buttons at mismatched heights. Now: snapshot grows to fill,
+ * the secondary cluster sits to its right, and everything is the same height
+ * + vertically centred. The cluster wraps to its own line when space runs out. */
 .editor-actions {
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
+  justify-content: space-between;
   gap: 8px;
 }
 
 .editor-actions .snap-toolbar {
   margin: 0;
+  /* don't grow — sit at natural width so the secondary cluster shares the
+   * same row when there's room. When the editor is too narrow the cluster
+   * wraps to a second row; the shared min-height keeps both rows visually
+   * uniform (a toolbar that happens to wrap, not two mismatched bars). */
+  flex: 0 1 auto;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 12px;
+}
+
+/* Keep the snapshot status label on one line — wrapping was the root of the
+ * "3-line tall panel" misalignment. */
+.snap-toolbar .snap-label {
+  white-space: nowrap;
 }
 
 .editor-actions-secondary {
@@ -558,14 +578,23 @@ button:disabled {
   flex-wrap: wrap;
 }
 
+/* Every secondary pill (stats / preview-toggle / export group) stretches to
+ * the row height and centres its content, so they line up with the snapshot
+ * panel instead of floating at different offsets. */
+.editor-actions-secondary > * {
+  align-self: stretch;
+}
+
 /* Stats + export-pill share the snap-toolbar's pill aesthetic
  * (background + border) so the row reads as one toolbar visually. */
 .stats-btn {
+  display: inline-flex;
+  align-items: center;
   height: auto;
+  min-height: 40px;
   padding: 0 16px;
   background: var(--surface);
   box-shadow: inset 0 0 0 1px var(--border-soft);
-  align-self: stretch;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.06em;
@@ -573,11 +602,19 @@ button:disabled {
   color: var(--text);
 }
 
+/* The md-mode preview toggle lives in the secondary cluster; drop its fixed
+ * 30px height so it matches the other pills' uniform min-height. */
+.editor-actions-secondary > .snap-btn {
+  height: auto;
+  min-height: 40px;
+}
+
 .export-group {
   display: inline-flex;
   align-items: center;
+  min-height: 40px;
   gap: 6px;
-  padding: 6px 10px;
+  padding: 0 12px;
   background: var(--surface);
   border: 1px solid var(--border-soft);
   border-radius: var(--r-md);

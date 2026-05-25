@@ -37,6 +37,21 @@ export function extractAttachmentIds(body: string): string[] {
   return out;
 }
 
+/**
+ * Generate a short, collision-checked attachment id. 12 hex chars
+ * (≈281 trillion space) keeps the inline `sveska-img:<id>` ref on one line
+ * in the editor source instead of the eyesore a full 36-char UUID makes,
+ * while staying astronomically collision-safe for a single user's notes.
+ */
+async function freshAttachmentId(): Promise<string> {
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const id = crypto.randomUUID().replace(/-/g, '').slice(0, 12);
+    if (!(await db().attachments.get(id))) return id;
+  }
+  // Vanishingly unlikely fallback: use the full UUID.
+  return crypto.randomUUID();
+}
+
 /** Persist an image blob for a note. Returns the new attachment id. */
 export async function putAttachment(
   noteId: string,
@@ -44,7 +59,7 @@ export async function putAttachment(
   mime: string,
   name: string,
 ): Promise<string> {
-  const id = crypto.randomUUID();
+  const id = await freshAttachmentId();
   const att: Attachment = {
     id,
     noteId,
