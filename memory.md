@@ -71,36 +71,37 @@
 
 ## Performance snapshot (rolling)
 
-| Date                 | Tests | JS gzip   | CSS gzip | Notes                                          |
-| -------------------- | ----- | --------- | -------- | ---------------------------------------------- |
-| M0 ship (2026-05-16) | 3     | 89.81 KB  | 2.53 KB  | scaffold only                                  |
-| T1.1 (2026-05-16)    | 8     | 90.67 KB  | 2.81 KB  | +editor                                        |
-| T1.2 (2026-05-16)    | 17    | 91.29 KB  | 3.15 KB  | +snapshots                                     |
-| T1.3 (2026-05-17)    | 28    | 93.21 KB  | 3.15 KB  | +export                                        |
-| T1.4 (2026-05-17)    | 40    | 93.84 KB  | 3.15 KB  | +stats modal                                   |
-| T1.5 (2026-05-17)    | 45    | 94.10 KB  | 3.15 KB  | +focus mode                                    |
-| T2.2 (2026-05-17)    | 85    | 99.83 KB  | 4.28 KB  | +diff + versions modal                         |
-| T2.3 (2026-05-17)    | 95    | 100.23 KB | 4.37 KB  | +draft shadow + recovery banner                |
-| T2.4 (2026-05-17)    | 107   | 101.66 KB | 4.94 KB  | +tags + pins + notes rail                      |
-| T2.5 (2026-05-17)    | 126   | 103.46 KB | 5.21 KB  | +fuzzy search + inbox modal                    |
-| T3.1 (2026-05-17)    | 138   | 104.89 KB | 5.42 KB  | +command palette + slash commands              |
-| T3.2 (2026-05-17)    | 150   | 160.39 KB | 5.70 KB  | +markdown-it + dompurify + md mode preview     |
-| T3.3 (2026-05-17)    | 161   | 161.32 KB | 5.92 KB  | +checklist mode (parser + pane + drag-reorder) |
-| T3.4 (2026-05-17)    | 169   | 163.21 KB | 6.09 KB  | +templates + snippet typeahead                 |
-| T3.5 (2026-05-17)    | 175   | 164.17 KB | 6.09 KB  | +typewriter scroll + WebAudio synth clicks     |
-| T3.6 (2026-05-17)    | 187   | 165.84 KB | 6.48 KB  | +paper / timer / word-goal / find&replace      |
-| T3.7 (2026-05-17)    | 195   | 167.31 KB | 6.48 KB  | +import / share / hash / lazy PDF (M3 close)   |
-| T4.1 (2026-05-17)    | 201   | 167.31 KB | 6.48 KB  | +edge AI proxy + SSE client (no client growth) |
-| T4.2 (2026-05-17)    | 209   | 169.52 KB | 6.68 KB  | +slash AI commands + result pane + toast       |
-| T4.3 (2026-05-17)    | 217   | 171.34 KB | 6.68 KB  | +Notes → image (canvas OG cards, M4 close)     |
-| T5.1 (2026-05-17)    | 224   | 172.49 KB | 6.75 KB  | +Excalidraw canvas (lazy 2.6 MB, M5 close)     |
-| T6.1 (2026-05-17)    | 237   | 176.78 KB | 7.04 KB  | +glossary engine (20 terms + autolink)         |
-| T6.2 (2026-05-17)    | 242   | 178.09 KB | 7.23 KB  | +changelog/blog routes + MDX export            |
-| T6.3 (2026-05-17)    | 248   | 179.35 KB | 7.44 KB  | +leadgen + email capture + CTA slot            |
-| T6.4 (2026-05-17)    | 254   | 177.81 KB | 7.90 KB  | +/pricing + /funnel; lazy platform routes      |
-| M7 ship (2026-05-17) | 260   | 178.47 KB | 8.09 KB  | +ErrorBoundary + a11y sweep + tab-bar refactor |
+| Date                   | Tests | JS gzip   | CSS gzip | Notes                                          |
+| ---------------------- | ----- | --------- | -------- | ---------------------------------------------- |
+| M0 ship (2026-05-16)   | 3     | 89.81 KB  | 2.53 KB  | scaffold only                                  |
+| T1.1 (2026-05-16)      | 8     | 90.67 KB  | 2.81 KB  | +editor                                        |
+| T1.2 (2026-05-16)      | 17    | 91.29 KB  | 3.15 KB  | +snapshots                                     |
+| T1.3 (2026-05-17)      | 28    | 93.21 KB  | 3.15 KB  | +export                                        |
+| T1.4 (2026-05-17)      | 40    | 93.84 KB  | 3.15 KB  | +stats modal                                   |
+| T1.5 (2026-05-17)      | 45    | 94.10 KB  | 3.15 KB  | +focus mode                                    |
+| T2.2 (2026-05-17)      | 85    | 99.83 KB  | 4.28 KB  | +diff + versions modal                         |
+| T2.3 (2026-05-17)      | 95    | 100.23 KB | 4.37 KB  | +draft shadow + recovery banner                |
+| T2.4 (2026-05-17)      | 107   | 101.66 KB | 4.94 KB  | +tags + pins + notes rail                      |
+| T2.5 (2026-05-17)      | 126   | 103.46 KB | 5.21 KB  | +fuzzy search + inbox modal                    |
+| T3.1 (2026-05-17)      | 138   | 104.89 KB | 5.42 KB  | +command palette + slash commands              |
+| T3.2 (2026-05-17)      | 150   | 160.39 KB | 5.70 KB  | +markdown-it + dompurify + md mode preview     |
+| T3.3 (2026-05-17)      | 161   | 161.32 KB | 5.92 KB  | +checklist mode (parser + pane + drag-reorder) |
+| T3.4 (2026-05-17)      | 169   | 163.21 KB | 6.09 KB  | +templates + snippet typeahead                 |
+| T3.5 (2026-05-17)      | 175   | 164.17 KB | 6.09 KB  | +typewriter scroll + WebAudio synth clicks     |
+| T3.6 (2026-05-17)      | 187   | 165.84 KB | 6.48 KB  | +paper / timer / word-goal / find&replace      |
+| T3.7 (2026-05-17)      | 195   | 167.31 KB | 6.48 KB  | +import / share / hash / lazy PDF (M3 close)   |
+| T4.1 (2026-05-17)      | 201   | 167.31 KB | 6.48 KB  | +edge AI proxy + SSE client (no client growth) |
+| T4.2 (2026-05-17)      | 209   | 169.52 KB | 6.68 KB  | +slash AI commands + result pane + toast       |
+| T4.3 (2026-05-17)      | 217   | 171.34 KB | 6.68 KB  | +Notes → image (canvas OG cards, M4 close)     |
+| T5.1 (2026-05-17)      | 224   | 172.49 KB | 6.75 KB  | +Excalidraw canvas (lazy 2.6 MB, M5 close)     |
+| T6.1 (2026-05-17)      | 237   | 176.78 KB | 7.04 KB  | +glossary engine (20 terms + autolink)         |
+| T6.2 (2026-05-17)      | 242   | 178.09 KB | 7.23 KB  | +changelog/blog routes + MDX export            |
+| T6.3 (2026-05-17)      | 248   | 179.35 KB | 7.44 KB  | +leadgen + email capture + CTA slot            |
+| T6.4 (2026-05-17)      | 254   | 177.81 KB | 7.90 KB  | +/pricing + /funnel; lazy platform routes      |
+| M7 ship (2026-05-17)   | 260   | 178.47 KB | 8.09 KB  | +ErrorBoundary + a11y sweep + tab-bar refactor |
+| img-paste (2026-05-18) | 274   | 179.62 KB | 8.33 KB  | +screenshot paste (attachments table + inline) |
 
-Budget: 180 KB JS gzip pre-canvas/AI.
+Budget: 180 KB JS gzip pre-canvas/AI. **Now within ~0.4 KB of the cap** — the next feature that touches the initial bundle should lazy-load or prune. Markdown/DOMPurify already dominate; consider lazy-loading the md renderer behind `import()` if we breach.
 
 ## Open decisions (parking lot)
 

@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { type Note } from '@/notes/db';
-import { migrateLegacyLocalStorage, listNotes, getNoteById, saveNoteBody } from '@/notes/noteRepo';
+import {
+  migrateLegacyLocalStorage,
+  listNotes,
+  getNoteById,
+  saveNoteBody,
+  setNoteMode,
+} from '@/notes/noteRepo';
 import { useTabs } from '@/notes/tabsStore';
 import { useAutosave, type SaveState } from './useAutosave';
 import { useSnapshots } from './useSnapshots';
@@ -24,6 +30,7 @@ import { SlashCommands } from './SlashCommands';
 import { PreviewPane } from './PreviewPane';
 import { ChecklistPane } from './ChecklistPane';
 import { useSnippetExpand } from './useSnippetExpand';
+import { useImagePaste } from './useImagePaste';
 import { useTypewriterScroll } from './useTypewriterScroll';
 import { useTypingSounds } from './useTypingSounds';
 import {
@@ -203,6 +210,31 @@ export function Editor(): React.JSX.Element {
     },
   });
 
+  // v2 — screenshot/image paste + drag-drop. Stores the blob, inserts a
+  // markdown image ref at the caret, and flips a text note to md mode so the
+  // image actually renders in preview.
+  const imagePaste = useImagePaste({
+    noteId,
+    mode: activeNote?.mode,
+    onInsert: ({ body: nextBody, cursor, switchToMd }) => {
+      setBody(nextBody);
+      setSelectionStart(cursor);
+      requestAnimationFrame(() => {
+        const el = textareaRef.current;
+        if (!el) return;
+        el.selectionStart = el.selectionEnd = cursor;
+        el.focus();
+      });
+      if (switchToMd && activeNote) {
+        void (async () => {
+          await setNoteMode(activeNote.id, 'md');
+          await refreshActiveNote();
+          setPreviewOn(true);
+        })();
+      }
+    },
+  });
+
   function onTextareaKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>): void {
     if (e.key === 'Tab' && !e.metaKey && !e.ctrlKey) {
       e.preventDefault();
@@ -283,6 +315,9 @@ export function Editor(): React.JSX.Element {
             onKeyUp={(e) => setSelectionStart(e.currentTarget.selectionStart)}
             onClick={(e) => setSelectionStart(e.currentTarget.selectionStart)}
             onKeyDown={onTextareaKeyDown}
+            onPaste={imagePaste.onPaste}
+            onDrop={imagePaste.onDrop}
+            onDragOver={imagePaste.onDragOver}
             placeholder={PLACEHOLDER}
             spellCheck={prefs.spellcheck}
             autoFocus

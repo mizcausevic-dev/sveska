@@ -110,6 +110,9 @@ export function ExcalidrawCanvas({ noteId }: Props): React.JSX.Element {
 
   return (
     <div className="canvas-pane" data-testid="canvas-pane">
+      <span className="canvas-paste-hint" aria-hidden="true">
+        Tip: paste a screenshot (Ctrl/⌘+V) to drop it on the canvas
+      </span>
       <Suspense
         fallback={
           <div className="canvas-loading" data-testid="canvas-loading">

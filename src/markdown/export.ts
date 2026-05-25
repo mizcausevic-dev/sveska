@@ -1,5 +1,5 @@
 import { type NoteAST } from './ast';
-import { renderMd } from './render';
+import { renderMd, type ImageResolver } from './render';
 import { autoLinkGlossary } from '@/platform/glossary';
 
 /**
@@ -27,13 +27,23 @@ export interface ExportResult {
   mime: string;
 }
 
-export function exportAs(ast: NoteAST, format: ExportFormat): ExportResult {
-  const body = bodyFor(ast, format);
+/**
+ * `resolveImg` (optional) inlines pasted-image refs (`sveska-img:<id>`) as
+ * `data:` URIs so an HTML export is self-contained. Only used by the html
+ * arm of md-mode notes; txt/md exports keep the raw `sveska-img:` ref so
+ * re-import round-trips. Callers resolve the map async (see ExportMenu).
+ */
+export function exportAs(
+  ast: NoteAST,
+  format: ExportFormat,
+  resolveImg?: ImageResolver,
+): ExportResult {
+  const body = bodyFor(ast, format, resolveImg);
   const blob = new Blob([body], { type: MIME[format] });
   return { blob, filename: filenameFor(ast, format), mime: MIME[format] };
 }
 
-function bodyFor(ast: NoteAST, format: ExportFormat): string {
+function bodyFor(ast: NoteAST, format: ExportFormat, resolveImg?: ImageResolver): string {
   // CRLF in line endings is a Windows-Notepad legacy. We always emit LF for
   // round-trippable text; consumers that need CRLF can convert downstream.
   const normalized = ast.body.replace(/\r\n/g, '\n');
@@ -50,7 +60,8 @@ function bodyFor(ast: NoteAST, format: ExportFormat): string {
         // T6.1 — auto-link glossary terms inline (first occurrence per term,
         // skipping code/anchor blocks). The function is a no-op in non-DOM
         // environments, so this is safe for any caller.
-        const linked = autoLinkGlossary(renderMd(normalized));
+        // v2 — resolveImg inlines pasted screenshots as data: URIs.
+        const linked = autoLinkGlossary(renderMd(normalized, resolveImg));
         return htmlTemplate(ast, linked, { prose: true });
       }
       return htmlTemplate(ast, escapeHtml(normalized), { prose: false });

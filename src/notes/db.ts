@@ -62,6 +62,20 @@ export interface Snippet {
   body: string;
 }
 
+/**
+ * Pasted/dropped image attachment for a note (screenshot paste, v2).
+ * Stored as a Blob keyed by id; referenced in note bodies as
+ * `sveska-img:<id>` and resolved to a data: URI at render/export time.
+ */
+export interface Attachment {
+  id: string;
+  noteId: string;
+  blob: Blob;
+  mime: string;
+  name: string;
+  createdAt: number;
+}
+
 export class SveskaDB extends Dexie {
   notes!: EntityTable<Note, 'id'>;
   versions!: EntityTable<Version, 'id'>;
@@ -71,6 +85,7 @@ export class SveskaDB extends Dexie {
   inbox!: EntityTable<InboxItem, 'id'>;
   templates!: EntityTable<Template, 'id'>;
   snippets!: EntityTable<Snippet, 'id'>;
+  attachments!: EntityTable<Attachment, 'id'>;
 
   constructor() {
     super('sveska');
@@ -83,6 +98,11 @@ export class SveskaDB extends Dexie {
       inbox: 'id, capturedAt, processed',
       templates: 'id, kind',
       snippets: 'id, trigger',
+    });
+    // v2 (screenshot paste) — additive: new `attachments` store only.
+    // Dexie carries existing v1 stores forward automatically.
+    this.version(2).stores({
+      attachments: 'id, noteId, createdAt',
     });
   }
 }

@@ -2005,6 +2005,16 @@ input[type='range'] {
   border-top: 1px solid var(--border-soft);
   margin: 1.5em 0;
 }
+/* Pasted/dropped screenshots (image paste v2) */
+.md-preview img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1em 0;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  background: var(--bg);
+}
 .md-preview table {
   border-collapse: collapse;
   width: 100%;
@@ -2149,6 +2159,42 @@ input[type='range'] {
 .canvas-pane > div {
   flex: 1;
   min-height: 0;
+}
+/* Screenshot-paste discoverability hint (v2). Non-interactive overlay so it
+ * never blocks the Excalidraw canvas; fades after a few seconds. */
+.canvas-paste-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  border: 1px solid var(--border-soft);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0.85;
+  animation: canvas-hint-fade 6s ease forwards;
+}
+@keyframes canvas-hint-fade {
+  0%,
+  60% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .canvas-paste-hint {
+    animation: none;
+    opacity: 0.6;
+  }
 }
 .canvas-loading {
   flex: 1;

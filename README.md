@@ -41,25 +41,26 @@ from day one.
 
 ## Features (live as of M7)
 
-| Layer       | What's shipped                                                                                                                |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Editor      | Native textarea · autosave (400 ms debounce + flush on blur/visibility) · crash-safe draft shadow                             |
-| Modes       | TXT · MD (split preview, DOMPurify XSS gate) · CHK (click-toggle, drag-reorder, indent levels, hide done)                     |
-| Navigation  | Multi-note tabs · session restore · NotesRail (pinned / recent / saved filters / tags)                                        |
-| Discovery   | `Ctrl+K` command palette (fuzzy) · inline slash commands · `Ctrl+P` fuzzy search across all notes (<50 ms / 1k)               |
-| Capture     | Inbox (`Ctrl+Shift+K`) · Web Share Target → inbox · import .txt / .md (file picker + drag-drop)                               |
-| Snapshots   | Per-note version history with side-by-side LCS diff + Restore                                                                 |
-| Writing     | Typewriter mode · WebAudio typing clicks · paper textures · writing-session timer · word goal · `Ctrl+F` find                 |
-| Templates   | 5 built-in note templates · user templates · snippet typeahead (`;date`, `;todo`, `;hr`)                                      |
-| Export      | `.txt` / `.md` / `.html` (prose for md) · share-via-URL hash · `.pdf` (lazy jsPDF)                                            |
-| AI          | Streaming Anthropic proxy on Cloudflare Pages Functions · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy |
-| AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                              |
-| Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                                |
-| Platform    | `/glossary` (20-term auto-linker) · `/blog` + `/changelog` (Markdown content) · `/pricing` · `/funnel` dashboard              |
-| Lead-gen    | Email capture · CTA slots · MDX export with frontmatter · HTML-export footer back-links                                       |
-| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored, axe-clean App / Glossary / Pricing                             |
-| Hardening   | Top-level `ErrorBoundary` (Reload / Copy report / Reset) · on-demand Playwright smoke suite (`pnpm test:e2e`)                 |
-| Persistence | Dexie (IndexedDB) — 8 tables, soft-delete, legacy-localStorage import on first run                                            |
+| Layer       | What's shipped                                                                                                                                                       |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Editor      | Native textarea · autosave (400 ms debounce + flush on blur/visibility) · crash-safe draft shadow                                                                    |
+| Modes       | TXT · MD (split preview, DOMPurify XSS gate) · CHK (click-toggle, drag-reorder, indent levels, hide done)                                                            |
+| Navigation  | Multi-note tabs · session restore · NotesRail (pinned / recent / saved filters / tags)                                                                               |
+| Discovery   | `Ctrl+K` command palette (fuzzy) · inline slash commands · `Ctrl+P` fuzzy search across all notes (<50 ms / 1k)                                                      |
+| Capture     | Inbox (`Ctrl+Shift+K`) · Web Share Target → inbox · import .txt / .md (file picker + drag-drop)                                                                      |
+| Images      | Paste / drag-drop a screenshot inline (stored local in IndexedDB → rendered as `data:` URI → embedded in HTML export) · or paste onto the per-note Excalidraw canvas |
+| Snapshots   | Per-note version history with side-by-side LCS diff + Restore                                                                                                        |
+| Writing     | Typewriter mode · WebAudio typing clicks · paper textures · writing-session timer · word goal · `Ctrl+F` find                                                        |
+| Templates   | 5 built-in note templates · user templates · snippet typeahead (`;date`, `;todo`, `;hr`)                                                                             |
+| Export      | `.txt` / `.md` / `.html` (prose for md) · share-via-URL hash · `.pdf` (lazy jsPDF)                                                                                   |
+| AI          | Streaming Anthropic proxy on Cloudflare Pages Functions · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy                                        |
+| AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                                                                     |
+| Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                                                                       |
+| Platform    | `/glossary` (20-term auto-linker) · `/blog` + `/changelog` (Markdown content) · `/pricing` · `/funnel` dashboard                                                     |
+| Lead-gen    | Email capture · CTA slots · MDX export with frontmatter · HTML-export footer back-links                                                                              |
+| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored, axe-clean App / Glossary / Pricing                                                                    |
+| Hardening   | Top-level `ErrorBoundary` (Reload / Copy report / Reset) · on-demand Playwright smoke suite (`pnpm test:e2e`)                                                        |
+| Persistence | Dexie (IndexedDB) — 8 tables, soft-delete, legacy-localStorage import on first run                                                                                   |
 
 ## Stack (locked at M0)
 

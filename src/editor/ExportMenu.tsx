@@ -1,6 +1,7 @@
 import { type Note } from '@/notes/db';
 import { astFromNote } from '@/markdown/ast';
 import { download, exportAs, type ExportFormat } from '@/markdown/export';
+import { extractAttachmentIds, resolveAttachmentDataUris } from '@/notes/attachmentRepo';
 
 interface Props {
   /** The currently-loaded note. Null while hydrating; export is disabled then. */
@@ -21,11 +22,21 @@ const FORMATS: { format: ExportFormat; label: string; ext: string }[] = [
 export function ExportMenu({ note, body }: Props): React.JSX.Element {
   const disabled = note === null;
 
-  function exportNote(format: ExportFormat): void {
+  async function exportNote(format: ExportFormat): Promise<void> {
     if (!note) return;
     const live: Note = { ...note, body };
     const ast = astFromNote(live);
-    const result = exportAs(ast, format);
+    // For self-contained HTML of md notes, inline pasted screenshots as
+    // data: URIs. txt/md keep the raw `sveska-img:` ref so re-import works.
+    let resolveImg: ((id: string) => string | undefined) | undefined;
+    if (format === 'html' && note.mode === 'md') {
+      const ids = extractAttachmentIds(body);
+      if (ids.length > 0) {
+        const map = await resolveAttachmentDataUris(ids);
+        resolveImg = (id) => map.get(id);
+      }
+    }
+    const result = exportAs(ast, format, resolveImg);
     download(result);
   }
 
@@ -46,7 +57,7 @@ export function ExportMenu({ note, body }: Props): React.JSX.Element {
           key={format}
           type="button"
           className="snap-btn export-btn"
-          onClick={() => exportNote(format)}
+          onClick={() => void exportNote(format)}
           disabled={disabled}
           data-testid={`export-${format}`}
           title={`Download as .${format}`}
