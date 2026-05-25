@@ -58,6 +58,7 @@
 - **Hostinger has an AI assistant called Kodee** that can edit DNS records when you give it explicit confirmation. Useful for bulk DNS changes across multiple Hostinger-managed domains in a single prompt — handled the post-migration cleanup (delete sveska.studio AAAA + 2 stale kineticgain aliases) in one round.
 - **CF Pages domain attach via API doesn't auto-create DNS records (2026-05-18)**: `POST /accounts/{id}/pages/projects/{name}/domains` succeeds + marks the domain "initializing" but won't create the necessary CNAME in the CF zone. Have to follow up with `POST /zones/{id}/dns_records` manually (apex: `CNAME @ → sveska.pages.dev proxied=true`, www: `CNAME www → sveska.pages.dev proxied=true`). After both DNS records exist, domain status flips to "active" within ~60s with SSL provisioned. Dashboard flow handles this automatically — API doesn't.
 - **CF Single Redirects API needs Account Ruleset perm, but Page Rules works with Zone:Edit alone (2026-05-18)**: When setting up www→apex redirect on sveska.studio, the modern `POST /zones/{id}/rulesets` returned "Authentication error" because the CF API token didn't have Account Rulesets:Edit. The deprecated Page Rules API (`POST /zones/{id}/pagerules`) works fine with just Zone:Edit. Free plan allows 3 page rules. Pattern: `targets: url matches "www.sveska.studio/*"`, action `forwarding_url status 301` to `https://sveska.studio/$1`.
+- **Rich editor (CodeMirror 6) is behind the `richEditor` pref, default OFF, lazy-loaded (2026-05-18, "big lift" increment 1)**: `src/editor/RichEditor.tsx` (CM6 EditorView) + `src/editor/richImageWidget.ts` (inline image ViewPlugin). Renders pasted `![](sveska-img:id)` refs as actual inline `<img>` (data: URI) when the cursor isn't on that ref's line — collapses via `Decoration.replace` widget, suppressed on cursor-overlap so it stays editable. Async data-URI resolution caches module-level + dispatches an annotation-only transaction to force a decoration rebuild (terminates because next pass finds all ids cached). **Increment 1 only ports: body sync, prefs (theme via Compartment), Tab, paste, markdown highlighting, undo.** NOT yet ported to CM (still textarea-exclusive): slash commands, snippet expand, find/replace, typewriter scroll, typing sounds. That's increment 2 — until then the rich editor is beta and the textarea stays the default. Driving CM6 from outside (tests/eval) is hard: the browser Selection API doesn't map to CM's internal selection model; use a real `paste` ClipboardEvent on `.cm-content` (the domEventHandler uses CM's own dispatch) to verify behavior.
 - **PWA Service Worker survives origin migrations (2026-05-18)**: User reported sveska.studio showed an old M5-era build (no Blog/Changelog/Pricing in header, no typewriter/sounds in Prefs) even after Hostinger 301 redirect was confirmed working at the DNS/HTTP level. Cause: a Service Worker registered earlier on the `sveska.studio` origin (when it served the Netlify build) was intercepting `fetch` events client-side BEFORE the request hit DNS, serving the cached stale assets. SWs are origin-scoped, so the new SW on `sveska.pages.dev` doesn't replace the old one on `sveska.studio` — and we can no longer push a self-unregistering SW to sveska.studio because nothing deploys there. **Fix path**: user must clear site data + unregister SW on sveska.studio manually (Chrome DevTools → Application → Storage → Clear site data, or mobile Site Settings → Clear & reset). After clearing, the 301 fires properly and they hit the current CF Pages build. **Lesson for future migrations**: when changing a domain's destination, expect installed PWAs on the old origin to keep serving stale content until users actively clear their site data. The proper preventive fix is to push a final "unregister.js" SW to the old origin BEFORE flipping DNS — too late for this migration since the Netlify deploys are frozen.
 
 ## File map (where things live)
@@ -71,37 +72,38 @@
 
 ## Performance snapshot (rolling)
 
-| Date                   | Tests | JS gzip   | CSS gzip | Notes                                          |
-| ---------------------- | ----- | --------- | -------- | ---------------------------------------------- |
-| M0 ship (2026-05-16)   | 3     | 89.81 KB  | 2.53 KB  | scaffold only                                  |
-| T1.1 (2026-05-16)      | 8     | 90.67 KB  | 2.81 KB  | +editor                                        |
-| T1.2 (2026-05-16)      | 17    | 91.29 KB  | 3.15 KB  | +snapshots                                     |
-| T1.3 (2026-05-17)      | 28    | 93.21 KB  | 3.15 KB  | +export                                        |
-| T1.4 (2026-05-17)      | 40    | 93.84 KB  | 3.15 KB  | +stats modal                                   |
-| T1.5 (2026-05-17)      | 45    | 94.10 KB  | 3.15 KB  | +focus mode                                    |
-| T2.2 (2026-05-17)      | 85    | 99.83 KB  | 4.28 KB  | +diff + versions modal                         |
-| T2.3 (2026-05-17)      | 95    | 100.23 KB | 4.37 KB  | +draft shadow + recovery banner                |
-| T2.4 (2026-05-17)      | 107   | 101.66 KB | 4.94 KB  | +tags + pins + notes rail                      |
-| T2.5 (2026-05-17)      | 126   | 103.46 KB | 5.21 KB  | +fuzzy search + inbox modal                    |
-| T3.1 (2026-05-17)      | 138   | 104.89 KB | 5.42 KB  | +command palette + slash commands              |
-| T3.2 (2026-05-17)      | 150   | 160.39 KB | 5.70 KB  | +markdown-it + dompurify + md mode preview     |
-| T3.3 (2026-05-17)      | 161   | 161.32 KB | 5.92 KB  | +checklist mode (parser + pane + drag-reorder) |
-| T3.4 (2026-05-17)      | 169   | 163.21 KB | 6.09 KB  | +templates + snippet typeahead                 |
-| T3.5 (2026-05-17)      | 175   | 164.17 KB | 6.09 KB  | +typewriter scroll + WebAudio synth clicks     |
-| T3.6 (2026-05-17)      | 187   | 165.84 KB | 6.48 KB  | +paper / timer / word-goal / find&replace      |
-| T3.7 (2026-05-17)      | 195   | 167.31 KB | 6.48 KB  | +import / share / hash / lazy PDF (M3 close)   |
-| T4.1 (2026-05-17)      | 201   | 167.31 KB | 6.48 KB  | +edge AI proxy + SSE client (no client growth) |
-| T4.2 (2026-05-17)      | 209   | 169.52 KB | 6.68 KB  | +slash AI commands + result pane + toast       |
-| T4.3 (2026-05-17)      | 217   | 171.34 KB | 6.68 KB  | +Notes → image (canvas OG cards, M4 close)     |
-| T5.1 (2026-05-17)      | 224   | 172.49 KB | 6.75 KB  | +Excalidraw canvas (lazy 2.6 MB, M5 close)     |
-| T6.1 (2026-05-17)      | 237   | 176.78 KB | 7.04 KB  | +glossary engine (20 terms + autolink)         |
-| T6.2 (2026-05-17)      | 242   | 178.09 KB | 7.23 KB  | +changelog/blog routes + MDX export            |
-| T6.3 (2026-05-17)      | 248   | 179.35 KB | 7.44 KB  | +leadgen + email capture + CTA slot            |
-| T6.4 (2026-05-17)      | 254   | 177.81 KB | 7.90 KB  | +/pricing + /funnel; lazy platform routes      |
-| M7 ship (2026-05-17)   | 260   | 178.47 KB | 8.09 KB  | +ErrorBoundary + a11y sweep + tab-bar refactor |
-| img-paste (2026-05-18) | 274   | 179.62 KB | 8.33 KB  | +screenshot paste (attachments table + inline) |
+| Date                    | Tests | JS gzip   | CSS gzip | Notes                                          |
+| ----------------------- | ----- | --------- | -------- | ---------------------------------------------- |
+| M0 ship (2026-05-16)    | 3     | 89.81 KB  | 2.53 KB  | scaffold only                                  |
+| T1.1 (2026-05-16)       | 8     | 90.67 KB  | 2.81 KB  | +editor                                        |
+| T1.2 (2026-05-16)       | 17    | 91.29 KB  | 3.15 KB  | +snapshots                                     |
+| T1.3 (2026-05-17)       | 28    | 93.21 KB  | 3.15 KB  | +export                                        |
+| T1.4 (2026-05-17)       | 40    | 93.84 KB  | 3.15 KB  | +stats modal                                   |
+| T1.5 (2026-05-17)       | 45    | 94.10 KB  | 3.15 KB  | +focus mode                                    |
+| T2.2 (2026-05-17)       | 85    | 99.83 KB  | 4.28 KB  | +diff + versions modal                         |
+| T2.3 (2026-05-17)       | 95    | 100.23 KB | 4.37 KB  | +draft shadow + recovery banner                |
+| T2.4 (2026-05-17)       | 107   | 101.66 KB | 4.94 KB  | +tags + pins + notes rail                      |
+| T2.5 (2026-05-17)       | 126   | 103.46 KB | 5.21 KB  | +fuzzy search + inbox modal                    |
+| T3.1 (2026-05-17)       | 138   | 104.89 KB | 5.42 KB  | +command palette + slash commands              |
+| T3.2 (2026-05-17)       | 150   | 160.39 KB | 5.70 KB  | +markdown-it + dompurify + md mode preview     |
+| T3.3 (2026-05-17)       | 161   | 161.32 KB | 5.92 KB  | +checklist mode (parser + pane + drag-reorder) |
+| T3.4 (2026-05-17)       | 169   | 163.21 KB | 6.09 KB  | +templates + snippet typeahead                 |
+| T3.5 (2026-05-17)       | 175   | 164.17 KB | 6.09 KB  | +typewriter scroll + WebAudio synth clicks     |
+| T3.6 (2026-05-17)       | 187   | 165.84 KB | 6.48 KB  | +paper / timer / word-goal / find&replace      |
+| T3.7 (2026-05-17)       | 195   | 167.31 KB | 6.48 KB  | +import / share / hash / lazy PDF (M3 close)   |
+| T4.1 (2026-05-17)       | 201   | 167.31 KB | 6.48 KB  | +edge AI proxy + SSE client (no client growth) |
+| T4.2 (2026-05-17)       | 209   | 169.52 KB | 6.68 KB  | +slash AI commands + result pane + toast       |
+| T4.3 (2026-05-17)       | 217   | 171.34 KB | 6.68 KB  | +Notes → image (canvas OG cards, M4 close)     |
+| T5.1 (2026-05-17)       | 224   | 172.49 KB | 6.75 KB  | +Excalidraw canvas (lazy 2.6 MB, M5 close)     |
+| T6.1 (2026-05-17)       | 237   | 176.78 KB | 7.04 KB  | +glossary engine (20 terms + autolink)         |
+| T6.2 (2026-05-17)       | 242   | 178.09 KB | 7.23 KB  | +changelog/blog routes + MDX export            |
+| T6.3 (2026-05-17)       | 248   | 179.35 KB | 7.44 KB  | +leadgen + email capture + CTA slot            |
+| T6.4 (2026-05-17)       | 254   | 177.81 KB | 7.90 KB  | +/pricing + /funnel; lazy platform routes      |
+| M7 ship (2026-05-17)    | 260   | 178.47 KB | 8.09 KB  | +ErrorBoundary + a11y sweep + tab-bar refactor |
+| img-paste (2026-05-18)  | 274   | 179.62 KB | 8.33 KB  | +screenshot paste (attachments table + inline) |
+| rich-ed i1 (2026-05-18) | 281   | 179.77 KB | 8.41 KB  | +CodeMirror rich editor (lazy, behind flag)    |
 
-Budget: 180 KB JS gzip pre-canvas/AI. **Now within ~0.4 KB of the cap** — the next feature that touches the initial bundle should lazy-load or prune. Markdown/DOMPurify already dominate; consider lazy-loading the md renderer behind `import()` if we breach.
+Budget: 180 KB JS gzip pre-canvas/AI. **~0.2 KB headroom — effectively at the ceiling.** CodeMirror is fully lazy (170 KB lazy chunk; loads only when the `richEditor` pref is on). PreviewPane is lazy now too. GOTCHA: markdown-it + DOMPurify did NOT leave the initial bundle when PreviewPane/ExportMenu went lazy — Rollup hoists the shared dep into the entry chunk because 3+ async chunks reference it (PreviewPane, ExportMenu, content routes). To actually reclaim that ~56 KB, add a `manualChunks` rule in vite.config forcing markdown-it+dompurify into their own async chunk. Do this BEFORE the next initial-bundle feature.
 
 ## Open decisions (parking lot)
 

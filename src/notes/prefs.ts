@@ -30,4 +30,5 @@ export const PREF_KEYS_EDITOR = {
   soundVolume: 'editor.soundVolume',
   paper: 'editor.paper',
   wordGoal: 'editor.wordGoal',
+  richEditor: 'editor.richEditor',
 } as const;

@@ -121,6 +121,28 @@ export function PrefsModalHost(): React.JSX.Element {
 
       <div className="row">
         <div>
+          <div className="label">Rich editor (beta)</div>
+          <span className="hint">
+            CodeMirror: pasted screenshots render inline + Markdown highlighting. Slash commands,
+            find/replace &amp; typewriter stay on the classic editor for now.
+          </span>
+        </div>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={prefs.richEditor}
+            onChange={(e) => void prefs.setRichEditor(e.target.checked)}
+            data-testid="pref-rich-editor"
+          />
+          <span className="switch-track" aria-hidden="true">
+            <span className="switch-thumb" />
+          </span>
+          <span className="switch-label">{prefs.richEditor ? 'On' : 'Off'}</span>
+        </label>
+      </div>
+
+      <div className="row">
+        <div>
           <div className="label">Tab size</div>
           <span className="hint">Visual width when a Tab character is rendered</span>
         </div>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { type Note } from '@/notes/db';
 import {
   migrateLegacyLocalStorage,
@@ -11,7 +11,6 @@ import { useTabs } from '@/notes/tabsStore';
 import { useAutosave, type SaveState } from './useAutosave';
 import { useSnapshots } from './useSnapshots';
 import { SnapshotToolbar } from './SnapshotToolbar';
-import { ExportMenu } from './ExportMenu';
 import { StatsModalHost } from './StatsModal';
 import { openStats } from './statsModalStore';
 import { FONT_FAMILY_CSS, useEditorPrefs } from '@/notes/editorPrefs';
@@ -27,7 +26,7 @@ import { DraftRecoveryBanner } from './DraftRecoveryBanner';
 import { useDraftRecovery } from './draftRecoveryStore';
 import { readDraft } from '@/notes/draftRepo';
 import { SlashCommands } from './SlashCommands';
-import { PreviewPane } from './PreviewPane';
+import { ExportMenu } from './ExportMenu';
 import { ChecklistPane } from './ChecklistPane';
 import { useSnippetExpand } from './useSnippetExpand';
 import { useImagePaste } from './useImagePaste';
@@ -44,6 +43,15 @@ import { FindReplaceBar } from './FindReplace';
 import { AIResultPane } from '@/ai/AIResultPane';
 import { ExcalidrawCanvas } from '@/canvas/ExcalidrawCanvas';
 import { useCanvasView } from '@/canvas/canvasViewStore';
+
+// Lazy — CodeMirror 6 is ~50 KB gzip; only loads when the user opts into the
+// rich editor (default off), so the initial textarea bundle is untouched.
+const LazyRichEditor = lazy(() => import('./RichEditor').then((m) => ({ default: m.RichEditor })));
+
+// Lazy — PreviewPane pulls markdown-it + DOMPurify. It only renders in md
+// mode with preview on, so deferring it trims the initial bundle with no UX
+// cost (the textarea path never loads it).
+const PreviewPane = lazy(() => import('./PreviewPane').then((m) => ({ default: m.PreviewPane })));
 
 const PLACEHOLDER = 'Prazna sveska. Najbolji početak.';
 
@@ -303,49 +311,77 @@ export function Editor(): React.JSX.Element {
               : ''
           }`}
         >
-          <textarea
-            ref={textareaRef}
-            className={`editor-input editor-input--paper-${prefs.paper}`}
-            value={body}
-            onChange={(e) => {
-              setBody(e.target.value);
-              setSelectionStart(e.target.selectionStart);
-              useWritingTimer.getState().registerInput();
-            }}
-            onKeyUp={(e) => setSelectionStart(e.currentTarget.selectionStart)}
-            onClick={(e) => setSelectionStart(e.currentTarget.selectionStart)}
-            onKeyDown={onTextareaKeyDown}
-            onPaste={imagePaste.onPaste}
-            onDrop={imagePaste.onDrop}
-            onDragOver={imagePaste.onDragOver}
-            placeholder={PLACEHOLDER}
-            spellCheck={prefs.spellcheck}
-            autoFocus
-            aria-label="Note body"
-            data-testid="editor-textarea"
-            style={{
-              fontSize: `${prefs.fontSize}px`,
-              lineHeight: prefs.lineHeight,
-              fontFamily: FONT_FAMILY_CSS[prefs.fontFamily],
-              tabSize: prefs.tabSize,
-            }}
-          />
-          <SlashCommands
-            textareaRef={textareaRef}
-            value={body}
-            selectionStart={selectionStart}
-            onApply={(nextValue, nextCursor) => {
-              setBody(nextValue);
-              setSelectionStart(nextCursor);
-              requestAnimationFrame(() => {
-                const el = textareaRef.current;
-                if (!el) return;
-                el.selectionStart = el.selectionEnd = nextCursor;
-                el.focus();
-              });
-            }}
-          />
-          {activeNote?.mode === 'md' && previewOn && <PreviewPane body={body} />}
+          {prefs.richEditor && activeNote && activeNote.mode !== 'checklist' ? (
+            <Suspense
+              fallback={
+                <div className="rich-editor-loading" data-testid="rich-editor-loading">
+                  Loading editor…
+                </div>
+              }
+            >
+              <LazyRichEditor
+                noteId={activeNote.id}
+                body={body}
+                prefs={prefs}
+                placeholder={PLACEHOLDER}
+                onChange={(value, sel) => {
+                  setBody(value);
+                  setSelectionStart(sel);
+                  useWritingTimer.getState().registerInput();
+                }}
+              />
+            </Suspense>
+          ) : (
+            <>
+              <textarea
+                ref={textareaRef}
+                className={`editor-input editor-input--paper-${prefs.paper}`}
+                value={body}
+                onChange={(e) => {
+                  setBody(e.target.value);
+                  setSelectionStart(e.target.selectionStart);
+                  useWritingTimer.getState().registerInput();
+                }}
+                onKeyUp={(e) => setSelectionStart(e.currentTarget.selectionStart)}
+                onClick={(e) => setSelectionStart(e.currentTarget.selectionStart)}
+                onKeyDown={onTextareaKeyDown}
+                onPaste={imagePaste.onPaste}
+                onDrop={imagePaste.onDrop}
+                onDragOver={imagePaste.onDragOver}
+                placeholder={PLACEHOLDER}
+                spellCheck={prefs.spellcheck}
+                autoFocus
+                aria-label="Note body"
+                data-testid="editor-textarea"
+                style={{
+                  fontSize: `${prefs.fontSize}px`,
+                  lineHeight: prefs.lineHeight,
+                  fontFamily: FONT_FAMILY_CSS[prefs.fontFamily],
+                  tabSize: prefs.tabSize,
+                }}
+              />
+              <SlashCommands
+                textareaRef={textareaRef}
+                value={body}
+                selectionStart={selectionStart}
+                onApply={(nextValue, nextCursor) => {
+                  setBody(nextValue);
+                  setSelectionStart(nextCursor);
+                  requestAnimationFrame(() => {
+                    const el = textareaRef.current;
+                    if (!el) return;
+                    el.selectionStart = el.selectionEnd = nextCursor;
+                    el.focus();
+                  });
+                }}
+              />
+            </>
+          )}
+          {activeNote?.mode === 'md' && previewOn && (
+            <Suspense fallback={<div className="md-preview" aria-hidden="true" />}>
+              <PreviewPane body={body} />
+            </Suspense>
+          )}
           {activeNote?.mode === 'checklist' && <ChecklistPane body={body} onBodyChange={setBody} />}
           <AIResultPane
             onApply={(next) => {

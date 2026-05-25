@@ -35,6 +35,12 @@ export interface EditorPrefs {
   paper: Paper;
   /** T3.6 — target word count for the session goal progress bar; 0 = off. */
   wordGoal: number;
+  /**
+   * Rich editor (CodeMirror 6) with inline image rendering + markdown syntax
+   * highlighting. Beta, default OFF — the native textarea stays the default
+   * until the rich path reaches feature parity. Lazy-loaded when on.
+   */
+  richEditor: boolean;
 }
 
 export const DEFAULT_EDITOR_PREFS: EditorPrefs = {
@@ -48,6 +54,7 @@ export const DEFAULT_EDITOR_PREFS: EditorPrefs = {
   soundVolume: 0.4,
   paper: 'plain',
   wordGoal: 0,
+  richEditor: false,
 };
 
 export const FONT_FAMILY_CSS: Record<FontFamily, string> = {
@@ -77,6 +84,7 @@ interface EditorPrefsState extends EditorPrefs {
   setSoundVolume: (n: number) => Promise<void>;
   setPaper: (p: Paper) => Promise<void>;
   setWordGoal: (n: number) => Promise<void>;
+  setRichEditor: (b: boolean) => Promise<void>;
   reset: () => Promise<void>;
 }
 
@@ -132,6 +140,10 @@ export const useEditorPrefs = create<EditorPrefsState>((set) => ({
     set({ wordGoal: clamped });
     await persist(PREF_KEYS_EDITOR.wordGoal, clamped);
   },
+  setRichEditor: async (b) => {
+    set({ richEditor: b });
+    await persist(PREF_KEYS_EDITOR.richEditor, b);
+  },
   reset: async () => {
     set(DEFAULT_EDITOR_PREFS);
     await Promise.all([
@@ -145,6 +157,7 @@ export const useEditorPrefs = create<EditorPrefsState>((set) => ({
       persist(PREF_KEYS_EDITOR.soundVolume, DEFAULT_EDITOR_PREFS.soundVolume),
       persist(PREF_KEYS_EDITOR.paper, DEFAULT_EDITOR_PREFS.paper),
       persist(PREF_KEYS_EDITOR.wordGoal, DEFAULT_EDITOR_PREFS.wordGoal),
+      persist(PREF_KEYS_EDITOR.richEditor, DEFAULT_EDITOR_PREFS.richEditor),
     ]);
   },
 }));
@@ -163,6 +176,7 @@ export async function bootstrapEditorPrefs(): Promise<void> {
       soundVolume,
       paper,
       wordGoal,
+      richEditor,
     ] = await Promise.all([
       getPref<number>(PREF_KEYS_EDITOR.fontSize),
       getPref<number>(PREF_KEYS_EDITOR.lineHeight),
@@ -174,6 +188,7 @@ export async function bootstrapEditorPrefs(): Promise<void> {
       getPref<number>(PREF_KEYS_EDITOR.soundVolume),
       getPref<Paper>(PREF_KEYS_EDITOR.paper),
       getPref<number>(PREF_KEYS_EDITOR.wordGoal),
+      getPref<boolean>(PREF_KEYS_EDITOR.richEditor),
     ]);
     useEditorPrefs.setState({
       fontSize: typeof fontSize === 'number' ? fontSize : DEFAULT_EDITOR_PREFS.fontSize,
@@ -186,6 +201,7 @@ export async function bootstrapEditorPrefs(): Promise<void> {
       soundVolume: typeof soundVolume === 'number' ? soundVolume : DEFAULT_EDITOR_PREFS.soundVolume,
       paper: isPaper(paper) ? paper : DEFAULT_EDITOR_PREFS.paper,
       wordGoal: typeof wordGoal === 'number' ? wordGoal : DEFAULT_EDITOR_PREFS.wordGoal,
+      richEditor: typeof richEditor === 'boolean' ? richEditor : DEFAULT_EDITOR_PREFS.richEditor,
     });
   } catch {
     useEditorPrefs.setState(DEFAULT_EDITOR_PREFS);
