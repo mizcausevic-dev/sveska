@@ -36,9 +36,12 @@ export interface EditorPrefs {
   /** T3.6 — target word count for the session goal progress bar; 0 = off. */
   wordGoal: number;
   /**
-   * Rich editor (CodeMirror 6) with inline image rendering + markdown syntax
-   * highlighting. Beta, default OFF — the native textarea stays the default
-   * until the rich path reaches feature parity. Lazy-loaded when on.
+   * Rich editor (CodeMirror 6): inline image rendering + markdown syntax
+   * highlighting + slash commands + snippet expansion + find/replace +
+   * typewriter + typing sounds. Default ON as of increment 2 (feature
+   * parity reached). Lazy-loaded — the CM chunk dynamic-imports after first
+   * paint, so the initial bundle budget holds. Toggle off for the classic
+   * textarea editor.
    */
   richEditor: boolean;
 }
@@ -54,7 +57,7 @@ export const DEFAULT_EDITOR_PREFS: EditorPrefs = {
   soundVolume: 0.4,
   paper: 'plain',
   wordGoal: 0,
-  richEditor: false,
+  richEditor: true,
 };
 
 export const FONT_FAMILY_CSS: Record<FontFamily, string> = {

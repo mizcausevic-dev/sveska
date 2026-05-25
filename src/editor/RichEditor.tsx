@@ -4,7 +4,10 @@ import { EditorView, keymap, placeholder as cmPlaceholder } from '@codemirror/vi
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
 import { markdown } from '@codemirror/lang-markdown';
 import { syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language';
+import { search, searchKeymap } from '@codemirror/search';
+import { closeBrackets } from '@codemirror/autocomplete';
 import { inlineImagePlugin } from './richImageWidget';
+import { slashCommands, snippetExpand, typewriterScroll, typingSounds } from './cmExtensions';
 import { attachmentRef, putAttachment } from '@/notes/attachmentRepo';
 import { type EditorPrefs, FONT_FAMILY_CSS } from '@/notes/editorPrefs';
 
@@ -136,11 +139,19 @@ export function RichEditor({
       doc: body,
       extensions: [
         history(),
-        keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
+        // searchKeymap (Ctrl/⌘+F) before defaultKeymap so find/replace wins.
+        keymap.of([...searchKeymap, ...defaultKeymap, ...historyKeymap, indentWithTab]),
         markdown(),
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
         EditorView.lineWrapping,
         cmPlaceholder(placeholder),
+        closeBrackets(),
+        search({ top: true }),
+        // M3 power features ported to CM (increment 2):
+        slashCommands, // / at line start → command palette
+        snippetExpand, // ;trigger → snippet body
+        typewriterScroll, // center caret line when the pref is on
+        typingSounds, // WebAudio click when the pref is on
         inlineImagePlugin,
         updateListener,
         pasteDrop,

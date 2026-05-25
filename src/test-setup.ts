@@ -10,6 +10,7 @@ import { useStatsModal } from '@/editor/statsModalStore';
 import { useShortcutsModal } from '@/ui/shortcutsModalStore';
 import { useUIStore } from '@/notes/uiStore';
 import { DEFAULT_EDITOR_PREFS, useEditorPrefs } from '@/notes/editorPrefs';
+import { PREF_KEYS_EDITOR, setPref } from '@/notes/prefs';
 import { useTabs } from '@/notes/tabsStore';
 import { useVersionsModal } from '@/editor/versionsModalStore';
 import { useDraftRecovery } from '@/editor/draftRecoveryStore';
@@ -29,6 +30,15 @@ import { useCTA } from '@/platform/ctaStore';
 // the Editor's async auto-bootstrap and see an empty Dexie when probing it.
 beforeEach(async () => {
   await useTabs.getState().bootstrap();
+  // The production default is the CodeMirror rich editor (richEditor: true),
+  // but the App-integration tests target the classic <textarea> surface
+  // (data-testid="editor-textarea") and CM doesn't render meaningfully in
+  // jsdom. Force the classic editor for tests: set the store AND persist
+  // false to Dexie so any per-test bootstrapEditorPrefs() reads it back as
+  // false (otherwise bootstrap would re-hydrate the true default). Rich-
+  // editor behavior is covered by its own unit tests + browser verification.
+  await setPref(PREF_KEYS_EDITOR.richEditor, false);
+  useEditorPrefs.setState({ richEditor: false });
 });
 
 afterEach(async () => {

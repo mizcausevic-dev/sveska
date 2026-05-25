@@ -38,15 +38,16 @@ describe('big lift — findImageRefs (inline image matcher)', () => {
 });
 
 describe('big lift — richEditor pref flag', () => {
-  it('defaults OFF so the classic textarea stays the default editor', () => {
-    expect(DEFAULT_EDITOR_PREFS.richEditor).toBe(false);
-    expect(useEditorPrefs.getState().richEditor).toBe(false);
+  it('production default is ON as of increment 2 (feature parity reached)', () => {
+    // Assert the constant, not the live store — the test harness forces the
+    // store to false so App-integration tests target the classic textarea.
+    expect(DEFAULT_EDITOR_PREFS.richEditor).toBe(true);
   });
 
-  it('setRichEditor flips the store value', async () => {
-    await useEditorPrefs.getState().setRichEditor(true);
-    expect(useEditorPrefs.getState().richEditor).toBe(true);
+  it('setRichEditor flips the store value (classic textarea opt-out)', async () => {
     await useEditorPrefs.getState().setRichEditor(false);
     expect(useEditorPrefs.getState().richEditor).toBe(false);
+    await useEditorPrefs.getState().setRichEditor(true);
+    expect(useEditorPrefs.getState().richEditor).toBe(true);
   });
 });

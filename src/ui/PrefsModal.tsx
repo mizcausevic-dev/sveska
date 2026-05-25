@@ -121,10 +121,10 @@ export function PrefsModalHost(): React.JSX.Element {
 
       <div className="row">
         <div>
-          <div className="label">Rich editor (beta)</div>
+          <div className="label">Rich editor</div>
           <span className="hint">
-            CodeMirror: pasted screenshots render inline + Markdown highlighting. Slash commands,
-            find/replace &amp; typewriter stay on the classic editor for now.
+            CodeMirror: pasted screenshots render inline, Markdown highlighting, slash commands,
+            snippets, find/replace, typewriter. Turn off for the classic textarea editor.
           </span>
         </div>
         <label className="switch">

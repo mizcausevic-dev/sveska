@@ -22,8 +22,8 @@ describe('M1.T1.6 — editor prefs (store + persistence)', () => {
       // T3.6 additions — plain paper + no word goal.
       paper: 'plain',
       wordGoal: 0,
-      // big-lift addition — rich editor off by default (classic textarea).
-      richEditor: false,
+      // big-lift increment 2 — rich editor ON by default (feature parity reached).
+      richEditor: true,
     });
   });
 
