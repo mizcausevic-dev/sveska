@@ -11,7 +11,7 @@
 
 [![PWA](https://img.shields.io/badge/PWA-installable-F2B544?style=flat-square)](https://sveska.studio)
 [![M7](https://img.shields.io/badge/milestone-M7_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.7.0-m7)
-[![Tests](https://img.shields.io/badge/tests-274_passing-7AD29C?style=flat-square)](#milestone-status)
+[![Tests](https://img.shields.io/badge/tests-281_passing-7AD29C?style=flat-square)](#milestone-status)
 [![License](https://img.shields.io/badge/license-MIT-0C0C0E?style=flat-square)](LICENSE)
 
 Multi-note tabs, Markdown + checklist modes, command palette, fuzzy search across notes,
@@ -39,7 +39,7 @@ from day one.
 
 <sub>Source mockups in <a href="docs/design-mocks/"><code>docs/design-mocks/</code></a>; rendered to PNGs by <a href="scripts/capture-mocks.mjs"><code>scripts/capture-mocks.mjs</code></a> (Playwright + Chromium headless).</sub>
 
-## Features (live as of M7)
+## Features (live as of v0.8)
 
 | Layer       | What's shipped                                                                                                                                                                                                 |
 | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -72,7 +72,7 @@ from day one.
 | Markdown    | `markdown-it` + DOMPurify                                                                                               |
 | PWA         | `vite-plugin-pwa` (Workbox, `registerType: 'autoUpdate'`)                                                               |
 | Router      | `react-router-dom` v6                                                                                                   |
-| Tests       | Vitest + Testing Library + `fake-indexeddb` (274 tests, 100% pass) · `vitest-axe` a11y sweep · on-demand Playwright e2e |
+| Tests       | Vitest + Testing Library + `fake-indexeddb` (281 tests, 100% pass) · `vitest-axe` a11y sweep · on-demand Playwright e2e |
 | Lint/format | ESLint 9 (flat config, typed) + Prettier 3                                                                              |
 | Pre-commit  | Husky 9 + lint-staged                                                                                                   |
 | Edge        | **Cloudflare Pages Functions** (Workers runtime) — same-origin AI proxy at `/api/ai`                                    |
@@ -85,7 +85,7 @@ pnpm install
 pnpm dev            # http://localhost:5173
 pnpm build          # builds, generates sitemap, runs key-leak + bundle-budget gates
 pnpm preview        # serves the built bundle
-pnpm test           # Vitest + Testing Library (274 tests, ~10s)
+pnpm test           # Vitest + Testing Library (281 tests, ~10s)
 pnpm test:e2e       # on-demand: builds dist/, runs Playwright smoke suite (offline + 3 routes + manifest)
 pnpm typecheck
 pnpm lint

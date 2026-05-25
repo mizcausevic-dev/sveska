@@ -2,6 +2,22 @@
 
 Per-milestone snapshots of what shipped. Each entry links to the matching GitHub release for the full release notes.
 
+## v0.8.0 — Rich editor + image paste
+
+Paste or drag-drop a screenshot straight into a note — it's stored locally in IndexedDB and renders inline. The editor moved to CodeMirror 6 (now the default): inline images, Markdown syntax highlighting, slash commands, snippet expansion, find/replace, and typewriter mode all on one surface. The classic textarea remains a one-toggle opt-out. HTML export embeds pasted images as self-contained data URIs.
+
+## v0.7.0-m7 — Hardening
+
+Top-level error boundary with a crash-recovery screen, accessibility sweep (axe-clean across the app shell, glossary, and pricing), an on-demand Playwright smoke suite (offline + install + key routes), a security review against the project's privacy gate, and the perf budget enforced in CI.
+
+[Release notes](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.7.0-m7)
+
+## v0.6.0-m6 — Platform & monetization
+
+Glossary engine that auto-links terms in notes and exports (plus a standalone `/glossary`), a content surface (Markdown blog + changelog, note → MDX export), a lead-gen funnel (email capture, CTA slots), and a pricing scaffold with an internal MRR dashboard.
+
+[Release notes](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.6.0-m6)
+
 ## v0.5.0-m5 — Canvas
 
 Excalidraw, vendored and lazy-loaded behind the `CanvasProvider` seam. Canvas-per-note saved to Dexie, ✎ toggle in the TagsBar, PNG export from the palette. The 2.6 MB vendor chunk only loads when the canvas opens.
