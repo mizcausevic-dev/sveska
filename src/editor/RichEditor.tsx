@@ -12,16 +12,16 @@ import { attachmentRef, putAttachment } from '@/notes/attachmentRepo';
 import { type EditorPrefs, FONT_FAMILY_CSS } from '@/notes/editorPrefs';
 
 /**
- * CodeMirror 6 rich editor (the "big lift", increment 1) — behind the
- * `richEditor` pref, lazy-loaded so it never touches the default bundle.
+ * CodeMirror 6 rich editor (the "big lift") — the `richEditor` pref, now
+ * DEFAULT ON. Lazy-loaded so the CM chunk dynamic-imports after first paint
+ * and the initial bundle budget holds.
  *
- * Delivers the headline feature: pasted screenshots render INLINE in the
- * editing surface (not as raw `![](sveska-img:…)` text) via a live-preview
- * widget. Also: markdown syntax highlighting, undo history, soft-wrap.
- *
- * Increment 2 (tracked) re-ports the M3 power features (slash commands,
- * snippet expand, find/replace, typewriter, typing sounds) onto CM6; until
- * then those remain exclusive to the textarea editor.
+ * Headline: pasted screenshots render INLINE in the editing surface (not as
+ * raw `![](sveska-img:…)` text) via a live-preview widget. Plus markdown
+ * syntax highlighting, undo, soft-wrap, and the full M3 power-feature set
+ * ported in increment 2 (see ./cmExtensions): slash commands, snippet
+ * expansion, find/replace (@codemirror/search), typewriter scroll, typing
+ * sounds. The classic <textarea> editor remains the opt-out.
  */
 
 interface Props {
