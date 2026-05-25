@@ -549,17 +549,17 @@ button:disabled {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  justify-content: space-between;
   gap: 8px;
 }
 
 .editor-actions .snap-toolbar {
   margin: 0;
-  /* don't grow — sit at natural width so the secondary cluster shares the
-   * same row when there's room. When the editor is too narrow the cluster
-   * wraps to a second row; the shared min-height keeps both rows visually
-   * uniform (a toolbar that happens to wrap, not two mismatched bars). */
-  flex: 0 1 auto;
+  /* grow to fill the row so the bar spans the full editor width (matching
+   * the input + preview panes below) — no awkward space-between gap. The
+   * secondary cluster sits at the right edge; it wraps to its own full row
+   * when the editor is too narrow. Uniform min-height keeps every pill
+   * aligned whether on one row or two. */
+  flex: 1 1 340px;
   align-items: center;
   min-height: 40px;
   padding: 0 12px;
