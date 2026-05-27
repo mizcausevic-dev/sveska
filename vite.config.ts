@@ -43,7 +43,23 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        manualChunks: undefined,
+        // Force markdown-it + DOMPurify (and their transitive helpers — entities, mdurl,
+        // linkify-it, uc.micro, punycode.js) into a single async chunk. Without this rule
+        // Rollup hoists the shared dep back into the initial bundle because PreviewPane
+        // (lazy) and ExportMenu (lazy) both import it. ~56 KB gzip reclaimed from the
+        // 180 KB initial budget.
+        //
+        // Anything ELSE imported only by lazy chunks falls through to default chunking.
+        manualChunks(id: string) {
+          if (
+            /[\\/]node_modules[\\/](markdown-it|dompurify|entities|mdurl|linkify-it|uc\.micro|punycode\.js)[\\/]/.test(
+              id,
+            )
+          ) {
+            return 'markdown-async';
+          }
+          return undefined;
+        },
       },
     },
   },

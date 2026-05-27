@@ -11,7 +11,7 @@ _None._ Migration + post-M7 platform work are settled. Next moves are deferred i
 
 ## Next up
 
-- [ ] **Bundle headroom (urgent — ~0.2 KB left)** — markdown-it + DOMPurify (~56 KB) stay in the initial bundle even after PreviewPane/ExportMenu went lazy (Rollup hoists the shared dep). Add a `manualChunks` rule in vite.config to force markdown-it+dompurify into their own async chunk. Do this before ANY initial-bundle feature.
+- ✅ **Bundle headroom** — added `manualChunks` rule that forces `markdown-it`, `dompurify`, and their transitive helpers (`entities`, `mdurl`, `linkify-it`, `uc.micro`, `punycode.js`) into a dedicated `markdown-async-*.js` chunk. Initial JS gzip: 179.78 → 179.12 KB (gzip savings smaller than the ~56 KB the ticket guessed because markdown-it's entity tables compress extraordinarily well — but raw initial bytes dropped 521 → 392 KB, real parse-time/TTI win). New ~129 KB raw async chunk created. All 281 tests green, lint clean.
 - [ ] **Rich editor polish (post-increment-2)** — match the slash autocomplete tooltip styling to the textarea's slash popover; consider a custom find/replace bar to match the textarea UX (currently CM's native search panel); port paper textures to CM; retire the textarea path entirely if no one uses the classic toggle.
 - [ ] Post-M7 — Lighthouse PWA report on prod, Pro-tier sync design (E2E-encrypted per §5.5), analytics vendor pick (parking lot row 4)
 
