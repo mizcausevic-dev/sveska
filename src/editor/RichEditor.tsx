@@ -194,5 +194,11 @@ export function RichEditor({
     view.dispatch({ effects: themeComp.current.reconfigure(buildTheme(prefs)) });
   }, [prefs]);
 
-  return <div ref={hostRef} className="rich-editor" data-testid="rich-editor" />;
+  return (
+    <div
+      ref={hostRef}
+      className={`rich-editor rich-editor--paper-${prefs.paper}`}
+      data-testid="rich-editor"
+    />
+  );
 }
