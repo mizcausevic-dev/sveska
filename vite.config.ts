@@ -43,13 +43,21 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-        // Force markdown-it + DOMPurify (and their transitive helpers — entities, mdurl,
-        // linkify-it, uc.micro, punycode.js) into a single async chunk. Without this rule
-        // Rollup hoists the shared dep back into the initial bundle because PreviewPane
-        // (lazy) and ExportMenu (lazy) both import it. ~56 KB gzip reclaimed from the
-        // 180 KB initial budget.
-        //
-        // Anything ELSE imported only by lazy chunks falls through to default chunking.
+        /**
+         * Force markdown-it + DOMPurify (and their transitive helpers — entities,
+         * mdurl, linkify-it, uc.micro, punycode.js) into a single async chunk.
+         *
+         * The chunk split is necessary-but-not-sufficient. The first attempt at
+         * this (commit af0d619) only added the rule; the gzip dropped 179.78 →
+         * 179.12 KB because Editor.tsx and commandCatalog.ts statically imported
+         * paths that reached renderMd, so Rollup preloaded the markdown chunk.
+         * The full fix also refactors `markdown/export.ts` and `platform/content.ts`
+         * to lazy-load renderMd via cached promise getters — then the gzip
+         * actually drops 179.11 → 124.58 KB (-54.5 KB), which is what the
+         * "56 KB recovered" estimate originally predicted.
+         *
+         * Anything ELSE imported only by lazy chunks falls through to default chunking.
+         */
         manualChunks(id: string) {
           if (
             /[\\/]node_modules[\\/](markdown-it|dompurify|entities|mdurl|linkify-it|uc\.micro|punycode\.js)[\\/]/.test(

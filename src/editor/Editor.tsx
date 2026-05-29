@@ -147,7 +147,7 @@ export function Editor(): React.JSX.Element {
     reg('export.txt', () => {
       if (!activeNote) return;
       const ast = astFromNote({ ...activeNote, body });
-      download(exportAs(ast, 'txt'));
+      void exportAs(ast, 'txt').then(download);
     });
     reg('copy.body', () => {
       if (!navigator.clipboard) return;

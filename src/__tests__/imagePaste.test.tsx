@@ -121,7 +121,7 @@ describe('v2 — image paste: renderMd resolution', () => {
 });
 
 describe('v2 — image paste: HTML export embedding', () => {
-  it('embeds the data URI in md-mode HTML export when a resolver is given', () => {
+  it('embeds the data URI in md-mode HTML export when a resolver is given', async () => {
     const note: Note = {
       id: 'n1',
       title: 'With image',
@@ -134,7 +134,7 @@ describe('v2 — image paste: HTML export embedding', () => {
       deletedAt: null,
     };
     const ast = astFromNote(note);
-    const result = exportAs(ast, 'html', (id) =>
+    const result = await exportAs(ast, 'html', (id) =>
       id === 'emb1' ? 'data:image/png;base64,EMBED' : undefined,
     );
     return readBlobText(result.blob).then((html) => {
@@ -143,7 +143,7 @@ describe('v2 — image paste: HTML export embedding', () => {
     });
   });
 
-  it('md export keeps the raw sveska-img ref (round-trippable)', () => {
+  it('md export keeps the raw sveska-img ref (round-trippable)', async () => {
     const note: Note = {
       id: 'n2',
       title: 'Raw',
@@ -155,7 +155,7 @@ describe('v2 — image paste: HTML export embedding', () => {
       updatedAt: Date.now(),
       deletedAt: null,
     };
-    const result = exportAs(astFromNote(note), 'md');
+    const result = await exportAs(astFromNote(note), 'md');
     return readBlobText(result.blob).then((md) => {
       expect(md).toContain('sveska-img:raw1');
     });

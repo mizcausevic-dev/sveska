@@ -34,14 +34,14 @@ describe('M1.T1.3 — export module', () => {
   describe('exportAs', () => {
     it('txt: body verbatim, MIME text/plain', async () => {
       const ast = astFromNote(makeNote({ body: 'hello\nworld' }));
-      const r = exportAs(ast, 'txt');
+      const r = await exportAs(ast, 'txt');
       expect(r.mime).toMatch(/^text\/plain/);
       expect(await blobText(r.blob)).toBe('hello\nworld');
     });
 
     it('md: body verbatim, MIME text/markdown, .md extension', async () => {
       const ast = astFromNote(makeNote({ body: '# heading\n\n- item' }));
-      const r = exportAs(ast, 'md');
+      const r = await exportAs(ast, 'md');
       expect(r.mime).toMatch(/^text\/markdown/);
       expect(r.filename).toMatch(/\.md$/);
       expect(await blobText(r.blob)).toBe('# heading\n\n- item');
@@ -49,7 +49,7 @@ describe('M1.T1.3 — export module', () => {
 
     it('html: wraps body in a CSP-safe document with title + escaped body', async () => {
       const ast = astFromNote(makeNote({ title: 'Weekend', body: '<script>alert(1)</script>' }));
-      const r = exportAs(ast, 'html');
+      const r = await exportAs(ast, 'html');
       const text = await blobText(r.blob);
       expect(text).toContain('<!doctype html>');
       expect(text).toContain('<title>Weekend — Sveska</title>');
@@ -63,7 +63,7 @@ describe('M1.T1.3 — export module', () => {
     it('normalizes CRLF → LF on all formats', async () => {
       const ast = astFromNote(makeNote({ body: 'a\r\nb\r\nc' }));
       for (const format of ['txt', 'md', 'html'] satisfies ExportFormat[]) {
-        const r = exportAs(ast, format);
+        const r = await exportAs(ast, format);
         const text = await blobText(r.blob);
         expect(text).not.toContain('\r\n');
       }
@@ -123,7 +123,7 @@ describe('M1.T1.3 — export module', () => {
 
     it('creates an object URL, clicks an anchor, and revokes the URL', async () => {
       const ast = astFromNote(makeNote({ title: 'x', body: 'y' }));
-      download(exportAs(ast, 'txt'));
+      download(await exportAs(ast, 'txt'));
       expect(createObjectURL).toHaveBeenCalledOnce();
       expect(clicked).toBe(1);
       // revoke is scheduled via setTimeout(0) — flush the macrotask.

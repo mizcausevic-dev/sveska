@@ -8,7 +8,18 @@
  * back-button nav doesn't re-fetch.
  */
 
-import { renderMd } from '@/markdown/render';
+// markdown-it + DOMPurify live in the `markdown-vendor` chunk (vite.config
+// manualChunks rule). commandCatalog statically imports this module for
+// slugify + toBlogMdx, so we cannot top-level-import renderMd here without
+// dragging the vendor into the initial bundle. Lazy-cache instead.
+import type { renderMd as RenderMd } from '@/markdown/render';
+let renderMdPromise: Promise<typeof RenderMd> | null = null;
+function getRenderMd(): Promise<typeof RenderMd> {
+  if (!renderMdPromise) {
+    renderMdPromise = import('@/markdown/render').then((m) => m.renderMd);
+  }
+  return renderMdPromise;
+}
 
 export interface BlogPostMeta {
   slug: string;
@@ -32,6 +43,7 @@ async function fetchText(url: string): Promise<string> {
 
 export async function loadChangelogHtml(): Promise<string> {
   const md = await fetchText('/content/changelog.md');
+  const renderMd = await getRenderMd();
   return renderMd(md);
 }
 
@@ -47,6 +59,7 @@ export async function loadBlogIndex(): Promise<BlogPostMeta[]> {
 
 export async function loadBlogPostHtml(slug: string): Promise<string> {
   const md = await fetchText(`/content/blog/${encodeURIComponent(slug)}.md`);
+  const renderMd = await getRenderMd();
   return renderMd(md);
 }
 

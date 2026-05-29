@@ -1,6 +1,21 @@
 import { type NoteAST } from './ast';
-import { renderMd, type ImageResolver } from './render';
+import type { ImageResolver, renderMd as RenderMd } from './render';
 import { autoLinkGlossary } from '@/platform/glossary';
+
+/**
+ * markdown-it + DOMPurify (~56 KB gzip combined) are heavy and only need to
+ * run when an md-mode note is being exported as HTML. Loading them at the
+ * top of this module would drag them into the initial bundle because
+ * Editor.tsx imports `exportAs` statically. Lazy-importing the renderer at
+ * call time + caching the promise keeps them in the `markdown-vendor` chunk.
+ */
+let renderMdPromise: Promise<typeof RenderMd> | null = null;
+function getRenderMd(): Promise<typeof RenderMd> {
+  if (!renderMdPromise) {
+    renderMdPromise = import('./render').then((m) => m.renderMd);
+  }
+  return renderMdPromise;
+}
 
 /**
  * One AST → three formats. Adding a format = one switch arm + one extension
@@ -33,17 +48,21 @@ export interface ExportResult {
  * arm of md-mode notes; txt/md exports keep the raw `sveska-img:` ref so
  * re-import round-trips. Callers resolve the map async (see ExportMenu).
  */
-export function exportAs(
+export async function exportAs(
   ast: NoteAST,
   format: ExportFormat,
   resolveImg?: ImageResolver,
-): ExportResult {
-  const body = bodyFor(ast, format, resolveImg);
+): Promise<ExportResult> {
+  const body = await bodyFor(ast, format, resolveImg);
   const blob = new Blob([body], { type: MIME[format] });
   return { blob, filename: filenameFor(ast, format), mime: MIME[format] };
 }
 
-function bodyFor(ast: NoteAST, format: ExportFormat, resolveImg?: ImageResolver): string {
+async function bodyFor(
+  ast: NoteAST,
+  format: ExportFormat,
+  resolveImg?: ImageResolver,
+): Promise<string> {
   // CRLF in line endings is a Windows-Notepad legacy. We always emit LF for
   // round-trippable text; consumers that need CRLF can convert downstream.
   const normalized = ast.body.replace(/\r\n/g, '\n');
@@ -61,6 +80,7 @@ function bodyFor(ast: NoteAST, format: ExportFormat, resolveImg?: ImageResolver)
         // skipping code/anchor blocks). The function is a no-op in non-DOM
         // environments, so this is safe for any caller.
         // v2 — resolveImg inlines pasted screenshots as data: URIs.
+        const renderMd = await getRenderMd();
         const linked = autoLinkGlossary(renderMd(normalized, resolveImg));
         return htmlTemplate(ast, linked, { prose: true });
       }

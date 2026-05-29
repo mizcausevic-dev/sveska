@@ -86,7 +86,7 @@ describe('M3.T3.2 — export uses Markdown renderer for md notes', () => {
   it('text-mode .html export wraps body in <pre> with escaped text', async () => {
     const note = await createNote({ body: '<b>hi</b>', mode: 'text' });
     const fresh = await getNoteById(note.id);
-    const result = exportAs(astFromNote(fresh!), 'html');
+    const result = await exportAs(astFromNote(fresh!), 'html');
     const html = await readBlob(result.blob);
     expect(html).toContain('<pre class="note">');
     expect(html).toContain('&lt;b&gt;hi&lt;/b&gt;');
@@ -95,7 +95,7 @@ describe('M3.T3.2 — export uses Markdown renderer for md notes', () => {
   it('md-mode .html export renders Markdown into .prose', async () => {
     const note = await createNote({ body: '# Heading\n\n**bold** ok', mode: 'md' });
     const fresh = await getNoteById(note.id);
-    const result = exportAs(astFromNote(fresh!), 'html');
+    const result = await exportAs(astFromNote(fresh!), 'html');
     const html = await readBlob(result.blob);
     expect(html).toContain('<div class="prose">');
     expect(html).toContain('<h1>Heading</h1>');

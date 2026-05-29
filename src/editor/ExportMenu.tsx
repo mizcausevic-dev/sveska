@@ -36,7 +36,7 @@ export function ExportMenu({ note, body }: Props): React.JSX.Element {
         resolveImg = (id) => map.get(id);
       }
     }
-    const result = exportAs(ast, format, resolveImg);
+    const result = await exportAs(ast, format, resolveImg);
     download(result);
   }
 
