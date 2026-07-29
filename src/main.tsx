@@ -11,6 +11,11 @@ import { bootstrapTheme } from '@/notes/themeStore';
 import { bootstrapUI } from '@/notes/uiStore';
 import { bootstrapEditorPrefs } from '@/notes/editorPrefs';
 import { useTabs } from '@/notes/tabsStore';
+import { installPreloadErrorRecovery } from '@/app/preloadRecovery';
+
+// Vite emits this event when an open tab requests a lazy chunk from an older
+// deployment. Install the recovery hook before rendering any lazy boundary.
+installPreloadErrorRecovery();
 
 async function bootstrap(): Promise<void> {
   // Hydrate theme from Dexie before first paint to avoid a flash when the user

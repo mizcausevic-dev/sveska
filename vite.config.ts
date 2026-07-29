@@ -75,7 +75,7 @@ export default defineConfig({
     react(),
     shareTargetStub,
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       injectRegister: 'auto',
       strategies: 'generateSW',
       includeAssets: [
@@ -147,8 +147,11 @@ export default defineConfig({
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/share-target/, /^\/api\//],
         cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        skipWaiting: true,
+        // Keep an existing tab on its existing precache until the user accepts
+        // the update. Claiming old clients immediately can strand a lazy import
+        // between two deployments.
+        clientsClaim: false,
+        skipWaiting: false,
       },
       devOptions: {
         enabled: false,
