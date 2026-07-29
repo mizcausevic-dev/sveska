@@ -6,11 +6,13 @@ import { Component, type ErrorInfo, type ReactNode } from 'react';
  * page. The user's data is never at risk — Dexie writes already
  * happened on prior keystrokes — but the UI thread can still crash.
  *
- * Three recovery affordances:
+ * Four recovery affordances:
  *   - Reload — re-runs the SPA bootstrap; recovers from most transient
  *     issues (stale lazy chunk after a deploy, transient memory blip).
  *   - Copy details — copies a short error report to the clipboard so
  *     the user can paste it into a bug report.
+ *   - Repair this browser — bypasses the SPA shell to remove only stale
+ *     service-worker assets while preserving IndexedDB notes.
  *   - Open the editor — same-origin link back to / so the user can
  *     keep writing in a fresh shell while we file the bug.
  */
@@ -96,6 +98,13 @@ export class ErrorBoundary extends Component<Props, State> {
             >
               Copy details
             </button>
+            <a
+              className="snap-btn"
+              href="/share-target/recover.html"
+              data-testid="error-boundary-repair"
+            >
+              Repair this browser
+            </a>
             <a className="snap-btn" href="/" onClick={this.reset}>
               Open the editor
             </a>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Repair Sveska</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+        background: #0d0d0f;
+        color: #f4f0e8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background:
+          radial-gradient(circle at top left, rgb(245 181 59 / 12%), transparent 34rem), #0d0d0f;
+      }
+
+      main {
+        width: min(680px, 100%);
+        padding: clamp(24px, 5vw, 48px);
+        border: 1px solid #343238;
+        border-radius: 18px;
+        background: #151518;
+        box-shadow: 0 24px 80px rgb(0 0 0 / 35%);
+      }
+
+      .eyebrow {
+        margin: 0 0 16px;
+        color: #f5b53b;
+        font-size: 0.82rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: clamp(2rem, 7vw, 4rem);
+        line-height: 0.98;
+      }
+
+      p {
+        line-height: 1.65;
+      }
+
+      .status {
+        min-height: 3.4rem;
+        margin: 28px 0;
+        padding: 16px;
+        border-left: 3px solid #f5b53b;
+        background: #0d0d0f;
+      }
+
+      button,
+      a {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 16px;
+        border: 1px solid #4b4850;
+        border-radius: 10px;
+        font: inherit;
+      }
+
+      button {
+        color: #111;
+        background: #f5b53b;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        cursor: wait;
+        opacity: 0.65;
+      }
+
+      a {
+        margin-left: 8px;
+        color: #f4f0e8;
+        text-decoration: none;
+      }
+
+      .privacy {
+        margin-top: 28px;
+        color: #aaa5ad;
+        font-size: 0.85rem;
+      }
+    </style>
+    <script src="/share-target/recover.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Sveska browser repair</p>
+      <h1>Keeping your notes. Refreshing the app.</h1>
+      <p>
+        This repairs stale Sveska application files in this browser profile. Your notes and
+        attachments stay in IndexedDB on this device.
+      </p>
+      <p class="status" role="status" aria-live="polite" data-repair-status>
+        Preparing a safe repair…
+      </p>
+      <div>
+        <button type="button" data-repair-button>Repair and reopen</button>
+        <a href="/">Return to Sveska</a>
+      </div>
+      <p class="privacy">
+        This page removes only Sveska service-worker registrations and generated Workbox asset
+        caches. It does not delete site storage, IndexedDB, notes, attachments, or preferences.
+      </p>
+    </main>
+  </body>
+</html>

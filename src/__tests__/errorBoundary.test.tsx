@@ -32,6 +32,10 @@ describe('M7.T7.1 — ErrorBoundary', () => {
     // Recovery affordances are present.
     expect(screen.getByTestId('error-boundary-reload')).toBeInTheDocument();
     expect(screen.getByTestId('error-boundary-copy')).toBeInTheDocument();
+    expect(screen.getByTestId('error-boundary-repair')).toHaveAttribute(
+      'href',
+      '/share-target/recover.html',
+    );
     spy.mockRestore();
   });
 
