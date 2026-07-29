@@ -3,9 +3,38 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+interface WorkboxManifestEntry {
+  integrity?: string;
+  revision: string | null;
+  size: number;
+  url: string;
+}
+
+/**
+ * Cloudflare Pages can expose a new index.html before every hashed asset has
+ * reached the custom domain. Its SPA fallback returns index.html with status
+ * 200 for a temporarily missing asset, which Workbox would otherwise accept
+ * into the precache. SRI makes the service-worker install fail safely instead
+ * of caching HTML as CSS or JavaScript.
+ */
+function addPrecacheIntegrity(entries: WorkboxManifestEntry[]) {
+  return {
+    manifest: entries.map((entry) => {
+      const rawPath = entry.url.split('?')[0] ?? entry.url;
+      const relativePath = decodeURIComponent(rawPath).replace(/^\/+/, '');
+      const contents = readFileSync(resolve(__dirname, 'dist', relativePath));
+      const integrity = `sha384-${createHash('sha384').update(contents).digest('base64')}`;
+      return { ...entry, integrity };
+    }),
+    warnings: [],
+  };
+}
 
 /**
  * Make POST /share-target return 200 + a redirect to /?capture=1 in both dev and `vite preview`.
@@ -43,6 +72,14 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
+        /*
+         * One-time cache namespace for the first SRI-protected release. Existing
+         * service workers may have cached a Pages fallback response under an old
+         * generated URL, so every generated asset needs a fresh cache key.
+         */
+        entryFileNames: 'assets/[name]-[hash]-sri1.js',
+        chunkFileNames: 'assets/[name]-[hash]-sri1.js',
+        assetFileNames: 'assets/[name]-[hash]-sri1[extname]',
         /**
          * Force markdown-it + DOMPurify (and their transitive helpers — entities,
          * mdurl, linkify-it, uc.micro, punycode.js) into a single async chunk.
@@ -144,6 +181,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2,ttf}'],
+        manifestTransforms: [addPrecacheIntegrity],
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/share-target/, /^\/api\//],
         cleanupOutdatedCaches: true,
