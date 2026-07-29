@@ -9,6 +9,9 @@ export default tseslint.config(
   {
     ignores: [
       'dist',
+      // Standalone sibling package with its own tsconfig, tests, and build
+      // pipeline. Root lint must not parse its source or generated dist.
+      'extension',
       'node_modules',
       'coverage',
       'public/brand',

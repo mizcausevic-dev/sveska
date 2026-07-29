@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { type Note } from '@/notes/db';
-import { setNoteMode, setNotePinned, updateNoteTags } from '@/notes/noteRepo';
+import { setNoteDirectory, setNoteMode, setNotePinned, updateNoteTags } from '@/notes/noteRepo';
 import { useTabs } from '@/notes/tabsStore';
 import { useCanvasView } from '@/canvas/canvasViewStore';
+import { useDirectories } from '@/notes/directoryStore';
+import { flattenDirectories } from '@/notes/directoryRepo';
 
 interface Props {
   note: Note;
+  onInsertTable: () => void;
 }
 
 /**
@@ -14,9 +17,16 @@ interface Props {
  * Backspace when the input is empty. All writes round-trip through
  * `updateNoteTags` so normalization is consistent with the rail filter.
  */
-export function TagsBar({ note }: Props): React.JSX.Element {
+export function TagsBar({ note, onInsertTable }: Props): React.JSX.Element {
   const refreshActiveNote = useTabs((s) => s.refreshActiveNote);
   const [draft, setDraft] = useState('');
+  const directories = useDirectories((s) => s.directories);
+  const bootstrapDirectories = useDirectories((s) => s.bootstrap);
+  const directoryOptions = useMemo(() => flattenDirectories(directories), [directories]);
+
+  useEffect(() => {
+    void bootstrapDirectories();
+  }, [bootstrapDirectories]);
 
   async function addFromDraft(): Promise<void> {
     const next = [...note.tags, draft];
@@ -85,6 +95,35 @@ export function TagsBar({ note }: Props): React.JSX.Element {
         data-testid="canvas-toggle"
       >
         ✎
+      </button>
+      <label className="directory-picker-label">
+        <span className="visually-hidden">Directory</span>
+        <select
+          className="directory-picker mono"
+          value={note.directoryId ?? ''}
+          onChange={(event) => {
+            const directoryId = event.target.value || null;
+            void setNoteDirectory(note.id, directoryId).then(() => refreshActiveNote());
+          }}
+          data-testid="note-directory"
+          title="Move note to directory"
+        >
+          <option value="">Unfiled</option>
+          {directoryOptions.map((directory) => (
+            <option key={directory.id} value={directory.id}>
+              {`${'  '.repeat(directory.depth)}${directory.name}`}
+            </option>
+          ))}
+        </select>
+      </label>
+      <button
+        type="button"
+        className="mode-toggle table-insert-button"
+        onClick={onInsertTable}
+        title="Insert Markdown table"
+        data-testid="table-open"
+      >
+        Table
       </button>
       <ul className="tag-list" data-testid="tag-list">
         {note.tags.map((tag) => (

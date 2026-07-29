@@ -13,6 +13,7 @@ const NEW_NOTE_DEFAULTS = (): Note => {
     body: '',
     mode: 'text',
     tags: [],
+    directoryId: null,
     pinned: 0,
     createdAt: now,
     updatedAt: now,
@@ -59,12 +60,13 @@ export async function listNotes(): Promise<Note[]> {
 
 /** Create a fresh note. M2 tab strip calls this for "+ new". */
 export async function createNote(
-  seed: Partial<Pick<Note, 'title' | 'body' | 'mode'>> = {},
+  seed: Partial<Pick<Note, 'title' | 'body' | 'mode' | 'directoryId'>> = {},
 ): Promise<Note> {
   const note = NEW_NOTE_DEFAULTS();
   if (seed.title !== undefined) note.title = seed.title;
   if (seed.body !== undefined) note.body = seed.body;
   if (seed.mode !== undefined) note.mode = seed.mode;
+  if (seed.directoryId !== undefined) note.directoryId = seed.directoryId;
   await db().notes.add(note);
   return note;
 }
@@ -105,6 +107,15 @@ export async function setNotePinned(id: string, pinned: boolean): Promise<void> 
 /** Switch a note between plain-text and Markdown mode (M3.T3.2). */
 export async function setNoteMode(id: string, mode: Note['mode']): Promise<void> {
   await db().notes.update(id, { mode, updatedAt: Date.now() });
+}
+
+/** Move a note into a local directory, or back to the unfiled root. */
+export async function setNoteDirectory(id: string, directoryId: string | null): Promise<void> {
+  if (directoryId !== null) {
+    const target = await db().directories.get(directoryId);
+    if (!target) throw new Error('Directory does not exist');
+  }
+  await db().notes.update(id, { directoryId, updatedAt: Date.now() });
 }
 
 /** All pinned non-deleted notes, newest-first. M2.T2.4 favorites bar. */

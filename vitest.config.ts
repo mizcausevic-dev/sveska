@@ -48,6 +48,11 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
     css: true,
+    // The /extension package is a sibling Vite build with its own
+    // node_modules and its own vitest config (chrome.* shim). Its tests
+    // don't belong in the PWA's test run — running them here fails with a
+    // multiple-React-instances error because both packages ship React.
+    exclude: ['**/node_modules/**', '**/dist/**', 'extension/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],

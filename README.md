@@ -11,7 +11,7 @@
 
 [![PWA](https://img.shields.io/badge/PWA-installable-F2B544?style=flat-square)](https://sveska.studio)
 [![M7](https://img.shields.io/badge/milestone-M7_shipped-7AD29C?style=flat-square)](https://github.com/mizcausevic-dev/sveska/releases/tag/v0.7.0-m7)
-[![Tests](https://img.shields.io/badge/tests-281_passing-7AD29C?style=flat-square)](#milestone-status)
+[![Tests](https://img.shields.io/badge/tests-290_passing-7AD29C?style=flat-square)](#milestone-status)
 [![License](https://img.shields.io/badge/license-MIT-0C0C0E?style=flat-square)](LICENSE)
 
 Multi-note tabs, Markdown + checklist modes, command palette, fuzzy search across notes,
@@ -39,28 +39,33 @@ from day one.
 
 <sub>Source mockups in <a href="docs/design-mocks/"><code>docs/design-mocks/</code></a>; rendered to PNGs by <a href="scripts/capture-mocks.mjs"><code>scripts/capture-mocks.mjs</code></a> (Playwright + Chromium headless).</sub>
 
-## Features (live as of v0.8)
+## Features (v0.8 plus the current local build)
 
-| Layer       | What's shipped                                                                                                                                                                                                 |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Editor      | CodeMirror 6 rich editor (inline images · md highlighting · slash · snippets · find · typewriter) — classic textarea opt-out · autosave (400 ms debounce + flush on blur/visibility) · crash-safe draft shadow |
-| Modes       | TXT · MD (split preview, DOMPurify XSS gate) · CHK (click-toggle, drag-reorder, indent levels, hide done)                                                                                                      |
-| Navigation  | Multi-note tabs · session restore · NotesRail (pinned / recent / saved filters / tags)                                                                                                                         |
-| Discovery   | `Ctrl+K` command palette (fuzzy) · inline slash commands · `Ctrl+P` fuzzy search across all notes (<50 ms / 1k)                                                                                                |
-| Capture     | Inbox (`Ctrl+Shift+K`) · Web Share Target → inbox · import .txt / .md (file picker + drag-drop)                                                                                                                |
-| Images      | Paste / drag-drop a screenshot inline (stored local in IndexedDB → rendered as `data:` URI → embedded in HTML export) · or paste onto the per-note Excalidraw canvas                                           |
-| Snapshots   | Per-note version history with side-by-side LCS diff + Restore                                                                                                                                                  |
-| Writing     | Typewriter mode · WebAudio typing clicks · paper textures · writing-session timer · word goal · `Ctrl+F` find                                                                                                  |
-| Templates   | 5 built-in note templates · user templates · snippet typeahead (`;date`, `;todo`, `;hr`)                                                                                                                       |
-| Export      | `.txt` / `.md` / `.html` (prose for md) · share-via-URL hash · `.pdf` (lazy jsPDF)                                                                                                                             |
-| AI          | Streaming Anthropic proxy on Cloudflare Pages Functions · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy                                                                                  |
-| AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                                                                                                               |
-| Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                                                                                                                 |
-| Platform    | `/glossary` (20-term auto-linker) · `/blog` + `/changelog` (Markdown content) · `/pricing` · `/funnel` dashboard                                                                                               |
-| Lead-gen    | Email capture · CTA slots · MDX export with frontmatter · HTML-export footer back-links                                                                                                                        |
-| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored, axe-clean App / Glossary / Pricing                                                                                                              |
-| Hardening   | Top-level `ErrorBoundary` (Reload / Copy report / Reset) · on-demand Playwright smoke suite (`pnpm test:e2e`)                                                                                                  |
-| Persistence | Dexie (IndexedDB) — 8 tables, soft-delete, legacy-localStorage import on first run                                                                                                                             |
+The directory, adaptive-workspace, wrapped-tab, table-insertion, and three-mode Markdown
+changes below are implemented locally but are not represented as deployed until they are
+intentionally committed and released.
+
+| Layer       | What's shipped                                                                                                                                                                                                                                      |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Editor      | CodeMirror 6 rich editor (inline images · md highlighting · slash · snippets · find · typewriter) · classic textarea opt-out · reading/wide/full workspace widths · autosave (400 ms debounce + flush on blur/visibility) · crash-safe draft shadow |
+| Modes       | TXT · MD with Edit / Split / Preview views and DOMPurify XSS gate · CHK (click-toggle, drag-reorder, indent levels, hide done)                                                                                                                      |
+| Navigation  | Wrapped multi-note tabs with no horizontal scrollbar · session restore · nested local directories · NotesRail (pinned / recent / saved filters / tags)                                                                                              |
+| Discovery   | `Ctrl+K` command palette (fuzzy) · inline slash commands · `Ctrl+P` fuzzy search across all notes (<50 ms / 1k)                                                                                                                                     |
+| Capture     | Inbox (`Ctrl+Shift+K`) · Web Share Target → inbox · import .txt / .md (file picker + drag-drop)                                                                                                                                                     |
+| Images      | Paste / drag-drop a screenshot inline (stored local in IndexedDB → rendered as `data:` URI → embedded in HTML export) · or paste onto the per-note Excalidraw canvas                                                                                |
+| Snapshots   | Per-note version history with side-by-side LCS diff + Restore                                                                                                                                                                                       |
+| Writing     | Typewriter mode · WebAudio typing clicks · paper textures · writing-session timer · word goal · `Ctrl+F` find                                                                                                                                       |
+| Templates   | 8 built-in note templates, including directory listing / technical spec / launch plan · user templates · snippet typeahead (`;date`, `;todo`, `;hr`)                                                                                                |
+| Tables      | Markdown table builder with configurable rows and columns, available from the note toolbar and command palette                                                                                                                                      |
+| Export      | `.txt` / `.md` / `.html` (prose for md) · share-via-URL hash · `.pdf` (lazy jsPDF)                                                                                                                                                                  |
+| AI          | Streaming Anthropic proxy on Cloudflare Pages Functions · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy                                                                                                                       |
+| AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                                                                                                                                                    |
+| Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                                                                                                                                                      |
+| Platform    | `/glossary` (20-term auto-linker) · `/blog` + `/changelog` (Markdown content) · `/pricing` · `/funnel` dashboard                                                                                                                                    |
+| Lead-gen    | Email capture · CTA slots · MDX export with frontmatter · HTML-export footer back-links                                                                                                                                                             |
+| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored, axe-clean App / Glossary / Pricing                                                                                                                                                   |
+| Hardening   | Top-level `ErrorBoundary` (Reload / Copy report / Reset) · on-demand Playwright smoke suite (`pnpm test:e2e`)                                                                                                                                       |
+| Persistence | Dexie (IndexedDB) — 10 tables, nested-directory schema v3, soft-delete, legacy-localStorage import on first run                                                                                                                                     |
 
 ## Stack (locked at M0)
 
@@ -72,7 +77,7 @@ from day one.
 | Markdown    | `markdown-it` + DOMPurify                                                                                               |
 | PWA         | `vite-plugin-pwa` (Workbox, `registerType: 'autoUpdate'`)                                                               |
 | Router      | `react-router-dom` v6                                                                                                   |
-| Tests       | Vitest + Testing Library + `fake-indexeddb` (281 tests, 100% pass) · `vitest-axe` a11y sweep · on-demand Playwright e2e |
+| Tests       | Vitest + Testing Library + `fake-indexeddb` (290 tests, 100% pass) · `vitest-axe` a11y sweep · on-demand Playwright e2e |
 | Lint/format | ESLint 9 (flat config, typed) + Prettier 3                                                                              |
 | Pre-commit  | Husky 9 + lint-staged                                                                                                   |
 | Edge        | **Cloudflare Pages Functions** (Workers runtime) — same-origin AI proxy at `/api/ai`                                    |
@@ -85,7 +90,7 @@ pnpm install
 pnpm dev            # http://localhost:5173
 pnpm build          # builds, generates sitemap, runs key-leak + bundle-budget gates
 pnpm preview        # serves the built bundle
-pnpm test           # Vitest + Testing Library (281 tests, ~10s)
+pnpm test           # Vitest + Testing Library (290 tests, ~12s)
 pnpm test:e2e       # on-demand: builds dist/, runs Playwright smoke suite (offline + 3 routes + manifest)
 pnpm typecheck
 pnpm lint
@@ -130,12 +135,12 @@ references, so `import()` chunks (jsPDF, html2canvas) don't count against the bu
 
 | Surface              | Gzip      | Loaded                                         |
 | -------------------- | --------- | ---------------------------------------------- |
-| Initial JS           | 178.47 KB | every page load (editor + Home only)           |
-| Initial CSS          | 8.09 KB   | every page load                                |
+| Initial JS           | 128.43 KB | every page load (editor + Home only)           |
+| Initial CSS          | 9.42 KB   | every page load                                |
 | Lazy platform routes | ~25 KB    | per route — glossary / blog / pricing / funnel |
 | Lazy `.pdf` chunk    | ~223 KB   | first `.pdf` export click only                 |
 | Lazy canvas chunk    | ~2.6 MB   | first canvas open (Excalidraw + deps)          |
-| **Budget**           | 180 KB    | initial JS — under by 1.53 KB                  |
+| **Budget**           | 180 KB    | initial JS, under by 51.57 KB                  |
 
 ## Milestone status
 
@@ -173,7 +178,7 @@ sveska/
                  ChecklistPane + PreviewPane + SlashCommands + FindReplace +
                  NotesRail + DraftRecoveryBanner + writingTimerStore +
                  ExportMenu + StatsModal + ClearConfirm
-    /notes       Dexie schema (8 tables) · noteRepo · tabsStore · snapshotRepo ·
+    /notes       Dexie schema (10 tables) · noteRepo · directoryRepo/store · tabsStore · snapshotRepo ·
                  draftRepo · prefs · editorPrefs · themeStore · inboxRepo ·
                  templatesRepo · snippetsRepo · uiStore · notesRailStore
     /markdown    markdown-it + DOMPurify renderer · ast · export

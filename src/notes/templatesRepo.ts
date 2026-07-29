@@ -111,14 +111,108 @@ const BUILTINS: BuiltinSeed[] = [
       '- [ ] ',
     ].join('\n'),
   },
+  {
+    id: 'builtin.directory-listing',
+    name: 'Directory listing',
+    body: [
+      '# <Business or provider name>',
+      '',
+      '## Listing facts',
+      '| Field | Value | Source |',
+      '| --- | --- | --- |',
+      '| Category |  |  |',
+      '| Service area |  |  |',
+      '| Website |  |  |',
+      '| Last verified |  |  |',
+      '',
+      '## Buyer fit',
+      '',
+      '## Services',
+      '- ',
+      '',
+      '## Evidence and provenance',
+      '- ',
+      '',
+      '## Review checklist',
+      '- [ ] Claims are source-backed',
+      '- [ ] Contact details are current',
+      '- [ ] Schema fields are complete',
+    ].join('\n'),
+  },
+  {
+    id: 'builtin.technical-spec',
+    name: 'Technical spec sheet',
+    body: [
+      '# Technical spec: <system>',
+      '',
+      '## Objective',
+      '',
+      '## Requirements',
+      '| ID | Requirement | Priority | Acceptance test |',
+      '| --- | --- | --- | --- |',
+      '| R-01 |  | Must |  |',
+      '',
+      '## Architecture',
+      '',
+      '## Data model',
+      '',
+      '## Security and privacy',
+      '- ',
+      '',
+      '## Failure modes',
+      '- ',
+      '',
+      '## Release gates',
+      '- [ ] Typecheck',
+      '- [ ] Tests',
+      '- [ ] Build',
+      '- [ ] Browser QA',
+    ].join('\n'),
+  },
+  {
+    id: 'builtin.product-launch',
+    name: 'Product launch plan',
+    body: [
+      '# Launch: <product>',
+      '',
+      '## Buyer, problem, offer',
+      '',
+      '## Launch goal',
+      '| KPI | Baseline | Target | Measurement |',
+      '| --- | --- | --- | --- |',
+      '|  |  |  |  |',
+      '',
+      '## Positioning and proof',
+      '- ',
+      '',
+      '## Distribution',
+      '- [ ] Search and GEO/AEO',
+      '- [ ] Owned audience',
+      '- [ ] Partnerships and outreach',
+      '- [ ] Paid media',
+      '',
+      '## Launch sequence',
+      '- [ ] Pre-launch',
+      '- [ ] Launch day',
+      '- [ ] Follow-up',
+      '',
+      '## Risks and kill criteria',
+      '- ',
+    ].join('\n'),
+  },
 ];
 
-/** Seed built-ins on first run. Idempotent — uses stable IDs. */
+/**
+ * Seed built-ins on first run.
+ *
+ * `put` keeps this safe when two app shells mount close together, such as a
+ * restored browser tab racing a fresh one. A check-then-add sequence can let
+ * both callers observe a missing stable ID and make one transaction fail with
+ * ConstraintError.
+ */
 export async function seedBuiltinTemplates(): Promise<void> {
   for (const seed of BUILTINS) {
-    const existing = await db().templates.get(seed.id);
-    if (existing) continue;
-    await db().templates.add({
+    await db().templates.put({
       id: seed.id,
       name: seed.name,
       body: seed.body,

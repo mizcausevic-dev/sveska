@@ -38,6 +38,8 @@ coverage
 # generated
 public/sitemap.xml
 *.tsbuildinfo
+extension/vite.config.js
+extension/vitest.config.js
 
 # scratch
 _tmp_final

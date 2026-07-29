@@ -42,6 +42,7 @@ describe('M1.T1.2 — snapshot repo', () => {
       body: 'current body',
       mode: 'text',
       tags: [],
+      directoryId: null,
       pinned: 0,
       createdAt: Date.now(),
       updatedAt: Date.now(),

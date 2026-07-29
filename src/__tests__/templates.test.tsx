@@ -26,12 +26,12 @@ async function renderApp(): Promise<void> {
 
 describe('M3.T3.4 — templates repo', () => {
   it('seedBuiltinTemplates is idempotent', async () => {
-    await seedBuiltinTemplates();
+    await Promise.all([seedBuiltinTemplates(), seedBuiltinTemplates()]);
     const first = await listTemplates();
     await seedBuiltinTemplates();
     const second = await listTemplates();
     expect(first.length).toBe(second.length);
-    expect(first.length).toBeGreaterThanOrEqual(5); // 5 built-ins
+    expect(first.length).toBeGreaterThanOrEqual(8);
   });
 
   it('createUserTemplate adds a row with kind=user', async () => {

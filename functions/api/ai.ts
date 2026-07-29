@@ -26,7 +26,7 @@
  *  - Secret: `ANTHROPIC_API_KEY` set via CF Pages → Settings → Environment
  *    variables (production scope). Without it the function 503s and the
  *    client degrades silently.
- *  - Default model: `claude-haiku-4-5-20251001`. Caller can override.
+ *  - Model: `claude-haiku-4-5-20251001`. The client cannot override it.
  */
 
 interface Env {
@@ -36,13 +36,17 @@ interface Env {
 interface IncomingBody {
   messages?: Array<{ role: 'user' | 'assistant'; content: string }>;
   system?: string;
-  model?: string;
   max_tokens?: number;
 }
 
 const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
+const MAX_REQUEST_CHARS = 64_000;
+const MAX_MESSAGES = 24;
+const MAX_MESSAGE_CHARS = 20_000;
+const MAX_SYSTEM_CHARS = 10_000;
+const MAX_TOKENS = 2_048;
 
 // Per-IP token bucket. 20 tokens, refilled at 1/3s (≈20 reqs/min steady).
 // Module-scope state lives for the lifetime of the Worker isolate.
@@ -70,11 +74,16 @@ function take(ip: string): boolean {
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  // Same-origin guard: reject cross-origin POSTs even though CSP already
-  // blocks them in the browser. Belt + suspenders.
+  // Require an exact same-origin match. Substring matching would accept an
+  // attacker-controlled origin such as https://sveska.studio.evil.example.
   const origin = request.headers.get('origin');
-  const host = request.headers.get('host') ?? '';
-  if (origin && !origin.includes(host)) {
+  let requestOrigin: string;
+  try {
+    requestOrigin = new URL(request.url).origin;
+  } catch {
+    return new Response('Bad request URL', { status: 400 });
+  }
+  if (!origin || origin !== requestOrigin) {
     return new Response('Forbidden', { status: 403 });
   }
 
@@ -96,13 +105,34 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   let body: IncomingBody;
   try {
-    body = (await request.json()) as IncomingBody;
+    const rawBody = await request.text();
+    if (rawBody.length > MAX_REQUEST_CHARS) {
+      return new Response('Request too large', { status: 413 });
+    }
+    body = JSON.parse(rawBody) as IncomingBody;
   } catch {
     return new Response('Bad JSON', { status: 400 });
   }
-  if (!Array.isArray(body.messages) || body.messages.length === 0) {
+  if (
+    !Array.isArray(body.messages) ||
+    body.messages.length === 0 ||
+    body.messages.length > MAX_MESSAGES ||
+    body.messages.some(
+      (message) =>
+        (message.role !== 'user' && message.role !== 'assistant') ||
+        typeof message.content !== 'string' ||
+        message.content.length === 0 ||
+        message.content.length > MAX_MESSAGE_CHARS,
+    ) ||
+    (body.system !== undefined &&
+      (typeof body.system !== 'string' || body.system.length > MAX_SYSTEM_CHARS))
+  ) {
     return new Response('messages[] required', { status: 400 });
   }
+  const maxTokens =
+    typeof body.max_tokens === 'number' && Number.isInteger(body.max_tokens)
+      ? Math.min(Math.max(body.max_tokens, 1), MAX_TOKENS)
+      : 1024;
 
   const upstream = await fetch(ANTHROPIC_URL, {
     method: 'POST',
@@ -113,8 +143,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       accept: 'text/event-stream',
     },
     body: JSON.stringify({
-      model: body.model ?? DEFAULT_MODEL,
-      max_tokens: body.max_tokens ?? 1024,
+      model: DEFAULT_MODEL,
+      max_tokens: maxTokens,
       stream: true,
       messages: body.messages,
       ...(body.system ? { system: body.system } : {}),

@@ -43,6 +43,9 @@ import { FindReplaceBar } from './FindReplace';
 import { AIResultPane } from '@/ai/AIResultPane';
 import { ExcalidrawCanvas } from '@/canvas/ExcalidrawCanvas';
 import { useCanvasView } from '@/canvas/canvasViewStore';
+import { TableModalHost } from './TableModal';
+import { openTableModal } from './tableModalStore';
+import { insertMarkdownTable } from './markdownTable';
 
 // Lazy — CodeMirror 6 is ~50 KB gzip; only loads when the user opts into the
 // rich editor (default off), so the initial textarea bundle is untouched.
@@ -63,6 +66,8 @@ const STATE_LABEL: Record<SaveState, string> = {
   error: 'save failed',
 };
 
+type MarkdownView = 'edit' | 'split' | 'preview';
+
 export function Editor(): React.JSX.Element {
   const activeNote = useTabs((s) => s.activeNote);
   const ready = useTabs((s) => s.ready);
@@ -73,7 +78,7 @@ export function Editor(): React.JSX.Element {
   const [body, setBody] = useState('');
   const [notesById, setNotesById] = useState<Record<string, Note>>({});
   const [selectionStart, setSelectionStart] = useState(0);
-  const [previewOn, setPreviewOn] = useState(true);
+  const [markdownView, setMarkdownView] = useState<MarkdownView>('split');
   const canvasOpen = useCanvasView((s) => s.open);
   const closeCanvas = useCanvasView((s) => s.set);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -237,7 +242,7 @@ export function Editor(): React.JSX.Element {
         void (async () => {
           await setNoteMode(activeNote.id, 'md');
           await refreshActiveNote();
-          setPreviewOn(true);
+          setMarkdownView('split');
         })();
       }
     },
@@ -256,10 +261,27 @@ export function Editor(): React.JSX.Element {
     }
   }
 
+  function onInsertTable(rows: number, columns: number): void {
+    if (!activeNote) return;
+    const insertion = insertMarkdownTable(body, selectionStart, rows, columns);
+    setBody(insertion.body);
+    setSelectionStart(insertion.cursor);
+    setMarkdownView('split');
+    if (activeNote.mode !== 'md') {
+      void setNoteMode(activeNote.id, 'md').then(() => refreshActiveNote());
+    }
+    requestAnimationFrame(() => {
+      const textarea = textareaRef.current;
+      if (!textarea) return;
+      textarea.selectionStart = textarea.selectionEnd = insertion.cursor;
+      textarea.focus();
+    });
+  }
+
   return (
     <section className="editor" aria-busy={!hydrated}>
       <TabBar tabs={tabs} activeTabId={activeTabId} notesById={notesById} activeBody={body} />
-      {activeNote && <TagsBar note={activeNote} />}
+      {activeNote && <TagsBar note={activeNote} onInsertTable={openTableModal} />}
       <div className="editor-actions">
         <SnapshotToolbar snapshots={snapshots} onAfterRestore={setBody} />
         <div className="editor-actions-secondary">
@@ -273,16 +295,37 @@ export function Editor(): React.JSX.Element {
             Stats
           </button>
           {activeNote?.mode === 'md' && (
-            <button
-              type="button"
-              className={`snap-btn${previewOn ? ' snap-btn--primary' : ''}`}
-              onClick={() => setPreviewOn((v) => !v)}
-              aria-pressed={previewOn}
-              data-testid="preview-toggle"
-              title="Toggle Markdown preview pane"
-            >
-              {previewOn ? 'Hide preview' : 'Show preview'}
-            </button>
+            <div className="md-view-switch" role="group" aria-label="Markdown view">
+              <button
+                type="button"
+                className="snap-btn"
+                onClick={() => setMarkdownView('edit')}
+                aria-pressed={markdownView === 'edit'}
+                data-testid="markdown-view-edit"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                className="snap-btn"
+                onClick={() =>
+                  setMarkdownView((current) => (current === 'split' ? 'edit' : 'split'))
+                }
+                aria-pressed={markdownView === 'split'}
+                data-testid="preview-toggle"
+              >
+                Split
+              </button>
+              <button
+                type="button"
+                className="snap-btn"
+                onClick={() => setMarkdownView('preview')}
+                aria-pressed={markdownView === 'preview'}
+                data-testid="markdown-view-preview"
+              >
+                Preview
+              </button>
+            </div>
           )}
           <ExportMenu note={activeNote} body={body} />
         </div>
@@ -291,6 +334,7 @@ export function Editor(): React.JSX.Element {
       <ClearConfirmHost />
       <VersionsModalHost liveBody={body} onRestore={setBody} />
       <DraftRecoveryBanner onKeep={setBody} />
+      <TableModalHost onInsert={onInsertTable} />
       <FindReplaceBar
         textareaRef={textareaRef}
         body={body}
@@ -306,78 +350,85 @@ export function Editor(): React.JSX.Element {
       ) : (
         <div
           className={`editor-input-wrap${
-            (activeNote?.mode === 'md' && previewOn) || activeNote?.mode === 'checklist'
+            (activeNote?.mode === 'md' && markdownView === 'split') ||
+            activeNote?.mode === 'checklist'
               ? ' editor-input-wrap--split'
+              : ''
+          }${
+            activeNote?.mode === 'md' && markdownView === 'preview'
+              ? ' editor-input-wrap--preview'
               : ''
           }`}
         >
-          {prefs.richEditor && activeNote && activeNote.mode !== 'checklist' ? (
-            <Suspense
-              fallback={
-                <div className="rich-editor-loading" data-testid="rich-editor-loading">
-                  Loading editor…
-                </div>
-              }
-            >
-              <LazyRichEditor
-                noteId={activeNote.id}
-                body={body}
-                prefs={prefs}
-                placeholder={PLACEHOLDER}
-                onChange={(value, sel) => {
-                  setBody(value);
-                  setSelectionStart(sel);
-                  useWritingTimer.getState().registerInput();
-                }}
-              />
-            </Suspense>
-          ) : (
-            <>
-              <textarea
-                ref={textareaRef}
-                className={`editor-input editor-input--paper-${prefs.paper}`}
-                value={body}
-                onChange={(e) => {
-                  setBody(e.target.value);
-                  setSelectionStart(e.target.selectionStart);
-                  useWritingTimer.getState().registerInput();
-                }}
-                onKeyUp={(e) => setSelectionStart(e.currentTarget.selectionStart)}
-                onClick={(e) => setSelectionStart(e.currentTarget.selectionStart)}
-                onKeyDown={onTextareaKeyDown}
-                onPaste={imagePaste.onPaste}
-                onDrop={imagePaste.onDrop}
-                onDragOver={imagePaste.onDragOver}
-                placeholder={PLACEHOLDER}
-                spellCheck={prefs.spellcheck}
-                autoFocus
-                aria-label="Note body"
-                data-testid="editor-textarea"
-                style={{
-                  fontSize: `${prefs.fontSize}px`,
-                  lineHeight: prefs.lineHeight,
-                  fontFamily: FONT_FAMILY_CSS[prefs.fontFamily],
-                  tabSize: prefs.tabSize,
-                }}
-              />
-              <SlashCommands
-                textareaRef={textareaRef}
-                value={body}
-                selectionStart={selectionStart}
-                onApply={(nextValue, nextCursor) => {
-                  setBody(nextValue);
-                  setSelectionStart(nextCursor);
-                  requestAnimationFrame(() => {
-                    const el = textareaRef.current;
-                    if (!el) return;
-                    el.selectionStart = el.selectionEnd = nextCursor;
-                    el.focus();
-                  });
-                }}
-              />
-            </>
-          )}
-          {activeNote?.mode === 'md' && previewOn && (
+          {!(activeNote?.mode === 'md' && markdownView === 'preview') &&
+            (prefs.richEditor && activeNote && activeNote.mode !== 'checklist' ? (
+              <Suspense
+                fallback={
+                  <div className="rich-editor-loading" data-testid="rich-editor-loading">
+                    Loading editor…
+                  </div>
+                }
+              >
+                <LazyRichEditor
+                  noteId={activeNote.id}
+                  body={body}
+                  selectionStart={selectionStart}
+                  prefs={prefs}
+                  placeholder={PLACEHOLDER}
+                  onChange={(value, sel) => {
+                    setBody(value);
+                    setSelectionStart(sel);
+                    useWritingTimer.getState().registerInput();
+                  }}
+                />
+              </Suspense>
+            ) : (
+              <>
+                <textarea
+                  ref={textareaRef}
+                  className={`editor-input editor-input--paper-${prefs.paper}`}
+                  value={body}
+                  onChange={(e) => {
+                    setBody(e.target.value);
+                    setSelectionStart(e.target.selectionStart);
+                    useWritingTimer.getState().registerInput();
+                  }}
+                  onKeyUp={(e) => setSelectionStart(e.currentTarget.selectionStart)}
+                  onClick={(e) => setSelectionStart(e.currentTarget.selectionStart)}
+                  onKeyDown={onTextareaKeyDown}
+                  onPaste={imagePaste.onPaste}
+                  onDrop={imagePaste.onDrop}
+                  onDragOver={imagePaste.onDragOver}
+                  placeholder={PLACEHOLDER}
+                  spellCheck={prefs.spellcheck}
+                  autoFocus
+                  aria-label="Note body"
+                  data-testid="editor-textarea"
+                  style={{
+                    fontSize: `${prefs.fontSize}px`,
+                    lineHeight: prefs.lineHeight,
+                    fontFamily: FONT_FAMILY_CSS[prefs.fontFamily],
+                    tabSize: prefs.tabSize,
+                  }}
+                />
+                <SlashCommands
+                  textareaRef={textareaRef}
+                  value={body}
+                  selectionStart={selectionStart}
+                  onApply={(nextValue, nextCursor) => {
+                    setBody(nextValue);
+                    setSelectionStart(nextCursor);
+                    requestAnimationFrame(() => {
+                      const el = textareaRef.current;
+                      if (!el) return;
+                      el.selectionStart = el.selectionEnd = nextCursor;
+                      el.focus();
+                    });
+                  }}
+                />
+              </>
+            ))}
+          {activeNote?.mode === 'md' && markdownView !== 'edit' && (
             <Suspense fallback={<div className="md-preview" aria-hidden="true" />}>
               <PreviewPane body={body} />
             </Suspense>

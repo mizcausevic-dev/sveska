@@ -1,28 +1,165 @@
-/* Sveska design tokens — dark-first. Import once at app root. */
+/* Sveska design tokens — dark-first. Import once at app root.
+ *
+ * Extended 2026-07-01: added named themes beyond dark/light (charcoal,
+ * midnight, sepia), a density preset system (compact/comfortable/spacious),
+ * and a spacing scale (--space-1..6). All new tokens are additive — existing
+ * CSS that uses --tap, --r-*, and color vars keeps working unchanged.
+ *
+ * The extension package (../../../extension) @imports this file so both
+ * clients share one token surface. When themes/density/spacing changes
+ * land, both surfaces pick them up.
+ *
+ * Selectors:
+ *   :root[data-theme="dark|light|charcoal|midnight|sepia"]
+ *   :root[data-density="compact|comfortable|spacious"]
+ * No attribute = dark theme + comfortable density (the historical default).
+ */
 :root {
-  --ink-900:#0C0C0E; --ink-800:#161619; --ink-700:#222228;
-  --paper:#F4EFE6;   --paper-dim:#B8B2A6;
-  --amber-500:#F2B544; --amber-600:#EDA92E; --amber-700:#C9871F;
-  --signal-400:#4FD6C4; --danger:#E5604D; --ok:#6FCF7F;
+  /* Base palette (shared across all themes; themes remap semantic vars below) */
+  --ink-900: #0c0c0e;
+  --ink-800: #161619;
+  --ink-700: #222228;
+  --paper: #f4efe6;
+  --paper-dim: #b8b2a6;
+  --amber-500: #f2b544;
+  --amber-600: #eda92e;
+  --amber-700: #c9871f;
+  --signal-400: #4fd6c4;
+  --danger: #e5604d;
+  --ok: #6fcf7f;
 
-  --bg:var(--ink-900); --surface:var(--ink-800); --raised:var(--ink-700);
-  --text:var(--paper); --text-dim:var(--paper-dim);
-  --accent:var(--amber-500); --accent-hover:var(--amber-600); --ai:var(--signal-400);
+  /* Semantic surface + text (default = dark theme) */
+  --bg: var(--ink-900);
+  --surface: var(--ink-800);
+  --raised: var(--ink-700);
+  --text: var(--paper);
+  --text-dim: var(--paper-dim);
+  --accent: var(--amber-500);
+  --accent-hover: var(--amber-600);
+  --ai: var(--signal-400);
 
-  --r-sm:8px; --r-md:12px; --r-lg:20px;
-  --font-display:"Bricolage Grotesque",system-ui,sans-serif;
-  --font-ui:"Satoshi","Manrope",system-ui,sans-serif;
-  --font-mono:"JetBrains Mono","iA Writer Quattro",ui-monospace,monospace;
-  --font-serif:"Newsreader",Georgia,serif;
-  --shadow:0 1px 0 rgba(255,255,255,.03),0 12px 32px rgba(0,0,0,.45);
-  --tap:44px;
+  /* Radius */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 20px;
+
+  /* Fonts */
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-ui: 'Satoshi', 'Manrope', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'iA Writer Quattro', ui-monospace, monospace;
+  --font-serif: 'Newsreader', Georgia, serif;
+
+  --shadow:
+    0 1px 0 rgba(255, 255, 255, 0.03), 0 12px 32px rgba(0, 0, 0, 0.45);
+
+  /* Spacing scale (default = comfortable density) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* Interactive target size */
+  --tap: 44px;
 }
-:root[data-theme="light"]{
-  --bg:var(--paper); --surface:#FBF8F1; --raised:#EFEADF;
-  --text:#15110A; --text-dim:#6B6457;
-  --accent:var(--amber-600); --accent-hover:var(--amber-700); --ai:var(--amber-700);
-  --shadow:0 1px 0 rgba(0,0,0,.02),0 12px 28px rgba(20,17,10,.10);
+
+/* ── Themes ────────────────────────────────────────────────────── */
+
+:root[data-theme='light'] {
+  --bg: var(--paper);
+  --surface: #fbf8f1;
+  --raised: #efeadf;
+  --text: #15110a;
+  --text-dim: #6b6457;
+  --accent: var(--amber-600);
+  --accent-hover: var(--amber-700);
+  --ai: var(--amber-700);
+  --shadow:
+    0 1px 0 rgba(0, 0, 0, 0.02), 0 12px 28px rgba(20, 17, 10, 0.1);
 }
-@media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]):not([data-theme="light"]){ color-scheme:light; }
+
+:root[data-theme='charcoal'] {
+  --bg: #101012;
+  --surface: #18181b;
+  --raised: #232327;
+  --text: #eceae5;
+  --text-dim: #98938a;
+  --accent: var(--amber-500);
+  --accent-hover: var(--amber-600);
+  --ai: var(--signal-400);
+  --shadow:
+    0 1px 0 rgba(255, 255, 255, 0.02), 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme='midnight'] {
+  --bg: #0a0e1a;
+  --surface: #101426;
+  --raised: #1a1f35;
+  --text: #e5ebf7;
+  --text-dim: #9ca6c0;
+  --accent: #7db9f5;
+  --accent-hover: #6ba6e8;
+  --ai: var(--signal-400);
+  --shadow:
+    0 1px 0 rgba(125, 185, 245, 0.04), 0 12px 32px rgba(0, 0, 0, 0.55);
+}
+
+:root[data-theme='sepia'] {
+  --bg: #f2e9d6;
+  --surface: #f9f2e1;
+  --raised: #eee3c9;
+  --text: #3a2d1a;
+  --text-dim: #7a6845;
+  --accent: #a66b1f;
+  --accent-hover: #8f5a15;
+  --ai: #a66b1f;
+  --shadow:
+    0 1px 0 rgba(0, 0, 0, 0.02), 0 10px 24px rgba(90, 60, 20, 0.1);
+}
+
+/* Native form widgets follow the theme brightness (scrollbars, checkboxes) */
+:root[data-theme='light'],
+:root[data-theme='sepia'] {
+  color-scheme: light;
+}
+:root[data-theme='dark'],
+:root[data-theme='charcoal'],
+:root[data-theme='midnight'] {
+  color-scheme: dark;
+}
+
+/* System preference — only when NO explicit theme is set */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+  }
+}
+
+/* ── Density presets ───────────────────────────────────────────── */
+
+:root[data-density='compact'] {
+  --space-1: 2px;
+  --space-2: 6px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-5: 18px;
+  --space-6: 24px;
+  --tap: 36px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+}
+
+:root[data-density='spacious'] {
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 16px;
+  --space-4: 22px;
+  --space-5: 32px;
+  --space-6: 44px;
+  --tap: 56px;
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
 }

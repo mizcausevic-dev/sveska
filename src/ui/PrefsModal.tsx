@@ -2,7 +2,16 @@ import { useEffect, useState } from 'react';
 import { Modal } from './Modal';
 import { ThemeSwitch } from './ThemeSwitch';
 import { closePrefs, usePrefsModal } from './prefsModalStore';
-import { useUIStore } from '@/notes/uiStore';
+import {
+  DENSITY_LABEL,
+  DENSITY_OPTIONS,
+  WORKSPACE_WIDTH_LABEL,
+  WORKSPACE_WIDTH_OPTIONS,
+  useUIStore,
+  type Density,
+  type WorkspaceWidth,
+} from '@/notes/uiStore';
+import { useThemeStore, type ThemeChoice } from '@/notes/themeStore';
 import {
   FONT_FAMILY_LABEL,
   PAPER_LABEL,
@@ -16,11 +25,37 @@ import { getRestoreSession, setRestoreSession } from '@/notes/tabsStore';
 const FAMILY_OPTIONS: FontFamily[] = ['mono', 'serif', 'ui', 'dyslexic'];
 const TAB_SIZE_OPTIONS = [2, 4, 8] as const;
 
+/**
+ * Named accent themes beyond the base dark/light/system trio. Kept as a
+ * secondary row (below ThemeSwitch) so the existing 3-button surface stays
+ * intact — smoke test expects a "Light" button inside the modal. Choosing
+ * an accent theme still routes through `useThemeStore.setTheme`, which
+ * writes the same `data-theme` attribute; tokens.css does the rest.
+ */
+const ACCENT_THEMES: readonly Exclude<ThemeChoice, 'dark' | 'light' | 'system'>[] = [
+  'charcoal',
+  'midnight',
+  'sepia',
+] as const;
+const ACCENT_LABEL: Record<(typeof ACCENT_THEMES)[number], string> = {
+  charcoal: 'Charcoal',
+  midnight: 'Midnight',
+  sepia: 'Sepia',
+};
+
 export function PrefsModalHost(): React.JSX.Element {
   const open = usePrefsModal((s) => s.open);
   const prefs = useEditorPrefs();
   const focus = useUIStore((s) => s.focus);
   const toggleFocus = useUIStore((s) => s.toggleFocus);
+  const density = useUIStore((s) => s.density);
+  const setDensity = useUIStore((s) => s.setDensity);
+  const hideNotesRail = useUIStore((s) => s.hideNotesRail);
+  const setHideNotesRail = useUIStore((s) => s.setHideNotesRail);
+  const workspaceWidth = useUIStore((s) => s.workspaceWidth);
+  const setWorkspaceWidth = useUIStore((s) => s.setWorkspaceWidth);
+  const themeChoice = useThemeStore((s) => s.choice);
+  const setTheme = useThemeStore((s) => s.setTheme);
   const [restoreSession, setRestoreSessionLocal] = useState(true);
 
   // Hydrate the restoreSession pref every time the modal opens so the toggle
@@ -43,6 +78,92 @@ export function PrefsModalHost(): React.JSX.Element {
           <span className="hint">Dark default · Light · System</span>
         </div>
         <ThemeSwitch />
+      </div>
+
+      {/* Accent themes — Phase 2. Extends the base theme with named
+          variants (charcoal / midnight / sepia). Selecting one writes the
+          same `data-theme` attribute; tokens.css does the rest. */}
+      <div className="row">
+        <div>
+          <div className="label">Accent theme</div>
+          <span className="hint">Charcoal · Midnight · Sepia (override base theme)</span>
+        </div>
+        <div className="seg" role="group" aria-label="Accent theme">
+          {ACCENT_THEMES.map((t) => (
+            <button
+              key={t}
+              type="button"
+              aria-pressed={themeChoice === t}
+              onClick={() => void setTheme(t)}
+              data-testid={`pref-theme-${t}`}
+            >
+              {ACCENT_LABEL[t]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Density — Phase 2. Scales spacing tokens + tap targets. */}
+      <div className="row">
+        <div>
+          <div className="label">Density</div>
+          <span className="hint">Compact · Comfortable · Spacious. Scales spacing + tap size.</span>
+        </div>
+        <div className="seg" role="group" aria-label="Density">
+          {DENSITY_OPTIONS.map((d: Density) => (
+            <button
+              key={d}
+              type="button"
+              aria-pressed={density === d}
+              onClick={() => void setDensity(d)}
+              data-testid={`pref-density-${d}`}
+            >
+              {DENSITY_LABEL[d]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="row">
+        <div>
+          <div className="label">Editor width</div>
+          <span className="hint">
+            Reading · Wide · Full. Full uses the available ultrawide workspace.
+          </span>
+        </div>
+        <div className="seg" role="group" aria-label="Editor width">
+          {WORKSPACE_WIDTH_OPTIONS.map((width: WorkspaceWidth) => (
+            <button
+              key={width}
+              type="button"
+              aria-pressed={workspaceWidth === width}
+              onClick={() => void setWorkspaceWidth(width)}
+              data-testid={`pref-workspace-${width}`}
+            >
+              {WORKSPACE_WIDTH_LABEL[width]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Notes rail visibility — Phase 2 panel-visibility toggle. */}
+      <div className="row">
+        <div>
+          <div className="label">Hide notes rail</div>
+          <span className="hint">Collapse the notes sidebar to reclaim editor width.</span>
+        </div>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={hideNotesRail}
+            onChange={(e) => void setHideNotesRail(e.target.checked)}
+            data-testid="pref-hide-rail"
+          />
+          <span className="switch-track" aria-hidden="true">
+            <span className="switch-thumb" />
+          </span>
+          <span className="switch-label">{hideNotesRail ? 'On' : 'Off'}</span>
+        </label>
       </div>
 
       {/* Editor section — M1.T1.6 */}

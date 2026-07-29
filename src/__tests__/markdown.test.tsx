@@ -142,4 +142,15 @@ describe('M3.T3.2 — UI: mode toggle + live preview', () => {
     await userEvent.click(screen.getByTestId('preview-toggle'));
     await waitFor(() => expect(screen.getByTestId('md-preview')).toBeInTheDocument());
   });
+
+  it('Preview view hides the editor and uses the full preview surface', async () => {
+    await renderApp();
+    await makeActiveNoteMarkdown();
+    await userEvent.click(screen.getByTestId('markdown-view-preview'));
+    await waitFor(() => expect(screen.getByTestId('md-preview')).toBeInTheDocument());
+    expect(screen.queryByTestId('editor-textarea')).not.toBeInTheDocument();
+    expect(screen.getByTestId('md-preview').parentElement).toHaveClass(
+      'editor-input-wrap--preview',
+    );
+  });
 });

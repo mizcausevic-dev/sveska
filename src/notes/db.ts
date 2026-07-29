@@ -9,10 +9,20 @@ export interface Note {
   body: string;
   mode: 'text' | 'md' | 'checklist';
   tags: string[];
+  directoryId: string | null;
   pinned: 0 | 1; // Dexie indexes don't accept booleans
   createdAt: number;
   updatedAt: number;
   deletedAt: number | null;
+}
+
+export interface Directory {
+  id: string;
+  name: string;
+  parentId: string | null;
+  order: number;
+  createdAt: number;
+  updatedAt: number;
 }
 
 export interface Version {
@@ -86,6 +96,7 @@ export class SveskaDB extends Dexie {
   templates!: EntityTable<Template, 'id'>;
   snippets!: EntityTable<Snippet, 'id'>;
   attachments!: EntityTable<Attachment, 'id'>;
+  directories!: EntityTable<Directory, 'id'>;
 
   constructor() {
     super('sveska');
@@ -104,6 +115,21 @@ export class SveskaDB extends Dexie {
     this.version(2).stores({
       attachments: 'id, noteId, createdAt',
     });
+    // v3 — nested local-first directories + a nullable note foreign key.
+    // Existing notes are explicitly moved to the unfiled root.
+    this.version(3)
+      .stores({
+        notes: 'id, updatedAt, pinned, deletedAt, directoryId, *tags',
+        directories: 'id, parentId, order, updatedAt',
+      })
+      .upgrade(async (tx) => {
+        await tx
+          .table('notes')
+          .toCollection()
+          .modify((note: Partial<Note>) => {
+            if (note.directoryId === undefined) note.directoryId = null;
+          });
+      });
   }
 }
 

@@ -1,0 +1,318 @@
+/*
+ * Sveska side-panel styles. The token file is @imported from the PWA's
+ * public/brand/tokens.css so both surfaces share one theme + density
+ * system. When new themes ship in that file, the extension picks them up
+ * automatically after a rebuild.
+ */
+@import '../../../public/brand/tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 260px;
+}
+
+.panel-loading {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid color-mix(in oklab, var(--text) 8%, transparent);
+  background: var(--surface);
+  gap: var(--space-2);
+}
+
+.panel-tabs {
+  display: inline-flex;
+  gap: var(--space-1);
+}
+
+.panel-tab {
+  background: transparent;
+  border: 0;
+  color: var(--text-dim);
+  font: inherit;
+  font-weight: 600;
+  padding: var(--space-2) var(--space-3);
+  min-height: var(--tap);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+.panel-tab.is-active {
+  color: var(--text);
+  background: var(--raised);
+}
+.panel-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.panel-theme-toggle {
+  background: transparent;
+  border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+  color: var(--text);
+  width: var(--tap);
+  height: var(--tap);
+  border-radius: var(--r-sm);
+  font-size: 16px;
+  cursor: pointer;
+}
+.panel-theme-toggle:hover {
+  background: var(--raised);
+}
+.panel-theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Empty state ────────────────────────────────────────────── */
+
+.panel-empty {
+  display: grid;
+  place-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-dim);
+  flex: 1;
+}
+
+.panel-primary-btn {
+  background: var(--accent);
+  color: var(--ink-900);
+  border: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--r-md);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  min-height: var(--tap);
+}
+.panel-primary-btn:hover {
+  background: var(--accent-hover);
+}
+
+/* ── Tasks + Notebook shared ────────────────────────────────── */
+
+.tasks-panel,
+.notebook-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  flex: 1;
+  min-height: 0;
+}
+
+.tasks-list-picker,
+.notebook-picker {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.tasks-list-picker select,
+.notebook-picker select {
+  flex: 1;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+  border-radius: var(--r-sm);
+  padding: 0 var(--space-2);
+  min-height: var(--tap);
+  font: inherit;
+}
+
+.tasks-list-add,
+.notebook-add {
+  background: var(--raised);
+  color: var(--text);
+  border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+  border-radius: var(--r-sm);
+  width: var(--tap);
+  height: var(--tap);
+  font-size: 20px;
+  cursor: pointer;
+}
+.tasks-list-add:hover,
+.notebook-add:hover {
+  background: color-mix(in oklab, var(--raised) 80%, var(--text) 4%);
+}
+
+.tasks-list-title,
+.notebook-title {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+  color: var(--text);
+  padding: var(--space-2) 0;
+  font: inherit;
+  font-weight: 700;
+  font-size: 16px;
+}
+.tasks-list-title:focus,
+.notebook-title:focus {
+  outline: 0;
+  border-bottom-color: var(--accent);
+}
+
+/* ── Tasks-specific ─────────────────────────────────────────── */
+
+.tasks-rows {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.tasks-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--r-sm);
+}
+.tasks-row:hover {
+  background: var(--surface);
+}
+
+.tasks-row input[type='checkbox'] {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.tasks-row-text {
+  flex: 1;
+  word-break: break-word;
+}
+.tasks-row-text.is-done {
+  color: var(--text-dim);
+  text-decoration: line-through;
+}
+
+.tasks-row-delete {
+  background: transparent;
+  border: 0;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0 var(--space-2);
+}
+.tasks-row-delete:hover {
+  color: var(--danger);
+}
+
+.tasks-add-row {
+  display: flex;
+  gap: var(--space-2);
+}
+.tasks-add-row input {
+  flex: 1;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+  border-radius: var(--r-sm);
+  padding: 0 var(--space-2);
+  min-height: var(--tap);
+  font: inherit;
+}
+.tasks-add-row input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.tasks-add-row button {
+  background: var(--accent);
+  color: var(--ink-900);
+  border: 0;
+  border-radius: var(--r-sm);
+  padding: 0 var(--space-4);
+  min-height: var(--tap);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tasks-add-row button:hover {
+  background: var(--accent-hover);
+}
+
+.tasks-list-delete,
+.notebook-delete {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid color-mix(in oklab, var(--danger) 40%, transparent);
+  color: var(--danger);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--r-sm);
+  font: inherit;
+  cursor: pointer;
+}
+.tasks-list-delete:hover,
+.notebook-delete:hover {
+  background: color-mix(in oklab, var(--danger) 12%, transparent);
+}
+
+/* ── Notebook-specific ──────────────────────────────────────── */
+
+.notebook-body {
+  flex: 1;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid color-mix(in oklab, var(--text) 12%, transparent);
+  border-radius: var(--r-sm);
+  padding: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  min-height: 200px;
+}
+.notebook-body:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}

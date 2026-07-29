@@ -14,11 +14,15 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps): React.JSX.Element {
   const focus = useUIStore((s) => s.focus);
   const toggleFocus = useUIStore((s) => s.toggleFocus);
+  const hideNotesRail = useUIStore((s) => s.hideNotesRail);
+  const workspaceWidth = useUIStore((s) => s.workspaceWidth);
   const railOpen = useNotesRail((s) => s.open);
   const location = useLocation();
-  // Show the rail only on the editor route + only outside focus mode.
-  const showRail = !focus && location.pathname === '/';
-  const shellMod = `${focus ? ' app-shell--focus' : ''}${
+  const editorRoute = location.pathname === '/';
+  // Show the rail only on the editor route, outside focus mode, and
+  // when the user hasn't opted to hide it via prefs (Phase 2).
+  const showRail = !focus && editorRoute && !hideNotesRail;
+  const shellMod = `${editorRoute ? ' app-shell--editor' : ''}${focus ? ' app-shell--focus' : ''}${
     showRail ? (railOpen ? ' app-shell--rail-open' : ' app-shell--rail-collapsed') : ''
   }`;
   return (
@@ -73,7 +77,12 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
       </header>
       <div className="app-body">
         {showRail && <NotesRail />}
-        <main className="app-main" id="main">
+        <main
+          className={`app-main${
+            editorRoute ? ` app-main--editor app-main--workspace-${workspaceWidth}` : ''
+          }`}
+          id="main"
+        >
           {children}
         </main>
       </div>

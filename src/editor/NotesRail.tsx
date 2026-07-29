@@ -1,13 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
-import { type Note } from '@/notes/db';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
+import { type Directory, type Note } from '@/notes/db';
 import { listNotes } from '@/notes/noteRepo';
 import { useTabs } from '@/notes/tabsStore';
 import { useNotesRail, type RailFilter } from '@/notes/notesRailStore';
-import { useRef } from 'react';
 import { countUnprocessed } from '@/notes/inboxRepo';
 import { openInbox, useInboxModal } from '@/ui/inboxModalStore';
 import { openSearch } from '@/ui/searchModalStore';
 import { importFiles } from '@/lib/importFiles';
+import { useDirectories } from '@/notes/directoryStore';
+import {
+  directoryDescendantIds,
+  flattenDirectories,
+  type FlatDirectory,
+} from '@/notes/directoryRepo';
 
 const RECENT_LIMIT = 8;
 
@@ -38,6 +43,14 @@ export function NotesRail(): React.JSX.Element {
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [inboxCount, setInboxCount] = useState(0);
+  const directories = useDirectories((s) => s.directories);
+  const selectedDirectoryId = useDirectories((s) => s.selectedId);
+  const selectDirectory = useDirectories((s) => s.select);
+  const bootstrapDirectories = useDirectories((s) => s.bootstrap);
+
+  useEffect(() => {
+    void bootstrapDirectories();
+  }, [bootstrapDirectories]);
 
   async function handleImport(files: FileList | File[] | null): Promise<void> {
     if (!files || (files instanceof FileList ? files.length === 0 : files.length === 0)) return;
@@ -52,7 +65,14 @@ export function NotesRail(): React.JSX.Element {
     void (async () => {
       setNotes(await listNotes());
     })();
-  }, [tabs.length, activeNote?.id, activeNote?.title, activeNote?.pinned, activeNote?.tags]);
+  }, [
+    tabs.length,
+    activeNote?.id,
+    activeNote?.title,
+    activeNote?.pinned,
+    activeNote?.tags,
+    activeNote?.directoryId,
+  ]);
 
   // Refresh the inbox badge whenever the inbox modal closes (most likely
   // moment a row was processed/added) or on first mount.
@@ -63,9 +83,21 @@ export function NotesRail(): React.JSX.Element {
     })();
   }, [inboxOpen]);
 
-  const visible = useMemo(() => applyFilter(notes, filter), [notes, filter]);
+  const selectedDirectoryIds = useMemo(
+    () => (selectedDirectoryId ? directoryDescendantIds(directories, selectedDirectoryId) : null),
+    [directories, selectedDirectoryId],
+  );
+  const visible = useMemo(() => {
+    const filtered = applyFilter(notes, filter);
+    if (!selectedDirectoryIds) return filtered;
+    return filtered.filter(
+      (note) => note.directoryId !== null && selectedDirectoryIds.has(note.directoryId),
+    );
+  }, [filter, notes, selectedDirectoryIds]);
   const pinned = visible.filter((n) => n.pinned === 1);
-  const recent = visible.filter((n) => n.pinned !== 1).slice(0, RECENT_LIMIT);
+  const recent = selectedDirectoryId
+    ? visible.filter((n) => n.pinned !== 1)
+    : visible.filter((n) => n.pinned !== 1).slice(0, RECENT_LIMIT);
 
   // Build the tag set across all notes for the filter dropdown.
   const allTags = useMemo(() => {
@@ -169,6 +201,12 @@ export function NotesRail(): React.JSX.Element {
           Import…
         </button>
       </div>
+      <DirectoryBrowser
+        directories={directories}
+        selectedId={selectedDirectoryId}
+        onSelect={selectDirectory}
+        onNotesMoved={async () => setNotes(await listNotes())}
+      />
       <div className="rail-filter">
         <label htmlFor="rail-filter-select" className="visually-hidden">
           Filter notes
@@ -202,7 +240,7 @@ export function NotesRail(): React.JSX.Element {
         />
       )}
       <RailSection
-        label="Recent"
+        label={selectedDirectoryId ? 'Notes' : 'Recent'}
         notes={recent}
         activeId={activeNote?.id ?? null}
         onSelect={(id) => void openNote(id)}
@@ -212,6 +250,176 @@ export function NotesRail(): React.JSX.Element {
         }
       />
     </aside>
+  );
+}
+
+interface DirectoryEditorState {
+  kind: 'create' | 'rename';
+  parentId: string | null;
+  id: string | null;
+  value: string;
+}
+
+function DirectoryBrowser({
+  directories,
+  selectedId,
+  onSelect,
+  onNotesMoved,
+}: {
+  directories: Directory[];
+  selectedId: string | null;
+  onSelect: (id: string | null) => void;
+  onNotesMoved: () => Promise<void>;
+}): React.JSX.Element {
+  const create = useDirectories((s) => s.create);
+  const rename = useDirectories((s) => s.rename);
+  const remove = useDirectories((s) => s.remove);
+  const rows = useMemo(() => flattenDirectories(directories), [directories]);
+  const [editor, setEditor] = useState<DirectoryEditorState | null>(null);
+
+  function beginCreate(parentId: string | null): void {
+    setEditor({ kind: 'create', parentId, id: null, value: '' });
+  }
+
+  function beginRename(row: FlatDirectory): void {
+    setEditor({
+      kind: 'rename',
+      parentId: row.parentId,
+      id: row.id,
+      value: row.name,
+    });
+  }
+
+  async function commit(): Promise<void> {
+    const name = editor?.value.trim();
+    if (!editor || !name) return;
+    if (editor.kind === 'create') {
+      const created = await create(name, editor.parentId);
+      onSelect(created.id);
+    } else if (editor.id) {
+      await rename(editor.id, name);
+    }
+    setEditor(null);
+  }
+
+  async function removeDirectory(row: FlatDirectory): Promise<void> {
+    const confirmed = window.confirm(
+      `Delete "${row.name}" and its subfolders? Notes will be moved to All notes.`,
+    );
+    if (!confirmed) return;
+    await remove(row.id);
+    await onNotesMoved();
+  }
+
+  return (
+    <section className="directory-browser" aria-label="Directories" data-testid="directory-browser">
+      <header className="directory-header">
+        <span className="rail-section-label mono">Directories</span>
+        <button
+          type="button"
+          className="directory-add"
+          onClick={() => beginCreate(null)}
+          aria-label="New top-level directory"
+          title="New top-level directory"
+          data-testid="directory-new-root"
+        >
+          + New
+        </button>
+      </header>
+      {editor && (
+        <div className="directory-editor" data-testid="directory-editor">
+          <input
+            type="text"
+            value={editor.value}
+            onChange={(event) =>
+              setEditor((current) =>
+                current ? { ...current, value: event.target.value } : current,
+              )
+            }
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                void commit();
+              }
+              if (event.key === 'Escape') setEditor(null);
+            }}
+            placeholder={editor.kind === 'create' ? 'Directory name…' : 'Rename directory…'}
+            aria-label={editor.kind === 'create' ? 'Directory name' : 'Rename directory'}
+            autoFocus
+            data-testid="directory-name-input"
+          />
+          <button
+            type="button"
+            className="directory-editor-save"
+            onClick={() => void commit()}
+            disabled={!editor.value.trim()}
+          >
+            Save
+          </button>
+          <button type="button" className="directory-editor-cancel" onClick={() => setEditor(null)}>
+            Cancel
+          </button>
+        </div>
+      )}
+      <ul className="directory-tree">
+        <li>
+          <button
+            type="button"
+            className={`directory-select${selectedId === null ? ' directory-select--active' : ''}`}
+            onClick={() => onSelect(null)}
+            data-testid="directory-all"
+          >
+            <span aria-hidden="true">⌂</span>
+            <span>All notes</span>
+          </button>
+        </li>
+        {rows.map((row) => (
+          <li
+            key={row.id}
+            className="directory-row"
+            style={{ '--directory-depth': row.depth } as CSSProperties}
+          >
+            <button
+              type="button"
+              className={`directory-select${
+                selectedId === row.id ? ' directory-select--active' : ''
+              }`}
+              onClick={() => onSelect(row.id)}
+              data-testid={`directory-${row.id}`}
+            >
+              <span aria-hidden="true">▱</span>
+              <span className="directory-name">{row.name}</span>
+            </button>
+            <span className="directory-actions">
+              <button
+                type="button"
+                onClick={() => beginCreate(row.id)}
+                aria-label={`Add subdirectory to ${row.name}`}
+                title="Add subdirectory"
+              >
+                +
+              </button>
+              <button
+                type="button"
+                onClick={() => beginRename(row)}
+                aria-label={`Rename ${row.name}`}
+                title="Rename"
+              >
+                ✎
+              </button>
+              <button
+                type="button"
+                onClick={() => void removeDirectory(row)}
+                aria-label={`Delete ${row.name}`}
+                title="Delete directory"
+              >
+                ×
+              </button>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

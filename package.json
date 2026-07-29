@@ -83,5 +83,12 @@
     "*.{json,css,md,html}": [
       "prettier --write"
     ]
+  },
+  "pnpm": {
+    "overrides": {
+      "immutable": "4.3.9",
+      "linkify-it": "5.0.2",
+      "lodash-es": "4.18.1"
+    }
   }
 }

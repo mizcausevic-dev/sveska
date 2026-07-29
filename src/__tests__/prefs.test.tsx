@@ -5,7 +5,8 @@ import { App } from '@/app/App';
 import { bootstrapTheme } from '@/notes/themeStore';
 import { bootstrapUI } from '@/notes/uiStore';
 import { bootstrapEditorPrefs, DEFAULT_EDITOR_PREFS, useEditorPrefs } from '@/notes/editorPrefs';
-import { getPref, PREF_KEYS_EDITOR } from '@/notes/prefs';
+import { getPref, PREF_KEYS_EDITOR, PREF_KEYS_UI } from '@/notes/prefs';
+import { useUIStore } from '@/notes/uiStore';
 
 describe('M1.T1.6 — editor prefs (store + persistence)', () => {
   it('defaults match BRAND.md spec (17 / 1.7 / mono / spellcheck on / tab 2)', () => {
@@ -136,5 +137,17 @@ describe('M1.T1.6 — prefs modal + editor wiring', () => {
     await userEvent.click(screen.getByTestId('pref-reset'));
     await waitFor(() => expect(useEditorPrefs.getState().fontSize).toBe(17));
     expect(useEditorPrefs.getState().fontFamily).toBe('mono');
+  });
+
+  it('editor width preference persists and updates the workspace class', async () => {
+    await renderApp();
+    fireEvent.keyDown(window, { key: ',', ctrlKey: true });
+    await waitFor(() => screen.getByRole('dialog'));
+    await userEvent.click(screen.getByTestId('pref-workspace-full'));
+    await waitFor(() => expect(useUIStore.getState().workspaceWidth).toBe('full'));
+    expect(document.querySelector('main')).toHaveClass('app-main--workspace-full');
+    await waitFor(async () => {
+      expect(await getPref<string>(PREF_KEYS_UI.workspaceWidth)).toBe('full');
+    });
   });
 });

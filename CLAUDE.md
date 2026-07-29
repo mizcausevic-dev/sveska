@@ -76,7 +76,8 @@ sveska/
 ## 4. Data model (Dexie)
 
 ```ts
-notes:     id, title, body, mode('text'|'md'|'checklist'), tags[], pinned, createdAt, updatedAt, deletedAt
+notes:     id, title, body, mode('text'|'md'|'checklist'), tags[], directoryId|null, pinned, createdAt, updatedAt, deletedAt
+directories: id, name, parentId?, order, createdAt, updatedAt       // nested local notebooks
 versions:  id, noteId, body, snapshotAt, label?            // local history + named snapshots
 canvas:    id, noteId, providerId, doc(blob)               // canvas per note (optional)
 tabs:      id, order, noteId, active                        // session restore
@@ -84,6 +85,7 @@ prefs:     key, value                                       // single-row settin
 inbox:     id, text, capturedAt, processed                  // quick-capture
 templates: id, name, body, kind
 snippets:  id, trigger, body
+attachments: id, noteId, blob, mime, name, createdAt
 ```
 
 Soft-delete via `deletedAt`. Migration step: import legacy `localStorage["note"]` → first note, then clear key.
@@ -173,8 +175,39 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 | --- | ---------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 1   | Canvas vendor    | ✅ DECIDED | Excalidraw (MIT), vendored + pinned, lazy-loaded behind CanvasProvider. tldraw dropped — no license exposure.                                                                                                                              |
 | 2   | Edge host        | ✅ DECIDED | **Cloudflare Pages Functions** (2026-05-17, M7+ migration). Same architecture as the prior Netlify Edge choice; switched after Netlify credit cap. Workers runtime, same-origin, free-tier headroom (500 builds/mo + unlimited bandwidth). |
-| 3   | Sync (post-M6)   | Miz        | Only if E2E-encrypted.                                                                                                                                                                                                                     |
+| 3   | Sync (post-M6)   | Miz        | Only if E2E-encrypted. Gates the extension ↔ PWA data reconciliation too (see §10).                                                                                                                                                        |
 | 4   | Analytics vendor | Miz        | Cookieless/self-host; consent-gated.                                                                                                                                                                                                       |
+
+## 10. Sibling package — `/extension` (Chrome side panel, MV3)
+
+Shipped 2026-07-01. Standalone sibling package inside the same repo, its own `package.json` / `tsconfig.json` / `vite.config.ts` / `manifest.json`. Not a monorepo workspace.
+
+### 10.1 Data boundary — **NOT synced with the PWA**
+
+- Extension notes live ONLY in `chrome.storage.local`, keyed under `sveska:v1:*` (see `extension/src/storage/notesStorage.ts`).
+- Extension does NOT read the PWA's IndexedDB, does NOT talk to any network endpoint, does NOT authenticate.
+- Cross-store sync stays gated on §5.5 (E2E-encrypted or not shipped). Do not add a sync bridge without the ADR.
+
+### 10.2 Type + ID parity
+
+- `Note` type in `extension/src/types/note.ts` is duplicated verbatim from `src/notes/db.ts`. If one shape changes, both must.
+- ID generator in `extension/src/lib/id.ts` wraps `crypto.randomUUID()` — the same primitive used at `src/notes/noteRepo.ts:12`. Do NOT introduce a separate ID scheme in either surface; a future sync layer relies on both surfaces speaking the same UUID.
+
+### 10.3 Permissions — locked minimal
+
+`manifest.json` permissions are exactly `["sidePanel", "storage"]`. No `host_permissions`. No tabs / activeTab / webNavigation / cookies / identity / content scripts. Smaller permission footprints are a Web Store trust signal and an AppSec default. Do not add anything "just in case."
+
+### 10.4 MV3 CSP — no `eval`, no `new Function`
+
+MV3's default extension CSP is `script-src 'self'; object-src 'self'`. Both `eval()` and `new Function(...)` throw at runtime under this policy. Recon-stage source-level greps against the current dep set (markdown-it, DOMPurify, all `@codemirror/*`, React) came back clean. **A build gate (`extension/scripts/check-no-eval.mjs`) walks `dist/` after `vite build` and fails the build if either token appears** — this defends against a bundler transform sneaking eval in. If you add a dep to the extension, run `pnpm build` and confirm the gate still passes before merging.
+
+### 10.5 Shared token surface
+
+`extension/src/styles/panel.css` `@imports` `public/brand/tokens.css` — one file, two consumers. Adding a new theme or density preset in `tokens.css` picks up in both surfaces on rebuild. Do NOT duplicate the token file. If tokens ever move, update both `import` sites atomically.
+
+### 10.6 Publishing — deferred
+
+Chrome Web Store submission requires a developer account, privacy disclosure, and store listing. Not automated. `pnpm build` in `/extension` produces a load-unpackable `dist/`; distribution is Miz's decision, not an autonomous step.
 
 ---
 

@@ -27,6 +27,7 @@ import { type EditorPrefs, FONT_FAMILY_CSS } from '@/notes/editorPrefs';
 interface Props {
   noteId: string;
   body: string;
+  selectionStart: number;
   prefs: EditorPrefs;
   placeholder: string;
   onChange: (value: string, selectionStart: number) => void;
@@ -72,6 +73,7 @@ function buildTheme(prefs: EditorPrefs): ReturnType<typeof EditorView.theme> {
 export function RichEditor({
   noteId,
   body,
+  selectionStart,
   prefs,
   placeholder,
   onChange,
@@ -184,8 +186,9 @@ export function RichEditor({
     if (current === body) return;
     view.dispatch({
       changes: { from: 0, to: current.length, insert: body },
+      selection: { anchor: Math.max(0, Math.min(body.length, selectionStart)) },
     });
-  }, [body]);
+  }, [body, selectionStart]);
 
   // Prefs change → reconfigure the theme compartment (no view recreation).
   useEffect(() => {

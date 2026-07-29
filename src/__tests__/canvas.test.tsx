@@ -52,12 +52,15 @@ describe('M5.T5.1 — Canvas view store + toggle UI', () => {
 
     await userEvent.click(screen.getByTestId('canvas-toggle'));
     await waitFor(() => expect(useCanvasView.getState().open).toBe(true));
-    // The lazy vendor chunk won't actually resolve in jsdom, but the wrapper
-    // div (with the Suspense fallback) renders synchronously.
     await waitFor(() => expect(screen.getByTestId('canvas-pane')).toBeInTheDocument());
     expect(screen.getByTestId('editor-canvas-wrap')).toBeInTheDocument();
-    // While loading, the fallback is what the user sees.
-    expect(screen.getByTestId('canvas-loading')).toBeInTheDocument();
+    // Depending on module-cache timing, jsdom can observe either the
+    // Suspense fallback or the resolved Excalidraw test stub.
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId('canvas-loading') ?? screen.queryByTestId('excalidraw-stub'),
+      ).toBeInTheDocument();
+    });
   });
 
   it('opening a different note closes the canvas pane', async () => {

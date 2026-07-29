@@ -18,6 +18,7 @@ import { downloadImage } from '@/ai/renderImage';
 import { runAI, type AIError } from '@/ai/aiClient';
 import { openCanvasView, useCanvasView } from '@/canvas/canvasViewStore';
 import { toBlogMdx, slugify as contentSlugify } from '@/platform/content';
+import { openTableModal } from '@/editor/tableModalStore';
 
 /**
  * Static catalog of every user-facing action (M3.T3.1).
@@ -221,6 +222,13 @@ export function buildCommandCatalog(): PaletteCommand[] {
       shortcut: 'Ctrl + Del',
       group: 'editor',
       run: () => useEditorCommands.getState().run('clear.body.request'),
+    },
+    {
+      id: 'insert.table',
+      label: 'Insert Markdown table…',
+      keywords: 'grid rows columns spreadsheet',
+      group: 'editor',
+      run: openTableModal,
     },
 
     // ─── view ──────────────────────────────────────────────────────────────

@@ -14,6 +14,7 @@ function makeNote(overrides: Partial<Note> = {}): Note {
     body: '',
     mode: 'text',
     tags: [],
+    directoryId: null,
     pinned: 0,
     createdAt: 0,
     updatedAt: 0,

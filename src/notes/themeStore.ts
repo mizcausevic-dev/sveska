@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { getPref, PREF_KEYS, setPref } from './prefs';
 
-export type ThemeChoice = 'dark' | 'light' | 'system';
+export type ThemeChoice = 'dark' | 'light' | 'system' | 'charcoal' | 'midnight' | 'sepia';
 export type ResolvedTheme = 'dark' | 'light';
 
 interface ThemeState {
@@ -10,7 +10,23 @@ interface ThemeState {
   setTheme: (choice: ThemeChoice) => Promise<void>;
 }
 
-const VALID: ReadonlySet<ThemeChoice> = new Set<ThemeChoice>(['dark', 'light', 'system']);
+const VALID: ReadonlySet<ThemeChoice> = new Set<ThemeChoice>([
+  'dark',
+  'light',
+  'system',
+  'charcoal',
+  'midnight',
+  'sepia',
+]);
+
+/** Named themes → their base brightness, for the theme-color meta + system detection. */
+const BRIGHTNESS: Record<Exclude<ThemeChoice, 'system'>, ResolvedTheme> = {
+  dark: 'dark',
+  light: 'light',
+  charcoal: 'dark',
+  midnight: 'dark',
+  sepia: 'light',
+};
 
 function osPrefersLight(): boolean {
   if (typeof window === 'undefined' || !window.matchMedia) return false;
@@ -19,7 +35,7 @@ function osPrefersLight(): boolean {
 
 function resolveChoice(choice: ThemeChoice): ResolvedTheme {
   if (choice === 'system') return osPrefersLight() ? 'light' : 'dark';
-  return choice;
+  return BRIGHTNESS[choice];
 }
 
 function applyDom(choice: ThemeChoice, resolved: ResolvedTheme): void {

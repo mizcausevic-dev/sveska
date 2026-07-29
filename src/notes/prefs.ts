@@ -17,6 +17,11 @@ export const PREF_KEYS = {
 export const PREF_KEYS_UI = {
   focus: 'ui.focus',
   restoreSession: 'ui.restoreSession',
+  // Phase 2 chrome-preferences (2026-07-01): density preset + notes-rail
+  // visibility toggle. Both apply via html attribute + persist in Dexie.
+  density: 'ui.density',
+  hideNotesRail: 'ui.hideNotesRail',
+  workspaceWidth: 'ui.workspaceWidth',
 } as const;
 
 export const PREF_KEYS_EDITOR = {
