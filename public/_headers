@@ -26,5 +26,6 @@
 /share-target/recover.js
   Cache-Control: no-cache, no-store, must-revalidate
 
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
+# Cloudflare Pages manages versioned static-asset caching and invalidation.
+# Do not add an immutable /assets/* override here: an SPA fallback response
+# at a missing asset URL can otherwise be cached as HTML for a full year.
