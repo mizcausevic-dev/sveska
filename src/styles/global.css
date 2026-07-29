@@ -1132,7 +1132,7 @@ input[type='range'] {
   letter-spacing: 0.02em;
   flex: 0 0 auto;
   min-width: 0;
-  max-width: 216px;
+  max-width: 214px;
   position: relative;
   transition:
     background-color 120ms ease,
