@@ -1098,43 +1098,45 @@ input[type='range'] {
  * ────────────────────────────────────────────────────────── */
 .tab-bar {
   display: flex;
-  align-items: stretch;
-  gap: 4px;
-  padding: 6px 6px 0;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 6px;
   background: var(--surface);
   border: 1px solid var(--border-soft);
-  border-bottom: 0;
-  border-radius: var(--r-md) var(--r-md) 0 0;
+  border-radius: var(--r-md);
   min-width: 0;
 }
 
 .tab-bar-list {
   display: flex;
-  flex: 1;
+  flex: 1 1 auto;
   flex-wrap: wrap;
-  align-items: stretch;
-  gap: 2px;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 4px;
   min-width: 0;
 }
 
 .tab-chip {
   display: inline-flex;
-  align-items: stretch;
+  align-items: center;
   gap: 4px;
   height: 30px;
   padding: 0 6px 0 10px;
-  border-radius: 8px 8px 0 0;
+  border: 1px solid transparent;
+  border-radius: 7px;
   background: transparent;
   color: var(--text-dim);
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.02em;
-  flex: 1 1 150px;
-  min-width: 108px;
-  max-width: 240px;
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: 220px;
   position: relative;
   transition:
     background-color 120ms ease,
+    border-color 120ms ease,
     color 120ms ease;
   user-select: none;
 }
@@ -1145,12 +1147,9 @@ input[type='range'] {
 }
 
 .tab-chip--active {
-  background: var(--bg);
+  background: color-mix(in oklab, var(--accent) 9%, var(--bg));
+  border-color: color-mix(in oklab, var(--accent) 42%, var(--border-soft));
   color: var(--text);
-  box-shadow:
-    inset 1px 0 0 var(--border-soft),
-    inset -1px 0 0 var(--border-soft),
-    inset 0 1px 0 var(--border-soft);
 }
 
 .tab-activate {
@@ -1158,8 +1157,9 @@ input[type='range'] {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
+  max-width: 182px;
   cursor: pointer;
   color: inherit;
   font: inherit;
@@ -1175,12 +1175,10 @@ input[type='range'] {
 .tab-chip--active::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 6px;
-  right: 6px;
-  height: 2px;
+  inset: auto 8px -1px;
+  height: 1px;
   background: var(--accent);
-  border-radius: 2px;
+  border-radius: 1px;
 }
 
 .tab-dot {
@@ -1201,7 +1199,9 @@ input[type='range'] {
 }
 
 .tab-title {
-  flex: 1;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 158px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1271,8 +1271,7 @@ input[type='range'] {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-left: 4px;
-  align-self: flex-end;
+  align-self: flex-start;
   transition:
     background-color 120ms ease,
     color 120ms ease;
@@ -1988,15 +1987,15 @@ input[type='range'] {
     max-width: none;
   }
   .tab-bar-list {
-    max-height: 62px;
+    max-height: 64px;
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-width: thin;
   }
   .tab-chip {
-    flex: 0 0 calc(50% - 1px);
+    flex: 0 0 auto;
     min-width: 0;
-    max-width: none;
+    max-width: min(190px, calc(100vw - 96px));
   }
 }
 
