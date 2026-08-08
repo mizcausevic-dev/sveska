@@ -34,7 +34,7 @@
     "@excalidraw/excalidraw": "^0.18.1",
     "@lezer/highlight": "^1.2.3",
     "dexie": "^4.0.10",
-    "dompurify": "^3.4.3",
+    "dompurify": "^3.4.13",
     "jspdf": "^4.2.1",
     "markdown-it": "^14.1.1",
     "react": "^18.3.1",
