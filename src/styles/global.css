@@ -1120,19 +1120,19 @@ input[type='range'] {
 .tab-chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  height: 30px;
-  padding: 0 6px 0 10px;
+  gap: 6px;
+  height: 34px;
+  padding: 0 8px 0 12px;
   border: 1px solid transparent;
   border-radius: 7px;
   background: transparent;
   color: var(--text-dim);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.02em;
   flex: 0 0 auto;
   min-width: 0;
-  max-width: 214px;
+  max-width: 240px;
   position: relative;
   transition:
     background-color 120ms ease,
@@ -1150,6 +1150,11 @@ input[type='range'] {
   background: color-mix(in oklab, var(--accent) 9%, var(--bg));
   border-color: color-mix(in oklab, var(--accent) 42%, var(--border-soft));
   color: var(--text);
+  /* Underline indicator. Previously a ::after pseudo-element — moved to
+   * box-shadow so ::after stays free for the fx-layer inner-panel layer
+   * (see the fx-layer/fx-scanline block below; a pseudo-element can only
+   * serve one purpose at a time). */
+  box-shadow: inset 0 -2px 0 0 var(--accent);
 }
 
 .tab-activate {
@@ -1172,15 +1177,6 @@ input[type='range'] {
   border-radius: 4px;
 }
 
-.tab-chip--active::after {
-  content: '';
-  position: absolute;
-  inset: auto 8px -1px;
-  height: 1px;
-  background: var(--accent);
-  border-radius: 1px;
-}
-
 .tab-dot {
   width: 6px;
   height: 6px;
@@ -1201,7 +1197,7 @@ input[type='range'] {
 .tab-title {
   flex: 0 1 auto;
   min-width: 0;
-  max-width: 158px;
+  max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1280,6 +1276,115 @@ input[type='range'] {
 .tab-new:hover {
   background: var(--raised);
   color: var(--accent);
+}
+
+/* ──────────────────────────────────────────────────────────
+ * fx-scanline — hover-gated scanning beam (Kinetic Gain FX doctrine,
+ * canonical source: dev/_estate/fx-Claude.css). Architecture: .fx-layer
+ * sets up stacking + clipping, ::before is the outer visual beam, ::after
+ * is the inner panel tint, real content stays above both at z-index:2.
+ *
+ * Ported inline (not @imported) so Sveska stays a self-contained repo —
+ * no cross-repo CSS reference that would break in CI. Defaults are
+ * re-pointed at Sveska's own theme tokens (--accent / --ai / --surface)
+ * instead of the library's generic BERT cyan/teal, so the beam tracks
+ * whichever of the 5 shipped themes (dark/light/charcoal/midnight/sepia)
+ * is active without per-instance overrides. Every knob is a custom
+ * property; override only what a caller needs.
+ * ────────────────────────────────────────────────────────── */
+.fx-layer {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.fx-layer > * {
+  position: relative;
+  z-index: 2;
+}
+.fx-layer::before,
+.fx-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.fx-layer::before {
+  z-index: 0;
+}
+.fx-layer::after {
+  z-index: 1;
+}
+
+.fx-scanline {
+  --fxsl-speed: 4s;
+  --fxsl-width: 2px;
+  --fxsl-inset: 2px;
+  --fxsl-bloom: 15px;
+  --fxsl-shadow: 6px;
+  --fxsl-easing: linear;
+  --fxsl-blend: normal;
+  --fxsl-opacity: 0.95;
+  --fxsl-dash: 4px;
+  --fxsl-gap: 12px;
+  --fxsl-panel-alpha: 0.96;
+  --fxsl-color: var(--accent);
+  --fxsl-stops: var(--accent), var(--ai), var(--accent-hover), var(--accent);
+}
+.fx-scanline::before {
+  inset: var(--fxsl-inset);
+  height: var(--fxsl-width);
+  bottom: auto;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--fxsl-stops) 0 var(--fxsl-dash),
+    transparent var(--fxsl-dash) calc(var(--fxsl-dash) + var(--fxsl-gap))
+  );
+  background-size: 200% 100%;
+  filter: drop-shadow(0 0 var(--fxsl-bloom) var(--fxsl-color))
+    drop-shadow(0 0 var(--fxsl-shadow) var(--fxsl-color));
+  mix-blend-mode: var(--fxsl-blend);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  animation: fx-scanline-a var(--fxsl-speed) var(--fxsl-easing) infinite;
+}
+.fx-scanline::after {
+  background: color-mix(in oklab, var(--surface) calc(var(--fxsl-panel-alpha) * 100%), transparent);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.fx-scanline:hover::before,
+.fx-scanline:focus-visible::before,
+.fx-scanline:hover::after,
+.fx-scanline:focus-visible::after {
+  opacity: var(--fxsl-opacity);
+}
+@keyframes fx-scanline-a {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fx-scanline::before {
+    animation: none;
+  }
+}
+
+/* Sveska-specific fit: tab chips + action-bar buttons are dense toolbar
+ * controls, not card-sized surfaces. Bumps corner radius to 12px per spec;
+ * everything else (background tint, accent border, the active-tab
+ * underline, disabled states) stays owned by the existing .tab-chip /
+ * .snap-btn rules above — fx-scanline only adds the hover beam + panel
+ * tint on top. Deliberately skips the canonical fx-layer's hover-lift
+ * transform: a -2px translateY reads as jitter in a tightly wrapped,
+ * multi-row tab list, not polish. */
+.tab-chip.fx-layer,
+.tab-new.fx-layer,
+.snap-btn.fx-layer {
+  border-radius: 12px;
 }
 
 /* ──────────────────────────────────────────────────────────

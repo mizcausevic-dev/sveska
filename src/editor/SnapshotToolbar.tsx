@@ -36,7 +36,7 @@ export function SnapshotToolbar({ snapshots, onAfterRestore }: Props): React.JSX
       <span className="snap-spacer" />
       <button
         type="button"
-        className="snap-btn snap-btn--primary"
+        className="snap-btn fx-layer fx-scanline snap-btn--primary"
         onClick={() => void save()}
         disabled={!pending}
         data-testid="snap-save"
@@ -45,7 +45,7 @@ export function SnapshotToolbar({ snapshots, onAfterRestore }: Props): React.JSX
       </button>
       <button
         type="button"
-        className="snap-btn"
+        className="snap-btn fx-layer fx-scanline"
         onClick={openVersions}
         disabled={count === 0}
         data-testid="snap-history"
@@ -55,7 +55,7 @@ export function SnapshotToolbar({ snapshots, onAfterRestore }: Props): React.JSX
       </button>
       <button
         type="button"
-        className="snap-btn snap-btn--danger"
+        className="snap-btn fx-layer fx-scanline snap-btn--danger"
         onClick={() => void clearAll()}
         disabled={count === 0}
         data-testid="snap-clear"

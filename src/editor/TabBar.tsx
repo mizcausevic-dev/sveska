@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { type Tab, type Note } from '@/notes/db';
 import { renameNote } from '@/notes/noteRepo';
 import { useTabs } from '@/notes/tabsStore';
+import { formatRelativeTime } from '@/lib/relativeTime';
 
 interface TabBarProps {
   tabs: Tab[];
@@ -46,6 +47,7 @@ export function TabBar({
               key={t.id}
               tab={t}
               title={title}
+              updatedAt={note?.updatedAt}
               active={active}
               dirty={dirty}
               renaming={renamingId === t.id}
@@ -62,7 +64,7 @@ export function TabBar({
       </div>
       <button
         type="button"
-        className="tab-new"
+        className="tab-new fx-layer fx-scanline"
         title="New note"
         aria-label="New note"
         onClick={() => void newNote()}
@@ -77,6 +79,8 @@ export function TabBar({
 interface TabChipProps {
   tab: Tab;
   title: string;
+  /** Note's `updatedAt` — undefined only while the note hasn't hydrated yet. */
+  updatedAt: number | undefined;
   active: boolean;
   dirty: boolean;
   renaming: boolean;
@@ -90,6 +94,7 @@ interface TabChipProps {
 function TabChip({
   tab,
   title,
+  updatedAt,
   active,
   dirty,
   renaming,
@@ -110,13 +115,23 @@ function TabChip({
     }
   }, [renaming, title]);
 
+  // Tooltip on the OUTER wrapper (not the inner button) so hovering any
+  // part of the chip — including the padding around the close button —
+  // surfaces it consistently. A `title` on both the wrapper and the child
+  // button would make the browser show only whichever one the pointer is
+  // precisely over, which reads as flaky rather than intentional.
+  const hoverHint = updatedAt
+    ? `${title} — updated ${formatRelativeTime(updatedAt)}. Double-click to rename.`
+    : `${title} — double-click to rename.`;
+
   // a11y: the wrapper is a plain flex container; activate + close are
   // sibling <button>s inside, so neither nests an interactive element.
   return (
     <div
-      className={`tab-chip${active ? ' tab-chip--active' : ''}${dirty ? ' tab-chip--dirty' : ''}`}
+      className={`tab-chip fx-layer fx-scanline${active ? ' tab-chip--active' : ''}${dirty ? ' tab-chip--dirty' : ''}`}
       onClick={() => !renaming && !active && onActivate()}
       onDoubleClick={() => onStartRename()}
+      title={renaming ? undefined : hoverHint}
       data-testid={`tab-${tab.id}`}
     >
       {renaming ? (
@@ -144,7 +159,6 @@ function TabChip({
           aria-current={active ? 'page' : undefined}
           className="tab-activate"
           onClick={() => !active && onActivate()}
-          title={`${title} — double-click to rename`}
         >
           <span
             className="tab-dot"

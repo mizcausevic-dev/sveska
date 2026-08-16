@@ -56,7 +56,7 @@ export function ExportMenu({ note, body }: Props): React.JSX.Element {
         <button
           key={format}
           type="button"
-          className="snap-btn export-btn"
+          className="snap-btn fx-layer fx-scanline export-btn"
           onClick={() => void exportNote(format)}
           disabled={disabled}
           data-testid={`export-${format}`}
@@ -67,7 +67,7 @@ export function ExportMenu({ note, body }: Props): React.JSX.Element {
       ))}
       <button
         type="button"
-        className="snap-btn export-btn"
+        className="snap-btn fx-layer fx-scanline export-btn"
         onClick={() => void exportPdf()}
         disabled={disabled}
         data-testid="export-pdf"

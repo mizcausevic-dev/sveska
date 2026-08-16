@@ -287,7 +287,7 @@ export function Editor(): React.JSX.Element {
         <div className="editor-actions-secondary">
           <button
             type="button"
-            className="snap-btn stats-btn"
+            className="snap-btn fx-layer fx-scanline stats-btn"
             onClick={openStats}
             data-testid="stats-open"
             title="Statistics (Ctrl + Shift + I)"
@@ -298,7 +298,7 @@ export function Editor(): React.JSX.Element {
             <div className="md-view-switch" role="group" aria-label="Markdown view">
               <button
                 type="button"
-                className="snap-btn"
+                className="snap-btn fx-layer fx-scanline"
                 onClick={() => setMarkdownView('edit')}
                 aria-pressed={markdownView === 'edit'}
                 data-testid="markdown-view-edit"
@@ -307,7 +307,7 @@ export function Editor(): React.JSX.Element {
               </button>
               <button
                 type="button"
-                className="snap-btn"
+                className="snap-btn fx-layer fx-scanline"
                 onClick={() =>
                   setMarkdownView((current) => (current === 'split' ? 'edit' : 'split'))
                 }
@@ -318,7 +318,7 @@ export function Editor(): React.JSX.Element {
               </button>
               <button
                 type="button"
-                className="snap-btn"
+                className="snap-btn fx-layer fx-scanline"
                 onClick={() => setMarkdownView('preview')}
                 aria-pressed={markdownView === 'preview'}
                 data-testid="markdown-view-preview"
