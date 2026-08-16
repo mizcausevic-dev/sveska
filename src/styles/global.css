@@ -2759,7 +2759,11 @@ input[type='range'] {
 }
 .cm-tooltip.cm-tooltip-autocomplete > ul {
   font-family: inherit;
-  max-height: 280px;
+  /* slashSource hard-caps results at 8 (cmExtensions.ts); ~34px per row
+   * tops out around 280px including borders/gaps, which is exactly what
+   * triggered the scrollbar. 420px comfortably clears all 8 with room to
+   * spare, matching the textarea's .slash-popover, which has no cap at all. */
+  max-height: 420px;
 }
 .cm-tooltip.cm-tooltip-autocomplete > ul > li {
   display: flex;

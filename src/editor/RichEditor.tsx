@@ -3,11 +3,18 @@ import { EditorState, Compartment } from '@codemirror/state';
 import { EditorView, keymap, placeholder as cmPlaceholder } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
 import { markdown } from '@codemirror/lang-markdown';
-import { syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language';
+import { syntaxHighlighting, defaultHighlightStyle, HighlightStyle } from '@codemirror/language';
+import { tags } from '@lezer/highlight';
 import { search, searchKeymap } from '@codemirror/search';
 import { closeBrackets } from '@codemirror/autocomplete';
 import { inlineImagePlugin } from './richImageWidget';
-import { slashCommands, snippetExpand, typewriterScroll, typingSounds } from './cmExtensions';
+import {
+  slashCommands,
+  snippetExpand,
+  typewriterScroll,
+  typingSounds,
+  tryLinkPastedUrl,
+} from './cmExtensions';
 import { attachmentRef, putAttachment } from '@/notes/attachmentRepo';
 import { type EditorPrefs, FONT_FAMILY_CSS } from '@/notes/editorPrefs';
 
@@ -32,6 +39,21 @@ interface Props {
   placeholder: string;
   onChange: (value: string, selectionStart: number) => void;
 }
+
+/**
+ * `defaultHighlightStyle` (registered below as a `{ fallback: true }`
+ * layer) ships CodeMirror's own generic palette, unrelated to Sveska's
+ * tokens — e.g. `tags.contentSeparator` (which `@lezer/markdown` maps
+ * `---` horizontal rules to) renders in a stock blue-violet (`#219`)
+ * that doesn't exist anywhere in tokens.css. Registering a highlighter
+ * WITHOUT `{ fallback: true }` gives it priority over one that IS marked
+ * fallback, so this narrow override — just the one tag — wins for `---`
+ * while every other token (headings, emphasis, links, code, ...) still
+ * falls through to CodeMirror's default styling untouched.
+ */
+const contentSeparatorFix = HighlightStyle.define([
+  { tag: tags.contentSeparator, color: 'var(--text-dim)' },
+]);
 
 function buildTheme(prefs: EditorPrefs): ReturnType<typeof EditorView.theme> {
   return EditorView.theme(
@@ -117,15 +139,16 @@ export function RichEditor({
     const pasteDrop = EditorView.domEventHandlers({
       paste(event, view) {
         const items = event.clipboardData?.items;
-        if (!items) return false;
-        const fileItem = Array.from(items).find(
-          (it) => it.kind === 'file' && it.type.startsWith('image/'),
-        );
+        const fileItem = items
+          ? Array.from(items).find((it) => it.kind === 'file' && it.type.startsWith('image/'))
+          : undefined;
         const file = fileItem?.getAsFile();
-        if (!file) return false;
-        event.preventDefault();
-        void handleImageFile(view, file);
-        return true;
+        if (file) {
+          event.preventDefault();
+          void handleImageFile(view, file);
+          return true;
+        }
+        return tryLinkPastedUrl(event, view);
       },
       drop(event, view) {
         const files = event.dataTransfer?.files;
@@ -145,6 +168,7 @@ export function RichEditor({
         keymap.of([...searchKeymap, ...defaultKeymap, ...historyKeymap, indentWithTab]),
         markdown(),
         syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+        syntaxHighlighting(contentSeparatorFix),
         EditorView.lineWrapping,
         cmPlaceholder(placeholder),
         closeBrackets(),

@@ -1,6 +1,35 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { EditorState } from '@codemirror/state';
+import { type EditorView } from '@codemirror/view';
 import { findImageRefs } from '@/editor/richImageWidget';
+import { tryLinkPastedUrl } from '@/editor/cmExtensions';
 import { DEFAULT_EDITOR_PREFS, useEditorPrefs } from '@/notes/editorPrefs';
+
+/**
+ * `tryLinkPastedUrl` only touches `view.state` (read) and `view.dispatch`
+ * (call) — never the DOM — so a real `EditorView` (which needs a `parent`
+ * element) isn't needed. This minimal stand-in satisfies the function's
+ * actual usage without pulling jsdom into the loop. Returns `dispatch`
+ * separately (not accessed as `view.dispatch` in assertions) so eslint's
+ * `unbound-method` check doesn't flag pulling a "method" off a
+ * class-typed object — it's a plain `vi.fn()`, not a bound instance method.
+ */
+function fakeView(
+  doc: string,
+  anchor: number,
+  head: number = anchor,
+): { view: EditorView; dispatch: ReturnType<typeof vi.fn> } {
+  const state = EditorState.create({ doc, selection: { anchor, head } });
+  const dispatch = vi.fn();
+  return { view: { state, dispatch } as unknown as EditorView, dispatch };
+}
+
+function pasteEvent(text: string): ClipboardEvent {
+  return {
+    clipboardData: { getData: (type: string) => (type === 'text/plain' ? text : '') },
+    preventDefault: vi.fn(),
+  } as unknown as ClipboardEvent;
+}
 
 describe('big lift — findImageRefs (inline image matcher)', () => {
   it('finds a single ref with correct range + id', () => {
@@ -34,6 +63,50 @@ describe('big lift — findImageRefs (inline image matcher)', () => {
     const refs = findImageRefs('![](sveska-img:deadbeef0000)');
     expect(refs).toHaveLength(1);
     expect(refs[0]!.id).toBe('deadbeef0000');
+  });
+});
+
+describe('tryLinkPastedUrl — paste-a-URL-over-a-selection auto-link', () => {
+  it('wraps the selected text as a markdown link to the pasted URL', () => {
+    const { view, dispatch } = fakeView('see docs here please', 4, 8); // selects "docs"
+    const handled = tryLinkPastedUrl(pasteEvent('https://example.com/guide'), view);
+    expect(handled).toBe(true);
+    expect(dispatch).toHaveBeenCalledWith({
+      changes: { from: 4, to: 8, insert: '[docs](https://example.com/guide)' },
+      selection: { anchor: 4 + '[docs](https://example.com/guide)'.length },
+    });
+  });
+
+  it('does nothing when there is no selection (collapsed cursor)', () => {
+    const { view, dispatch } = fakeView('hello world', 5);
+    const handled = tryLinkPastedUrl(pasteEvent('https://example.com'), view);
+    expect(handled).toBe(false);
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
+  it('leaves non-URL paste text alone', () => {
+    const { view, dispatch } = fakeView('select this', 0, 6);
+    const handled = tryLinkPastedUrl(pasteEvent('just some regular text'), view);
+    expect(handled).toBe(false);
+    expect(dispatch).not.toHaveBeenCalled();
+  });
+
+  it('tolerates surrounding whitespace on the pasted URL', () => {
+    const { view, dispatch } = fakeView('select this', 0, 6);
+    const handled = tryLinkPastedUrl(pasteEvent('  https://example.com/x  \n'), view);
+    expect(handled).toBe(true);
+    expect(dispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        changes: { from: 0, to: 6, insert: '[select](https://example.com/x)' },
+      }),
+    );
+  });
+
+  it('requires an http(s) scheme — bare domains are not auto-linked', () => {
+    const { view, dispatch } = fakeView('select this', 0, 6);
+    const handled = tryLinkPastedUrl(pasteEvent('example.com'), view);
+    expect(handled).toBe(false);
+    expect(dispatch).not.toHaveBeenCalled();
   });
 });
 

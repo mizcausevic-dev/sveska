@@ -66,6 +66,36 @@ export const slashCommands = autocompletion({
   defaultKeymap: true,
 });
 
+// ── Paste-a-URL-over-a-selection auto-link ──────────────────────────────
+
+const BARE_URL_RE = /^\s*(https?:\/\/\S+)\s*$/;
+
+/**
+ * Paste a bare URL over a text selection → wrap the selection as a
+ * markdown link pointing at that URL, instead of clobbering the selected
+ * text with the raw URL. No selection → let the paste through untouched;
+ * `linkify: true` in src/markdown/render.ts already renders a bare pasted
+ * URL as a clickable link in preview/export, so wrapping an unselected
+ * URL in `[url](url)` would just be redundant noise in the raw source.
+ */
+export function tryLinkPastedUrl(event: ClipboardEvent, view: EditorView): boolean {
+  const text = event.clipboardData?.getData('text/plain');
+  if (!text) return false;
+  const match = BARE_URL_RE.exec(text);
+  if (!match) return false;
+  const sel = view.state.selection.main;
+  if (sel.from === sel.to) return false;
+  const url = match[1] ?? '';
+  const label = view.state.doc.sliceString(sel.from, sel.to);
+  const insert = `[${label}](${url})`;
+  event.preventDefault();
+  view.dispatch({
+    changes: { from: sel.from, to: sel.to, insert },
+    selection: { anchor: sel.from + insert.length },
+  });
+  return true;
+}
+
 // ── Snippet expansion ───────────────────────────────────────────────────
 // When the text before the caret ends with a saved trigger, replace it with
 // the snippet body. Reuses findTriggerAt. Guards against re-processing its
