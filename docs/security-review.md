@@ -70,11 +70,11 @@ The exception does not enable script injection.
 
 ## §5.5 — "Optional sync (post-M6) must be E2E-encrypted or not shipped."
 
-| Check                                                       | Status    | Evidence                                                                                          |
-| ----------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------- |
-| Sync feature shipped?                                       | ❌ (none) | No sync code exists. Parking-lot row 3 keeps the decision deferred                                |
-| Pro tier on `/pricing` references sync as "coming soon"     | ✅        | [`src/routes/Pricing.tsx`](../src/routes/Pricing.tsx) — Pro tier shows waitlist, not a buy button |
-| If sync ships later, gate is: payload is ciphertext at rest | ⏸ planned | Tracked in parking-lot row 3                                                                      |
+| Check                                                       | Status    | Evidence                                                                                                                 |
+| ----------------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Sync feature shipped?                                       | ❌ (none) | No sync code exists. Parking-lot row 3 keeps the decision deferred                                                       |
+| Pro-tier pricing surface                                    | N/A       | `/pricing` removed 2026-08-16 (Miz: personal use before market release). No paid-tier claims exist to check against §5.5 |
+| If sync ships later, gate is: payload is ciphertext at rest | ⏸ planned | Tracked in parking-lot row 3                                                                                             |
 
 **Verdict:** Pass (vacuously — nothing to encrypt yet). Re-review at sync ship.
 
@@ -96,12 +96,12 @@ lands, re-verify CSP `connect-src`, no cookies, and consent UI.
 
 ## Additional hardening landed in M7
 
-| Item                           | Status | Evidence                                                                                                                                                                      |
-| ------------------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Top-level React error boundary | ✅     | [`src/app/ErrorBoundary.tsx`](../src/app/ErrorBoundary.tsx) — wraps `<App />` in `main.tsx`                                                                                   |
-| Accessibility sweep (axe)      | ✅     | [`src/__tests__/a11y.test.tsx`](../src/__tests__/a11y.test.tsx) — App shell + /glossary + /pricing pass `vitest-axe` (color-contrast + region rules skipped per file comment) |
-| Bundle budget gate             | ✅     | `pnpm build` runs [`scripts/check-bundle.mjs`](../scripts/check-bundle.mjs) and [`scripts/check-no-keys.mjs`](../scripts/check-no-keys.mjs)                                   |
-| Tab-bar a11y refactor          | ✅     | `role="toolbar"` instead of nested `role="tab" > button` (a11y test caught the original violation)                                                                            |
+| Item                           | Status | Evidence                                                                                                                                                           |
+| ------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Top-level React error boundary | ✅     | [`src/app/ErrorBoundary.tsx`](../src/app/ErrorBoundary.tsx) — wraps `<App />` in `main.tsx`                                                                        |
+| Accessibility sweep (axe)      | ✅     | [`src/__tests__/a11y.test.tsx`](../src/__tests__/a11y.test.tsx) — App shell + /glossary pass `vitest-axe` (color-contrast + region rules skipped per file comment) |
+| Bundle budget gate             | ✅     | `pnpm build` runs [`scripts/check-bundle.mjs`](../scripts/check-bundle.mjs) and [`scripts/check-no-keys.mjs`](../scripts/check-no-keys.mjs)                        |
+| Tab-bar a11y refactor          | ✅     | `role="toolbar"` instead of nested `role="tab" > button` (a11y test caught the original violation)                                                                 |
 
 ---
 

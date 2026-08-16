@@ -186,7 +186,7 @@ export const GLOSSARY: GlossaryEntry[] = [
     term: 'notepad.js.org',
     summary:
       "Amit Merchant's MIT-licensed reference notepad PWA; Sveska's behavioral spec, not a code fork.",
-    body: 'Sveska re-implements the notepad.js.org feature set as a typed, modular PWA with a platform surface (glossary, lead-gen, pricing) from day one — and then extends past it (multi-note, AI, canvas).',
+    body: 'Sveska re-implements the notepad.js.org feature set as a typed, modular PWA with a platform surface (glossary, lead-gen) from day one — and then extends past it (multi-note, AI, canvas).',
     group: 'brand',
   },
 ];

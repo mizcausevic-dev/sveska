@@ -6,6 +6,8 @@ Per-milestone snapshots of what shipped. Each entry links to the matching GitHub
 
 The editor now scales to reading, wide, or full-width workspaces instead of boxing ultrawide displays into a narrow column. Multi-note tabs wrap into compact rows with no horizontal scrollbar. Nested local-first directories organize notes above tags, backed by Dexie schema v3, and deleting a directory safely returns its notes to the unfiled root. Markdown adds explicit Edit / Split / Preview views plus a row-and-column table builder available from the toolbar and command palette. Three new built-in templates cover directory listings, technical specs, and product launches.
 
+Tab chips are noticeably more compact, matched to the density of the notes sidebar. Hovering a tab now shows when it was last edited. Three new accent themes (Charcoal, Midnight, Sepia) join Dark and Light, plus density and notes-rail visibility controls in Preferences. The pricing page and internal funnel dashboard have been retired for now — Sveska is staying in personal use ahead of any wider release.
+
 ## v0.8.0 — Rich editor + image paste
 
 Paste or drag-drop a screenshot straight into a note — it's stored locally in IndexedDB and renders inline. The editor moved to CodeMirror 6 (now the default): inline images, Markdown syntax highlighting, slash commands, snippet expansion, find/replace, and typewriter mode all on one surface. The classic textarea remains a one-toggle opt-out. HTML export embeds pasted images as self-contained data URIs.

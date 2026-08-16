@@ -61,9 +61,9 @@ intentionally committed and released.
 | AI          | Streaming Anthropic proxy on Cloudflare Pages Functions · `/improve` `/summarize` `/continue` `/rewrite` · LinkedIn-post copy                                                                                                                       |
 | AI visual   | Notes → image (Concise / Detailed) rendered on 1200×630 canvas, downloads as PNG                                                                                                                                                                    |
 | Canvas      | Per-note Excalidraw canvas (lazy-loaded, 2.6 MB only on first open) · PNG export · dark-themed                                                                                                                                                      |
-| Platform    | `/glossary` (20-term auto-linker) · `/blog` + `/changelog` (Markdown content) · `/pricing` · `/funnel` dashboard                                                                                                                                    |
+| Platform    | `/glossary` (20-term auto-linker) · `/blog` + `/changelog` (Markdown content)                                                                                                                                                                       |
 | Lead-gen    | Email capture · CTA slots · MDX export with frontmatter · HTML-export footer back-links                                                                                                                                                             |
-| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored, axe-clean App / Glossary / Pricing                                                                                                                                                   |
+| A11y        | Keyboard-first, focus rings, `prefers-reduced-motion` honored, axe-clean App / Glossary                                                                                                                                                             |
 | Hardening   | Top-level `ErrorBoundary` (Reload / Copy report / Reset) · on-demand Playwright smoke suite (`pnpm test:e2e`)                                                                                                                                       |
 | Persistence | Dexie (IndexedDB) — 10 tables, nested-directory schema v3, soft-delete, legacy-localStorage import on first run                                                                                                                                     |
 
@@ -133,14 +133,14 @@ CLAUDE.md §5. Hard, enforced now (not deferred):
 `scripts/check-bundle.mjs` parses `dist/index.html` and only counts assets it directly
 references, so `import()` chunks (jsPDF, html2canvas) don't count against the budget.
 
-| Surface              | Gzip      | Loaded                                         |
-| -------------------- | --------- | ---------------------------------------------- |
-| Initial JS           | 128.43 KB | every page load (editor + Home only)           |
-| Initial CSS          | 9.42 KB   | every page load                                |
-| Lazy platform routes | ~25 KB    | per route — glossary / blog / pricing / funnel |
-| Lazy `.pdf` chunk    | ~223 KB   | first `.pdf` export click only                 |
-| Lazy canvas chunk    | ~2.6 MB   | first canvas open (Excalidraw + deps)          |
-| **Budget**           | 180 KB    | initial JS, under by 51.57 KB                  |
+| Surface              | Gzip      | Loaded                                |
+| -------------------- | --------- | ------------------------------------- |
+| Initial JS           | 128.43 KB | every page load (editor + Home only)  |
+| Initial CSS          | 9.42 KB   | every page load                       |
+| Lazy platform routes | ~25 KB    | per route — glossary / blog           |
+| Lazy `.pdf` chunk    | ~223 KB   | first `.pdf` export click only        |
+| Lazy canvas chunk    | ~2.6 MB   | first canvas open (Excalidraw + deps) |
+| **Budget**           | 180 KB    | initial JS, under by 51.57 KB         |
 
 ## Milestone status
 
@@ -205,7 +205,6 @@ sveska/
 | [memory.md](memory.md)                             | Locked decisions, gotchas, perf snapshot per ticket  |
 | [docs/threat-model.md](docs/threat-model.md)       | What we defend, what we accept                       |
 | [docs/security-review.md](docs/security-review.md) | M7 walkthrough of CLAUDE.md §5 — controls + evidence |
-| [docs/roi.md](docs/roi.md)                         | Path-to-$15K MRR math + funnel + acquisition lanes   |
 | [src/ai/README.md](src/ai/README.md)               | AI threat model + secret-setup command               |
 
 ## License

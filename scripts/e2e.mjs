@@ -74,18 +74,6 @@ try {
     await ctx.close();
   });
 
-  await runCase('/pricing renders 3 tiers', async () => {
-    const ctx = await browser.newContext();
-    const page = await ctx.newPage();
-    const errors = collectErrors(page);
-    await page.goto(`${BASE}/pricing`, { waitUntil: 'networkidle' });
-    await page.waitForSelector('[data-testid^="pricing-card-"]', { timeout: 10_000 });
-    const count = await page.locator('[data-testid^="pricing-card-"]').count();
-    if (count !== 3) throw new Error(`expected 3 pricing tiers, got ${count}`);
-    assertNoErrors(errors);
-    await ctx.close();
-  });
-
   await runCase('manifest.json is served + parses (PWA install gate)', async () => {
     const ctx = await browser.newContext();
     const page = await ctx.newPage();

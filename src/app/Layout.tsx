@@ -60,9 +60,6 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
           <NavLink to="/glossary" className="nav-secondary">
             Glossary
           </NavLink>
-          <NavLink to="/pricing" className="nav-secondary">
-            Pricing
-          </NavLink>
           <button
             type="button"
             onClick={openPrefs}

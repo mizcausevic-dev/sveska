@@ -5,7 +5,6 @@ import * as matchers from 'vitest-axe/matchers';
 import { MemoryRouter } from 'react-router-dom';
 import { App } from '@/app/App';
 import { Glossary } from '@/routes/Glossary';
-import { Pricing } from '@/routes/Pricing';
 
 expect.extend(matchers);
 
@@ -35,16 +34,6 @@ describe('M7.T7.1 — a11y sweep', () => {
     const { container } = render(
       <MemoryRouter initialEntries={['/glossary']}>
         <Glossary />
-      </MemoryRouter>,
-    );
-    const results = await axe(container, AXE_OPTIONS);
-    expect(results).toHaveNoViolations();
-  });
-
-  it('/pricing page has no axe violations', async () => {
-    const { container } = render(
-      <MemoryRouter initialEntries={['/pricing']}>
-        <Pricing />
       </MemoryRouter>,
     );
     const results = await axe(container, AXE_OPTIONS);

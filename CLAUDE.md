@@ -152,7 +152,7 @@ Legend: ☐ todo · ✅ done. Each milestone ends with: tests green, Lighthouse 
 - ✅ T6.1 Glossary engine (auto-link terms in notes/exports; standalone SEO `/glossary`).
 - ✅ T6.2 Content surface: marketing/landing, changelog, MDX blog; "Export to blog/MDX" from a note.
 - ✅ T6.3 Lead-gen funnel: email capture, ad/affiliate placement slots in shell + HTML export footer, CTA system.
-- ✅ T6.4 Pricing/upgrade scaffold (free local / Pro sync+AI). Instrumentation → MRR funnel dashboard. **AC:** funnel events firing; pricing page live; path to ROI ≥ $15K/mo documented.
+- ✅ T6.4 Pricing/upgrade scaffold (free local / Pro sync+AI). Instrumentation → MRR funnel dashboard. **AC:** funnel events firing; pricing page live; path to ROI ≥ $15K/mo documented. **REMOVED 2026-08-16** — `/pricing` + `/funnel` deleted at Miz's request; he's using Sveska himself before any market release, no monetization surface should be live in the meantime. Not a design failure, a sequencing call — this ticket can be re-opened wholesale (routes, tests, `docs/roi.md` math) if/when Sveska heads back toward market. See `tasks.md` for the removal's file-level diff.
 
 ### M7 — Hardening
 
