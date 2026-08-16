@@ -1113,26 +1113,26 @@ input[type='range'] {
   flex-wrap: wrap;
   align-items: flex-start;
   align-content: flex-start;
-  gap: 4px;
+  gap: 3px;
   min-width: 0;
 }
 
 .tab-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 34px;
-  padding: 0 8px 0 12px;
+  gap: 4px;
+  height: 24px;
+  padding: 0 5px 0 8px;
   border: 1px solid transparent;
-  border-radius: 7px;
+  border-radius: 6px;
   background: transparent;
   color: var(--text-dim);
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 11px;
   letter-spacing: 0.02em;
   flex: 0 0 auto;
   min-width: 0;
-  max-width: 240px;
+  max-width: 160px;
   position: relative;
   transition:
     background-color 120ms ease,
@@ -1178,8 +1178,8 @@ input[type='range'] {
 }
 
 .tab-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 999px;
   background: var(--text-dim);
   flex-shrink: 0;
@@ -1197,7 +1197,7 @@ input[type='range'] {
 .tab-title {
   flex: 0 1 auto;
   min-width: 0;
-  max-width: 180px;
+  max-width: 108px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1219,13 +1219,13 @@ input[type='range'] {
 
 .tab-close {
   align-self: center;
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
   border: 0;
   border-radius: 4px;
   background: transparent;
   color: var(--text-dim);
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1;
   cursor: pointer;
   flex-shrink: 0;
@@ -1255,12 +1255,12 @@ input[type='range'] {
 }
 
 .tab-new {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   border-radius: 6px;
   background: transparent;
   color: var(--text-dim);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   cursor: pointer;
   display: inline-flex;
@@ -1374,15 +1374,22 @@ input[type='range'] {
 }
 
 /* Sveska-specific fit: tab chips + action-bar buttons are dense toolbar
- * controls, not card-sized surfaces. Bumps corner radius to 12px per spec;
- * everything else (background tint, accent border, the active-tab
- * underline, disabled states) stays owned by the existing .tab-chip /
- * .snap-btn rules above — fx-scanline only adds the hover beam + panel
- * tint on top. Deliberately skips the canonical fx-layer's hover-lift
- * transform: a -2px translateY reads as jitter in a tightly wrapped,
- * multi-row tab list, not polish. */
+ * controls, not card-sized surfaces. Everything else (background tint,
+ * accent border, the active-tab underline, disabled states) stays owned
+ * by the existing .tab-chip / .snap-btn rules above — fx-scanline only
+ * adds the hover beam + panel tint on top. Deliberately skips the
+ * canonical fx-layer's hover-lift transform: a -2px translateY reads as
+ * jitter in a tightly wrapped, multi-row tab list, not polish.
+ *
+ * Radius: tab chips are 24px tall (matched to the notes-rail item density
+ * per direct feedback — 12px here would be a full stadium pill on
+ * something this short), so they keep their own native 6px. The 12px
+ * from the original motion-profile spec is kept on .snap-btn, which is
+ * still 30px tall and wasn't part of the sizing complaint. */
 .tab-chip.fx-layer,
-.tab-new.fx-layer,
+.tab-new.fx-layer {
+  border-radius: 6px;
+}
 .snap-btn.fx-layer {
   border-radius: 12px;
 }
@@ -2100,7 +2107,7 @@ input[type='range'] {
   .tab-chip {
     flex: 0 0 auto;
     min-width: 0;
-    max-width: min(190px, calc(100vw - 96px));
+    max-width: min(140px, calc(100vw - 96px));
   }
 }
 
